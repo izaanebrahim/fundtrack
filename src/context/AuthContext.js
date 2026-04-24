@@ -34,35 +34,23 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const initAuth = async () => {
-      setLoading(true);
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          setUser(session.user);
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
-        }
-      } catch (err) {
-        console.error('Auth init error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initAuth();
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        if (event === 'SIGNED_IN' && session?.user) {
-          setUser(session.user);
-          setLoading(true);
-          const profileData = await fetchProfile(session.user.id);
-          setProfile(profileData);
+        console.log('Auth Event:', event);
+        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (session?.user) {
+            setUser(session.user);
+            const profileData = await fetchProfile(session.user.id);
+            setProfile(profileData);
+          } else {
+            setUser(null);
+            setProfile(null);
+          }
           setLoading(false);
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);
+          setLoading(false);
         }
       }
     );
