@@ -52,18 +52,18 @@ export default function Sidebar({ onClose }) {
   };
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-gray-900 border-r border-gray-800 text-gray-300">
-      <div className="flex h-16 items-center justify-between px-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold text-white tracking-widest uppercase">FundTrack</h1>
+    <div className="flex h-screen w-64 flex-col bg-[#090c0c] border-r border-white/5 text-gray-400">
+      <div className="flex h-16 items-center justify-between px-6 border-b border-white/5">
+        <h1 className="text-xl font-black text-white tracking-tighter italic">FT.</h1>
         <button 
           onClick={onClose}
-          className="p-2 text-gray-400 hover:text-white lg:hidden font-bold"
+          className="p-2 text-gray-500 hover:text-white lg:hidden font-bold"
         >
           X
         </button>
       </div>
       
-      <nav className="flex-1 space-y-1 px-2 py-4">
+      <nav className="flex-1 space-y-2 px-3 py-6">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -73,39 +73,39 @@ export default function Sidebar({ onClose }) {
               href={item.href}
               className={clsx(
                 isActive
-                  ? 'bg-gray-800 text-white'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                'group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors'
+                  ? 'nav-item-active'
+                  : 'text-gray-500 hover:bg-white/5 hover:text-white',
+                'group flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200'
               )}
             >
               <Icon
                 className={clsx(
-                  isActive ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-300',
-                  'mr-3 h-5 w-5 flex-shrink-0'
+                  isActive ? 'text-black' : 'text-gray-500 group-hover:text-white',
+                  'h-5 w-5 flex-shrink-0'
                 )}
               />
-              {item.name}
+              <span className="ml-3">{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="border-t border-gray-800 p-4">
-        <div className="flex items-center mb-4">
-          <div className="h-8 w-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+      <div className="border-t border-white/5 p-6 bg-black/20">
+        <div className="flex items-center mb-6">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-black font-black shadow-lg shadow-emerald-500/20">
             {profile.name.charAt(0).toUpperCase()}
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-white">{profile.name}</p>
-            <p className="text-xs text-gray-400 capitalize">{profile.role}</p>
+            <p className="text-sm font-bold text-white leading-none">{profile.name}</p>
+            <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">{profile.role}</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="group flex w-full items-center rounded-md px-2 py-2 text-sm font-medium text-red-400 hover:bg-gray-800 hover:text-red-300 transition-colors"
+          className="group flex w-full items-center rounded-xl px-3 py-3 text-sm font-bold text-red-500/80 hover:bg-red-500/10 hover:text-red-400 transition-all"
         >
-          <LogOut className="mr-3 h-5 w-5 flex-shrink-0" />
-          Logout
+          <LogOut className="h-5 w-5 flex-shrink-0" />
+          <span className="ml-3">Logout</span>
         </button>
       </div>
     </div>
