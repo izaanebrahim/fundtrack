@@ -131,12 +131,8 @@ export default function AdminDashboard() {
             <Landmark className="w-4 h-4 mr-1" />
             Current NAV
           </div>
-          <div className="text-3xl font-bold text-indigo-400 mb-2">
+          <div className="text-3xl font-bold text-indigo-400">
             ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
-          </div>
-          <div className={`flex items-center text-sm font-medium ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-            {data.navChange >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-            {data.navChange > 0 ? '+' : ''}{data.navChange.toFixed(4)} ({data.navChangePercentage.toFixed(2)}%)
           </div>
         </div>
 

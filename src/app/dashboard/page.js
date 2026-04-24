@@ -143,9 +143,15 @@ export default function Dashboard() {
               <div className="text-3xl font-bold text-white mb-2">
                 ₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
               </div>
-              <div className={`flex items-center text-sm font-medium ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
-                {isProfit ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
-                {data.profitLoss > 0 ? '+' : ''}₹{data.profitLoss.toLocaleString('en-IN', { maximumFractionDigits: 2 })} ({data.profitLossPercentage.toFixed(2)}%)
+              <div className="space-y-1">
+                <div className={`flex items-center text-sm font-medium ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {isProfit ? <TrendingUp className="w-4 h-4 mr-1" /> : <TrendingDown className="w-4 h-4 mr-1" />}
+                  Total: {data.profitLoss > 0 ? '+' : ''}₹{data.profitLoss.toLocaleString('en-IN', { maximumFractionDigits: 2 })} ({data.profitLossPercentage.toFixed(2)}%)
+                </div>
+                <div className={`flex items-center text-xs font-medium ${(data.navChange * data.totalUnits) >= 0 ? 'text-emerald-500/80' : 'text-red-500/80'}`}>
+                  {(data.navChange * data.totalUnits) >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                  Today: {(data.navChange * data.totalUnits) > 0 ? '+' : ''}₹{(data.navChange * data.totalUnits).toLocaleString('en-IN', { maximumFractionDigits: 2 })} ({data.navChangePercentage.toFixed(2)}%)
+                </div>
               </div>
             </div>
 
@@ -174,12 +180,8 @@ export default function Dashboard() {
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Current NAV
               </div>
-              <div className="text-2xl font-semibold text-white mb-2">
+              <div className="text-2xl font-semibold text-white">
                 ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
-              </div>
-              <div className={`flex items-center text-sm font-medium ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                {data.navChange >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
-                {data.navChange > 0 ? '+' : ''}{data.navChange.toFixed(4)} ({data.navChangePercentage.toFixed(2)}%)
               </div>
             </div>
           </div>
