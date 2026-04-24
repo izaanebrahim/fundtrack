@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [profileError, setProfileError] = useState(null);
 
-  const fetchProfile = async (userId) => {
+  const fetchProfile = async (userId, retries = 3) => {
     try {
       const { data, error } = await supabase
         .from('clients')
@@ -20,6 +20,11 @@ export const AuthProvider = ({ children }) => {
         .single();
 
       if (error) {
+        if (error.message && error.message.includes('Lock broken') && retries > 0) {
+          console.warn(`Lock broken error, retrying fetchProfile... (${retries} retries left)`);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          return fetchProfile(userId, retries - 1);
+        }
         console.error('Profile fetch error:', error);
         setProfileError(error.message);
         return null;
@@ -27,6 +32,11 @@ export const AuthProvider = ({ children }) => {
       setProfileError(null);
       return data;
     } catch (err) {
+      if (err.message && err.message.includes('Lock broken') && retries > 0) {
+        console.warn(`Lock broken exception, retrying fetchProfile... (${retries} retries left)`);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        return fetchProfile(userId, retries - 1);
+      }
       console.error('Profile fetch exception:', err);
       setProfileError(err.message);
       return null;
