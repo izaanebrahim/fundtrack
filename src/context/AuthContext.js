@@ -8,7 +8,8 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Only show loading on the client side initially to prevent SSR hangs
+  const [loading, setLoading] = useState(typeof window !== 'undefined');
   const [profileError, setProfileError] = useState(null);
 
   const fetchProfile = async (userId, retries = 3) => {
