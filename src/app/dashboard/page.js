@@ -3,12 +3,13 @@
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import AllocationChart from '@/components/AllocationChart';
+import Link from 'next/link';
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [data, setData] = useState({
     totalUnits: 0,
     currentNav: 0,
@@ -102,114 +103,153 @@ export default function Dashboard() {
   const isProfit = data.profitLoss >= 0;
   const isDayUp = data.navChange >= 0;
 
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 glass-card animate-pulse"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="h-64 glass-card animate-pulse"></div>
+          <div className="h-64 glass-card animate-pulse"></div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="h-48 glass-card animate-pulse"></div>
+          <div className="h-48 glass-card animate-pulse"></div>
+          <div className="h-48 glass-card animate-pulse"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-black tracking-tighter text-white">Dashboard</h1>
-        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-          Updated: {format(new Date(), 'hh:mm a')}
+    <div className="space-y-8 pb-10">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-black tracking-tighter text-white">Hello, {profile?.name?.split(' ')[0] || 'Investor'}</h1>
+          <p className="text-gray-500 text-sm font-medium mt-1">Here's your investment overview for today.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href="/transactions" className="px-4 py-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
+            History
+          </Link>
+          <div className="px-4 py-2 glass-card text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+            {format(new Date(), 'dd MMM yyyy')}
+          </div>
         </div>
       </div>
 
-      {/* 4 Stat Cards */}
-      {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="glass-card h-36 animate-pulse"></div>
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* Portfolio Value */}
-            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Portfolio Value</span>
-                <div className="h-7 w-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                  <IndianRupee className="w-3.5 h-3.5" />
+      {/* Main Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Left Column: Portfolio Balance & Quick Actions */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="glass-card p-8 relative overflow-hidden h-full flex flex-col justify-between" 
+               style={{ background: 'linear-gradient(135deg, rgba(0,245,160,0.08) 0%, rgba(13,17,17,0.9) 100%)' }}>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-[50px] -mr-10 -mt-10"></div>
+            
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Balance</span>
+                <div className="h-8 w-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                  <IndianRupee className="w-4 h-4" />
                 </div>
               </div>
-              <div className="text-2xl font-black text-white tracking-tighter mb-2">
+              
+              <div className="text-4xl font-black text-white tracking-tighter mb-4">
                 ₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
               </div>
-              <div className={`flex items-center gap-1 text-xs font-bold ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
-                {isProfit ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {isProfit ? '+' : ''}₹{data.profitLoss.toLocaleString('en-IN', { maximumFractionDigits: 0 })} ({data.profitLossPercentage.toFixed(2)}%)
-              </div>
-              <div className={`flex items-center gap-1 text-[10px] font-bold mt-1 ${isDayUp ? 'text-emerald-500/70' : 'text-red-500/70'}`}>
-                {isDayUp ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
-                Today: {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}%
-              </div>
-            </div>
-
-            {/* Total Invested */}
-            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Invested</span>
-                <div className="h-7 w-7 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-                  <IndianRupee className="w-3.5 h-3.5" />
+              
+              <div className="flex items-center gap-3">
+                <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${isProfit ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                  {isProfit ? '+' : ''}{data.profitLossPercentage.toFixed(2)}% Total
+                </div>
+                <div className={`text-[10px] font-bold ${isDayUp ? 'text-emerald-500/60' : 'text-red-500/60'}`}>
+                  {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}% today
                 </div>
               </div>
-              <div className="text-2xl font-black text-white tracking-tighter">
-                ₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
-              </div>
             </div>
 
-            {/* Units Held */}
-            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Units Held</span>
-                <div className="h-7 w-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
-                  <Layers className="w-3.5 h-3.5" />
-                </div>
-              </div>
-              <div className="text-2xl font-black text-white tracking-tighter">
-                {data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
-              </div>
+            <div className="grid grid-cols-2 gap-4 mt-10">
+              <button className="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-black font-black text-xs rounded-xl uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+                <ArrowUpRight className="w-4 h-4" /> Invest
+              </button>
+              <button className="flex items-center justify-center gap-2 py-3 glass-card border-white/10 text-white font-black text-xs rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all">
+                <ArrowDownLeft className="w-4 h-4" /> Withdraw
+              </button>
             </div>
+          </div>
+        </div>
 
-            {/* Current NAV */}
-            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
+        {/* Middle/Right Column: Market & Asset Allocation */}
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          {/* Market Card */}
+          <div className="glass-card p-6 flex flex-col justify-between">
+            <div>
               <div className="flex items-center justify-between mb-4">
                 <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current NAV</span>
-                <div className="h-7 w-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
-                  <TrendingUp className="w-3.5 h-3.5" />
-                </div>
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
               </div>
-              <div className="text-2xl font-black text-white tracking-tighter mb-2">
-                ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+              <div className="text-3xl font-black text-white tracking-tighter mb-2">
+                ₹{data.currentNav.toFixed(4)}
               </div>
-              <div className={`text-[10px] font-bold ${isDayUp ? 'text-emerald-400' : 'text-red-400'}`}>
-                {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}% today
-              </div>
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Fund Performance Index</p>
             </div>
-          </div>
-
-          {/* Charts Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <AllocationChart data={data.categoryData} title="Asset Allocation" />
-            <AllocationChart data={data.sectorData} title="Sector Diversification" />
-          </div>
-
-          {/* Bottom Banner */}
-          <div className="glass-card p-6 flex items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 flex-shrink-0">
-                <PieIcon className="w-5 h-5" />
+            
+            <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Units Held</p>
+                <p className="text-lg font-black text-white tracking-tight">{data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</p>
               </div>
               <div>
-                <h3 className="text-white font-black text-sm">Detailed Analytics Available</h3>
-                <p className="text-gray-500 text-xs font-medium mt-0.5">Visit the Fund Performance tab for detailed historical NAV tracking vs Nifty 50.</p>
+                <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Total Invested</p>
+                <p className="text-lg font-black text-white tracking-tight">₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
               </div>
             </div>
           </div>
-        </>
-      )}
+
+          {/* Allocation Donut */}
+          <div className="glass-card overflow-hidden">
+            <AllocationChart data={data.categoryData} title="Asset Mix" hideTitle />
+          </div>
+        </div>
+      </div>
+
+      {/* Secondary Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Sector Insights */}
+        <div className="lg:col-span-2 glass-card p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Sector Allocation</h3>
+            <PieIcon className="w-4 h-4 text-emerald-400" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {data.sectorData.slice(0, 4).map((s, i) => (
+              <div key={i} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-bold text-gray-500 truncate">{s.name}</span>
+                  <span className="text-[10px] font-black text-emerald-400">{(s.value / data.portfolioValue * 100).toFixed(1)}%</span>
+                </div>
+                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${(s.value / data.portfolioValue * 100)}%` }}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pro Insights Card */}
+        <div className="lg:col-span-1 glass-card p-6 flex flex-col justify-between border-emerald-500/10" style={{ background: 'rgba(0,245,160,0.02)' }}>
+          <div>
+            <h3 className="text-sm font-black text-white mb-2">Unlock Pro Insights</h3>
+            <p className="text-xs text-gray-500 font-medium leading-relaxed">Get access to real-time market signals and deep portfolio analytics.</p>
+          </div>
+          <button className="mt-6 w-full py-2.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
+            Upgrade Account
+          </button>
+        </div>
+      </div>
+
     </div>
   );
 }
