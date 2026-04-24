@@ -166,23 +166,23 @@ export default function ManageTransactions() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-        <ArrowLeftRight className="mr-3 text-indigo-400" />
+      <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
+        <ArrowLeftRight className="mr-3 text-emerald-400" />
         Manage Transactions
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Form Section */}
         <div className="lg:col-span-1 border border-gray-800 bg-gray-900 rounded-xl shadow-sm overflow-hidden sticky top-8 h-fit">
-          <div className="p-6 border-b border-gray-800 bg-gray-900/50">
-            <h2 className="text-lg font-semibold text-white">Record Transaction</h2>
+          <div className="p-6 border-b border-white/5 bg-gray-900/50">
+            <h2 className="text-sm font-black text-white uppercase tracking-widest">Record Transaction</h2>
             <div className="mt-2 text-sm text-gray-400 flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span>System Calculated NAV:</span>
                 <span className="text-gray-300 font-mono">₹{Number(currentNav).toFixed(4)}</span>
               </div>
               <div className="flex flex-col gap-1.5 mt-2">
-                <label className="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">NAV to Apply for this Order</label>
+                <label className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">NAV to Apply for this Order</label>
                 <input 
                   type="number" step="0.0001"
                   className="w-full px-3 py-1.5 bg-gray-950 border border-indigo-500/30 rounded-lg text-white font-mono text-lg focus:ring-1 focus:ring-indigo-500"
@@ -210,7 +210,7 @@ export default function ManageTransactions() {
                   required
                   value={selectedClient}
                   onChange={(e) => setSelectedClient(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                 >
                   <option value="" disabled>-- Select a Client --</option>
                   {clients.map(c => (
@@ -242,7 +242,7 @@ export default function ManageTransactions() {
                   placeholder="e.g. 500000"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                 />
                 {amount && (
                   <p className="text-xs text-gray-400 mt-2">
@@ -255,7 +255,7 @@ export default function ManageTransactions() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+                  className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black rounded-xl transition-colors disabled:opacity-50"
                 >
                   {submitting ? 'Processing...' : `Process ${type === 'INVEST' ? 'Investment' : 'Withdrawal'}`}
                 </button>
@@ -266,14 +266,14 @@ export default function ManageTransactions() {
 
         {/* History Section */}
         <div className="lg:col-span-2">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-800">
+          <div className="glass-card shadow-sm overflow-hidden">
+            <div className="p-6 border-b border-white/5">
                <h2 className="text-xl font-semibold text-white">Recent Transactions</h2>
             </div>
             
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-gray-400">
-                <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-gray-800">
+                <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
                   <tr>
                     <th className="px-6 py-4">Date</th>
                     <th className="px-6 py-4">Client</th>
@@ -286,7 +286,7 @@ export default function ManageTransactions() {
                 </thead>
                 <tbody>
                   {transactions.map((t) => (
-                    <tr key={t.id} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
+                    <tr key={t.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-4 font-medium text-gray-300">
                         {format(new Date(t.created_at), 'dd MMM yyyy')}
                       </td>

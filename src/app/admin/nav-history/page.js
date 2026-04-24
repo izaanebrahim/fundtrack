@@ -57,8 +57,8 @@ export default function AdminNavHistory() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-          <History className="mr-3 text-indigo-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
+          <History className="mr-3 text-emerald-400" />
           Full NAV History (Admin)
         </h1>
         
@@ -68,8 +68,8 @@ export default function AdminNavHistory() {
         </button>
       </div>
 
-      <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-800 flex items-center flex-wrap gap-4 justify-between">
+      <div className="glass-card shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-white/5 flex items-center flex-wrap gap-4 justify-between">
            <p className="text-sm text-gray-400">Chronological record of all declared NAV and Fund Values.</p>
            <div className="bg-indigo-900/30 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-md text-sm font-medium">
              Total Records: {history.length}
@@ -78,7 +78,7 @@ export default function AdminNavHistory() {
         
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-400">
-            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-gray-800">
+            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
               <tr>
                 <th className="px-6 py-4">Observation Date</th>
                 <th className="px-6 py-4 text-right">Total Value (AUM)</th>
@@ -88,9 +88,9 @@ export default function AdminNavHistory() {
                 <th className="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-white/5">
               {history.map((record) => (
-                <tr key={record.id} className="hover:bg-gray-800/30 transition-colors">
+                <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="px-6 py-4 font-medium text-white">
                     {format(new Date(record.date), 'dd MMMM yyyy')}
                   </td>
@@ -100,7 +100,7 @@ export default function AdminNavHistory() {
                   <td className="px-6 py-4 text-right text-gray-300">
                     {Number(record.total_units).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                   </td>
-                  <td className="px-6 py-4 text-right font-bold text-indigo-400 text-base">
+                  <td className="px-6 py-4 text-right font-bold text-emerald-400 text-base">
                     ₹{Number(record.nav).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                   </td>
                   <td className="px-6 py-4 text-right text-xs text-gray-600">

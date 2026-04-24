@@ -106,14 +106,14 @@ export default function ManageClients() {
   return (
     <div className="space-y-6 relative">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-          <Users className="mr-3 text-indigo-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
+          <Users className="mr-3 text-emerald-400" />
           Client Management
         </h1>
         
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors"
         >
           <UserPlus className="w-4 h-4 mr-2" />
           Create New Client
@@ -123,10 +123,10 @@ export default function ManageClients() {
       {/* Creation Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-           <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-              <div className="flex justify-between items-center p-4 border-b border-gray-800 bg-gray-950/50">
-                 <h2 className="text-lg font-semibold text-white flex items-center">
-                   <UserPlus className="w-5 h-5 mr-2 text-indigo-400"/> Create Client Account
+           <div className="glass-card shadow-2xl w-full max-w-md overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-white/5 bg-gray-950/50">
+                 <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center">
+                   <UserPlus className="w-5 h-5 mr-2 text-emerald-400"/> Create Client Account
                  </h2>
                  <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                    <X className="w-5 h-5" />
@@ -148,28 +148,28 @@ export default function ManageClients() {
                     <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
                     <input
                       type="text" required value={newName} onChange={(e) => setNewName(e.target.value)}
-                      className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
                     <input
                       type="email" required value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                     />
                   </div>
                   <div>
                      <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number (Optional)</label>
                      <input
                        type="tel" value={newPhone} onChange={(e) => setNewPhone(e.target.value)}
-                       className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                       className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                      />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">Assign Password</label>
                     <input
                       type="text" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={6}
-                      className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
                       placeholder="Min 6 characters"
                     />
                     <p className="text-xs text-gray-500 mt-1">Provide this password securely to the client.</p>
@@ -179,7 +179,7 @@ export default function ManageClients() {
                      <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
                         Cancel
                      </button>
-                     <button type="submit" disabled={creating} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center">
+                     <button type="submit" disabled={creating} className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center">
                         {creating ? 'Creating...' : 'Create Account'}
                      </button>
                   </div>
@@ -190,8 +190,8 @@ export default function ManageClients() {
       )}
 
       {/* Search and List */}
-      <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-gray-800 flex items-center">
+      <div className="glass-card shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-white/5 flex items-center">
           <div className="relative w-full max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-4 w-4 text-gray-500" />
@@ -208,7 +208,7 @@ export default function ManageClients() {
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-400">
-            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-gray-800">
+            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
               <tr>
                 <th className="px-6 py-4">Client Name</th>
                 <th className="px-6 py-4">Contact Info</th>
@@ -217,7 +217,7 @@ export default function ManageClients() {
                 <th className="px-6 py-4 text-right">Net Units Held (Approx)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
+            <tbody className="divide-y divide-white/5">
               {filteredClients.map((client) => {
                 // Approximate units logic for admin view
                 let approxUnits = 0;
@@ -227,7 +227,7 @@ export default function ManageClients() {
                 });
 
                 return (
-                  <tr key={client.id} className="hover:bg-gray-800/30 transition-colors">
+                  <tr key={client.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-900/50 flex items-center justify-center text-indigo-300 font-bold border border-indigo-700/50">
@@ -249,7 +249,7 @@ export default function ManageClients() {
                     <td className="px-6 py-4 text-right">
                       {client.transactions?.length || 0}
                     </td>
-                    <td className="px-6 py-4 text-right font-medium text-indigo-400">
+                    <td className="px-6 py-4 text-right font-medium text-emerald-400">
                       {approxUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                     </td>
                   </tr>

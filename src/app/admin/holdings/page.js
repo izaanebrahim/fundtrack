@@ -152,15 +152,15 @@ export default function ManageHoldings() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-          <Briefcase className="mr-3 text-indigo-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
+          <Briefcase className="mr-3 text-emerald-400" />
           Manage Fund Holdings
         </h1>
         
         <button 
           onClick={triggerSync}
           disabled={syncing || holdings.length === 0}
-          className="flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
+          className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
           {syncing ? 'Syncing Market Data...' : 'Sync Prices & Update NAV'}
@@ -170,9 +170,9 @@ export default function ManageHoldings() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Add Asset Form */}
         <div className="lg:col-span-1">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
-             <h2 className="text-lg font-semibold text-white mb-6 flex items-center">
-               <Plus className="w-5 h-5 mr-2 text-indigo-400" /> Add New Asset
+          <div className="glass-card p-6 shadow-sm">
+             <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 flex items-center">
+               <Plus className="w-5 h-5 mr-2 text-emerald-400" /> Add New Asset
              </h2>
 
              {message.text && (
@@ -190,7 +190,7 @@ export default function ManageHoldings() {
                   <input
                     type="text" placeholder="e.g. RELIANCE.NS" required
                     value={newAsset.symbol} onChange={e => setNewAsset({...newAsset, symbol: e.target.value})}
-                    className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                    className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                   />
                   <p className="text-[10px] text-gray-500 mt-1">Use .NS for NSE India stocks</p>
                 </div>
@@ -199,15 +199,15 @@ export default function ManageHoldings() {
                   <input
                     type="text" placeholder="Auto-fills on verify"
                     value={newAsset.name} onChange={e => setNewAsset({...newAsset, name: e.target.value})}
-                    className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                    className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                   />
-                  {!newAsset.name && <p className="text-[10px] text-indigo-400 mt-1">Leave blank to auto-fetch from market</p>}
+                  {!newAsset.name && <p className="text-[10px] text-emerald-400 mt-1">Leave blank to auto-fetch from market</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-400 mb-1">Category</label>
                   <select
                     value={newAsset.category} onChange={e => setNewAsset({...newAsset, category: e.target.value})}
-                    className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                    className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                   >
                     <option>Equity</option>
                     <option>Debt</option>
@@ -219,7 +219,7 @@ export default function ManageHoldings() {
                   <label className="block text-sm font-medium text-gray-400 mb-1">Sector (for Diversification)</label>
                   <select
                     value={newAsset.sector} onChange={e => setNewAsset({...newAsset, sector: e.target.value})}
-                    className="w-full px-4 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                    className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                   >
                     <optgroup label="Financial Services">
                       <option>Banking & Finance</option>
@@ -246,7 +246,7 @@ export default function ManageHoldings() {
                      <input
                        type="number" step="0.0001" required
                        value={newAsset.quantity} onChange={e => setNewAsset({...newAsset, quantity: e.target.value})}
-                       className="w-full px-2 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                       className="w-full px-2 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                      />
                    </div>
                    <div>
@@ -254,14 +254,14 @@ export default function ManageHoldings() {
                      <input
                        type="number" step="0.01" required
                        value={newAsset.avg_cost} onChange={e => setNewAsset({...newAsset, avg_cost: e.target.value})}
-                       className="w-full px-2 py-2 bg-gray-950 border border-gray-700 rounded-lg text-white text-sm"
+                       className="w-full px-2 py-2 bg-black/30 border border-white/10 rounded-xl text-white text-sm"
                      />
                    </div>
                 </div>
                 <button 
                   type="submit" 
                   disabled={verifying}
-                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                  className="w-full py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black rounded-lg font-medium transition-colors disabled:opacity-50"
                 >
                   {verifying ? 'Verifying Ticker...' : 'Add to Holdings'}
                 </button>
@@ -271,9 +271,9 @@ export default function ManageHoldings() {
 
         {/* Assets List */}
         <div className="lg:col-span-3 space-y-4">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-sm">
-            <div className="p-6 border-b border-gray-800 flex justify-between items-center">
-               <h2 className="text-lg font-semibold text-white">Current Asset Allocation</h2>
+          <div className="glass-card overflow-hidden shadow-sm">
+            <div className="p-6 border-b border-white/5 flex justify-between items-center">
+               <h2 className="text-sm font-black text-white uppercase tracking-widest">Current Asset Allocation</h2>
                <div className="text-right">
                   <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Total Calculated AUM</p>
                   <p className="text-2xl font-bold text-white">₹{totalAUM.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</p>
@@ -282,7 +282,7 @@ export default function ManageHoldings() {
 
             <div className="overflow-x-auto">
                <table className="w-full text-left text-sm text-gray-400">
-                 <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-gray-800">
+                 <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
                     <tr>
                       <th className="px-6 py-4">Asset / Ticker</th>
                       <th className="px-6 py-4">Category / Sector</th>
@@ -294,7 +294,7 @@ export default function ManageHoldings() {
                       <th className="px-6 py-4"></th>
                     </tr>
                  </thead>
-                 <tbody className="divide-y divide-gray-800">
+                 <tbody className="divide-y divide-white/5">
                     {holdings.map(h => {
                       const holdingValue = h.quantity * h.current_price;
                       const costValue = h.quantity * h.avg_cost;
@@ -304,10 +304,10 @@ export default function ManageHoldings() {
                       const isEditing = h.id === editingId;
 
                       return (
-                        <tr key={h.id} className={`${isEditing ? 'bg-indigo-900/10' : 'hover:bg-gray-800/30'} transition-colors`}>
+                        <tr key={h.id} className={`${isEditing ? 'bg-emerald-500/5' : 'hover:bg-white/[0.02]'} transition-colors`}>
                           <td className="px-6 py-4">
                             <p className="font-medium text-white">{h.name}</p>
-                            <p className="text-xs text-indigo-400 font-mono">{h.symbol}</p>
+                            <p className="text-xs text-emerald-400 font-mono">{h.symbol}</p>
                           </td>
                           <td className="px-6 py-4">
                             {isEditing ? (
@@ -382,7 +382,7 @@ export default function ManageHoldings() {
                                </div>
                              ) : (
                                <div className="flex items-center justify-end gap-2">
-                                 <button onClick={() => handleEditStart(h)} className="text-gray-400 hover:text-indigo-400 transition-colors p-1">
+                                 <button onClick={() => handleEditStart(h)} className="text-gray-400 hover:text-emerald-400 transition-colors p-1">
                                    <Pencil className="w-4 h-4" />
                                  </button>
                                  <button onClick={() => deleteHolding(h.id)} className="text-gray-600 hover:text-red-400 transition-colors p-1">
@@ -403,7 +403,7 @@ export default function ManageHoldings() {
                </table>
             </div>
             {holdings.length > 0 && (
-              <div className="p-4 bg-gray-950/50 border-t border-gray-800 text-[11px] text-gray-500 italic text-right">
+              <div className="p-4 bg-black/20 border-t border-white/5 text-[11px] text-gray-500 italic text-right">
                 Last globally synced: {holdings[0].last_synced_at ? format(new Date(holdings[0].last_synced_at), 'dd MMM, hh:mm a') : 'Never'}
               </div>
             )}
