@@ -14,6 +14,8 @@ export default function AdminDashboard() {
     totalClients: 0,
     currentNav: 0,
     totalUnits: 0,
+    navChange: 0,
+    navChangePercentage: 0,
     categoryData: [],
     sectorData: [],
   });
@@ -46,6 +48,17 @@ export default function AdminDashboard() {
 
         const liveNav = liveUnits > 0 ? (liveAum / liveUnits) : 10;
 
+        // 3.5 Fetch latest official NAV for 1-day change
+        const { data: lastNavData } = await supabase
+          .from('fund')
+          .select('nav')
+          .order('date', { ascending: false })
+          .limit(1);
+        
+        const lastOfficialNav = lastNavData?.[0]?.nav || liveNav;
+        const navChange = liveNav - lastOfficialNav;
+        const navChangePercentage = lastOfficialNav > 0 ? (navChange / lastOfficialNav) * 100 : 0;
+
         // 4. Prepare Allocation Data
         const categoryMap = {};
         const sectorMap = {};
@@ -67,6 +80,8 @@ export default function AdminDashboard() {
           totalClients: clientsCount || 0,
           currentNav: liveNav,
           totalUnits: liveUnits,
+          navChange,
+          navChangePercentage,
           categoryData,
           sectorData,
         });
@@ -116,8 +131,12 @@ export default function AdminDashboard() {
             <Landmark className="w-4 h-4 mr-1" />
             Current NAV
           </div>
-          <div className="text-3xl font-bold text-indigo-400">
+          <div className="text-3xl font-bold text-indigo-400 mb-2">
             ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+          </div>
+          <div className={`flex items-center text-sm font-medium ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+            {data.navChange >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+            {data.navChange > 0 ? '+' : ''}{data.navChange.toFixed(4)} ({data.navChangePercentage.toFixed(2)}%)
           </div>
         </div>
 

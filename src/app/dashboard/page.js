@@ -16,6 +16,8 @@ export default function Dashboard() {
     portfolioValue: 0,
     profitLoss: 0,
     profitLossPercentage: 0,
+    navChange: 0,
+    navChangePercentage: 0,
     categoryData: [],
     sectorData: [],
   });
@@ -65,6 +67,17 @@ export default function Dashboard() {
         const profitLoss = portfolioValue - investedAmount;
         const profitLossPercentage = investedAmount > 0 ? (profitLoss / investedAmount) * 100 : 0;
 
+        // 3.5 Fetch latest official NAV for 1-day change
+        const { data: lastNavData } = await supabase
+          .from('fund')
+          .select('nav')
+          .order('date', { ascending: false })
+          .limit(1);
+        
+        const lastOfficialNav = lastNavData?.[0]?.nav || currentNav;
+        const navChange = currentNav - lastOfficialNav;
+        const navChangePercentage = lastOfficialNav > 0 ? (navChange / lastOfficialNav) * 100 : 0;
+
         // 4. Prepare Allocation Data
         const categoryMap = {};
         const sectorMap = {};
@@ -86,6 +99,8 @@ export default function Dashboard() {
           portfolioValue, 
           profitLoss, 
           profitLossPercentage,
+          navChange,
+          navChangePercentage,
           categoryData,
           sectorData
         });
@@ -159,8 +174,12 @@ export default function Dashboard() {
                 <TrendingUp className="w-4 h-4 mr-1" />
                 Current NAV
               </div>
-              <div className="text-2xl font-semibold text-white">
+              <div className="text-2xl font-semibold text-white mb-2">
                 ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+              </div>
+              <div className={`flex items-center text-sm font-medium ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                {data.navChange >= 0 ? <TrendingUp className="w-3 h-3 mr-1" /> : <TrendingDown className="w-3 h-3 mr-1" />}
+                {data.navChange > 0 ? '+' : ''}{data.navChange.toFixed(4)} ({data.navChangePercentage.toFixed(2)}%)
               </div>
             </div>
           </div>
