@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AppLayout({ children }) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, profileError } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -51,13 +51,25 @@ export default function AppLayout({ children }) {
     return <>{children}</>;
   }
 
-  // No profile yet - show spinner (safety net)
+  // No profile yet - show spinner or error
   if (!profile) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-950">
-        <div className="flex flex-col items-center gap-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-          <p className="text-gray-400 text-sm">Loading profile...</p>
+        <div className="flex flex-col items-center gap-4 max-w-md text-center p-6 bg-gray-900 border border-gray-800 rounded-xl">
+          {profileError ? (
+            <>
+              <div className="text-red-500 text-xl font-bold">Connection Error</div>
+              <p className="text-gray-300 text-sm">Failed to load profile data from the database. Please check your Supabase Row Level Security (RLS) policies and Environment Variables.</p>
+              <div className="bg-black/50 p-3 rounded text-red-400 text-xs font-mono w-full break-words">
+                {profileError}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+              <p className="text-gray-400 text-sm">Loading profile...</p>
+            </>
+          )}
         </div>
       </div>
     );

@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profileError, setProfileError] = useState(null);
 
   const fetchProfile = async (userId) => {
     try {
@@ -20,11 +21,14 @@ export const AuthProvider = ({ children }) => {
 
       if (error) {
         console.error('Profile fetch error:', error);
+        setProfileError(error.message);
         return null;
       }
+      setProfileError(null);
       return data;
     } catch (err) {
       console.error('Profile fetch exception:', err);
+      setProfileError(err.message);
       return null;
     }
   };
@@ -67,7 +71,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading }}>
+    <AuthContext.Provider value={{ user, profile, loading, profileError }}>
       {children}
     </AuthContext.Provider>
   );
