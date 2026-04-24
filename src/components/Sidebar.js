@@ -39,7 +39,7 @@ const adminNav = [
   { name: 'NAV History', href: '/admin/nav-history', icon: History },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }) {
   const pathname = usePathname();
   const { profile } = useAuth();
   
@@ -53,8 +53,14 @@ export default function Sidebar() {
 
   return (
     <div className="flex h-screen w-64 flex-col bg-gray-900 border-r border-gray-800 text-gray-300">
-      <div className="flex h-16 items-center justify-center border-b border-gray-800">
+      <div className="flex h-16 items-center justify-between px-4 border-b border-gray-800">
         <h1 className="text-xl font-bold text-white tracking-widest uppercase">FundTrack</h1>
+        <button 
+          onClick={onClose}
+          className="p-2 text-gray-400 hover:text-white lg:hidden"
+        >
+          <X className="h-6 w-6" />
+        </button>
       </div>
       
       <nav className="flex-1 space-y-1 px-2 py-4">

@@ -3,12 +3,19 @@
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 export default function AppLayout({ children }) {
   const { user, profile, loading, profileError } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Close sidebar on route change
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     if (loading) return;
@@ -77,10 +84,35 @@ export default function AppLayout({ children }) {
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-950 text-gray-100">
-      <Sidebar />
-      <main className="flex-1 overflow-y-auto p-8">
-        {children}
-      </main>
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar - Responsive */}
+      <div className={`fixed inset-y-0 left-0 z-50 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
+        <Sidebar onClose={() => setIsSidebarOpen(false)} />
+      </div>
+
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* Mobile Header */}
+        <header className="flex h-16 items-center justify-between border-b border-gray-800 bg-gray-900 px-4 lg:hidden">
+          <h1 className="text-lg font-bold text-white tracking-widest uppercase">FundTrack</h1>
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 text-gray-400 hover:text-white"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+        </header>
+
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
