@@ -20,16 +20,26 @@ const customStorage = {
   },
 };
 
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co', 
-  supabaseAnonKey || 'placeholder', 
-  {
-    auth: {
-      storage: customStorage,
-      storageKey: 'fundtrack-v5',
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
+let supabase;
+
+try {
+  supabase = createClient(
+    supabaseUrl || 'https://placeholder.supabase.co', 
+    supabaseAnonKey || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIn0.signature', // Dummy JWT
+    {
+      auth: {
+        storage: customStorage,
+        storageKey: 'fundtrack-v6', // Fresh start
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      }
     }
-  }
-);
+  );
+} catch (err) {
+  console.error('Supabase initialization crash:', err);
+  // Export a dummy object to prevent 'cannot read property auth of undefined' errors
+  supabase = { auth: { onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) } };
+}
+
+export { supabase };
