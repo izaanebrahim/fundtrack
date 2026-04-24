@@ -44,42 +44,69 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // SAFETY TIMEOUT: If Supabase hangs (due to Lock Errors or connection issues), 
-    // we force the loading state to false after 2.5 seconds so the user can at least see the login page.
+    let isMounted = true;
+    
+    // 1. SAFETY TIMER: Absolute fallback to ensure the app never stays stuck
     const safetyTimer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth Event:', event);
-        
-        // Only fetch profile on initial load or fresh login to prevent lock conflicts during background token refreshes
-        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
-          clearTimeout(safetyTimer);
-          if (session?.user) {
-            setUser(session.user);
-            const profileData = await fetchProfile(session.user.id);
-            setProfile(profileData);
-          } else {
-            setUser(null);
-            setProfile(null);
-          }
-          setLoading(false);
-        } else if (event === 'TOKEN_REFRESHED') {
-          // Just update the user session, do NOT re-fetch profile data
-          if (session?.user) {
-            setUser(session.user);
-          }
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null);
-          setProfile(null);
-          setLoading(false);
-        }
+      if (isMounted) {
+        console.warn('Auth Safety Timer triggered - forcing loading to false');
+        setLoading(false);
       }
-    );
+    }, 2000);
 
-    return () => subscription.unsubscribe();
+    // 2. INITIALIZATION
+    let subscription = null;
+    
+    try {
+      const result = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (!isMounted) return;
+          console.log('Auth Event:', event);
+          
+          try {
+            // Only fetch profile on initial load or fresh login
+            if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+              clearTimeout(safetyTimer);
+              
+              if (session?.user) {
+                setUser(session.user);
+                const profileData = await fetchProfile(session.user.id);
+                if (isMounted) setProfile(profileData);
+              } else {
+                if (isMounted) {
+                  setUser(null);
+                  setProfile(null);
+                }
+              }
+              if (isMounted) setLoading(false);
+            } else if (event === 'TOKEN_REFRESHED') {
+              if (session?.user && isMounted) {
+                setUser(session.user);
+              }
+            } else if (event === 'SIGNED_OUT') {
+              if (isMounted) {
+                setUser(null);
+                setProfile(null);
+                setLoading(false);
+              }
+            }
+          } catch (innerErr) {
+            console.error('Inner Auth Error:', innerErr);
+            if (isMounted) setLoading(false);
+          }
+        }
+      );
+      subscription = result.data?.subscription;
+    } catch (err) {
+      console.error('Critical Auth Initialization Error:', err);
+      if (isMounted) setLoading(false);
+    }
+
+    return () => {
+      isMounted = false;
+      clearTimeout(safetyTimer);
+      if (subscription) subscription.unsubscribe();
+    };
   }, []);
 
   return (
