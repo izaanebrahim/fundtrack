@@ -44,12 +44,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // SAFETY TIMEOUT: If Supabase hangs (due to Lock Errors or connection issues), 
+    // we force the loading state to false after 2.5 seconds so the user can at least see the login page.
+    const safetyTimer = setTimeout(() => {
+      setLoading(false);
+    }, 2500);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth Event:', event);
         
         // Only fetch profile on initial load or fresh login to prevent lock conflicts during background token refreshes
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
+          clearTimeout(safetyTimer);
           if (session?.user) {
             setUser(session.user);
             const profileData = await fetchProfile(session.user.id);
