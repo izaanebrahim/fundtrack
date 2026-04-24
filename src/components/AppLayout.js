@@ -42,7 +42,7 @@ export default function AppLayout({ children }) {
   }, [user, profile, loading, pathname, router]);
 
   // Full page loading spinner
-  if (loading) {
+  if (loading && !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-950">
         <div className="flex flex-col items-center gap-4">
@@ -58,30 +58,7 @@ export default function AppLayout({ children }) {
     return <>{children}</>;
   }
 
-  // No profile yet - show spinner or error
-  if (!profile) {
-    return (
-      <div className="flex h-screen w-screen items-center justify-center bg-gray-950">
-        <div className="flex flex-col items-center gap-4 max-w-md text-center p-6 bg-gray-900 border border-gray-800 rounded-xl">
-          {profileError ? (
-            <>
-              <div className="text-red-500 text-xl font-bold">Connection Error</div>
-              <p className="text-gray-300 text-sm">Failed to load profile data from the database. Please check your Supabase Row Level Security (RLS) policies and Environment Variables.</p>
-              <div className="bg-black/50 p-3 rounded text-red-400 text-xs font-mono w-full break-words">
-                {profileError}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-              <p className="text-gray-400 text-sm">Loading profile...</p>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  }
-
+  // Logged in but profile still loading - show shell but with a loading state inside
   return (
     <div className="flex h-screen overflow-hidden bg-gray-950 text-gray-100">
       {/* Mobile Backdrop */}
@@ -110,7 +87,18 @@ export default function AppLayout({ children }) {
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 lg:p-8">
-          {children}
+          {!profile && !profileError ? (
+            <div className="flex h-full items-center justify-center">
+               <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-indigo-500"></div>
+            </div>
+          ) : profileError ? (
+            <div className="p-6 bg-red-900/20 border border-red-500/30 rounded-xl text-red-400">
+               <h3 className="font-bold text-lg mb-2">Connection Error</h3>
+               <p className="text-sm">{profileError}</p>
+            </div>
+          ) : (
+            children
+          )}
         </main>
       </div>
     </div>
