@@ -28,7 +28,6 @@ export default function Dashboard() {
 
     async function fetchDashboardData() {
       try {
-        // Fetch live Total AUM and Units for real-time NAV calculation
         const { data: holdingsData } = await supabase.from('holdings').select('quantity, current_price, category, sector');
         const liveAum = holdingsData?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
         
@@ -41,7 +40,6 @@ export default function Dashboard() {
           });
         }
 
-        // 3. Fetch user-specific transactions to calculate their ownership
         const { data: userTransactions } = await supabase
           .from('transactions')
           .select('*')
@@ -67,18 +65,16 @@ export default function Dashboard() {
         const profitLoss = portfolioValue - investedAmount;
         const profitLossPercentage = investedAmount > 0 ? (profitLoss / investedAmount) * 100 : 0;
 
-        // 3.5 Fetch latest official NAV for 1-day change
         const { data: lastNavData } = await supabase
           .from('fund')
           .select('nav')
           .order('date', { ascending: false })
-          .limit(1);
+          .limit(2);
         
-        const lastOfficialNav = lastNavData?.[0]?.nav || currentNav;
+        const lastOfficialNav = lastNavData?.[1]?.nav || lastNavData?.[0]?.nav || currentNav;
         const navChange = currentNav - lastOfficialNav;
         const navChangePercentage = lastOfficialNav > 0 ? (navChange / lastOfficialNav) * 100 : 0;
 
-        // 4. Prepare Allocation Data
         const categoryMap = {};
         const sectorMap = {};
 
@@ -92,18 +88,7 @@ export default function Dashboard() {
         const categoryData = Object.entries(categoryMap).map(([name, value]) => ({ name, value }));
         const sectorData = Object.entries(sectorMap).map(([name, value]) => ({ name, value }));
 
-        setData({ 
-          totalUnits, 
-          currentNav, 
-          investedAmount, 
-          portfolioValue, 
-          profitLoss, 
-          profitLossPercentage,
-          navChange,
-          navChangePercentage,
-          categoryData,
-          sectorData
-        });
+        setData({ totalUnits, currentNav, investedAmount, portfolioValue, profitLoss, profitLossPercentage, navChange, navChangePercentage, categoryData, sectorData });
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -115,127 +100,112 @@ export default function Dashboard() {
   }, [user]);
 
   const isProfit = data.profitLoss >= 0;
+  const isDayUp = data.navChange >= 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tighter text-white">My Portfolio</h1>
-          <p className="text-gray-500 text-sm font-medium mt-1">2024 - 2025 Investment Overview</p>
-        </div>
-        <div className="flex items-center gap-3">
-           <div className="px-4 py-2 glass-card text-[10px] font-bold uppercase tracking-widest text-gray-400">
-             Updated: {format(new Date(), 'hh:mm a')}
-           </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-black tracking-tighter text-white">Dashboard</h1>
+        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+          Updated: {format(new Date(), 'hh:mm a')}
         </div>
       </div>
 
+      {/* 4 Stat Cards */}
       {loading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 h-[400px] glass-card animate-pulse"></div>
-          <div className="h-[400px] glass-card animate-pulse"></div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="glass-card h-36 animate-pulse"></div>
+          ))}
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Investment Chart Area */}
-            <div className="lg:col-span-2 glass-card p-8 glass-card-hover relative overflow-hidden group">
-               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[100px] rounded-full -mr-32 -mt-32"></div>
-               <div className="flex items-center justify-between mb-8 relative z-10">
-                  <h2 className="text-xl font-black text-white tracking-tight">Portfolio Performance</h2>
-                  <div className="flex gap-2">
-                    <span className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold text-gray-400 uppercase tracking-widest">Maximum</span>
-                    <span className="px-3 py-1 bg-emerald-500/20 rounded-full text-[10px] font-bold text-emerald-400 uppercase tracking-widest border border-emerald-500/20">Average</span>
-                  </div>
-               </div>
-               <div className="h-[300px] w-full relative z-10">
-                  <AllocationChart data={data.categoryData} hideTitle />
-               </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Portfolio Value */}
+            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Portfolio Value</span>
+                <div className="h-7 w-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                  <IndianRupee className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-white tracking-tighter mb-2">
+                ₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+              </div>
+              <div className={`flex items-center gap-1 text-xs font-bold ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
+                {isProfit ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                {isProfit ? '+' : ''}₹{data.profitLoss.toLocaleString('en-IN', { maximumFractionDigits: 0 })} ({data.profitLossPercentage.toFixed(2)}%)
+              </div>
+              <div className={`flex items-center gap-1 text-[10px] font-bold mt-1 ${isDayUp ? 'text-emerald-500/70' : 'text-red-500/70'}`}>
+                {isDayUp ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+                Today: {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}%
+              </div>
             </div>
 
-            {/* Quick Stats Sidebar (Right) */}
-            <div className="space-y-6">
-               <div className="glass-card p-6 bg-gradient-to-br from-[#1a2e2e]/40 to-transparent border-emerald-500/10">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-sm font-black text-white uppercase tracking-widest">Current Balance</h3>
-                    <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                       <IndianRupee className="w-4 h-4" />
-                    </div>
-                  </div>
-                  <div className="text-4xl font-black text-white tracking-tighter mb-2">
-                    ₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
-                  </div>
-                  <div className={`inline-flex items-center px-2 py-1 rounded-lg text-xs font-bold ${isProfit ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
-                    {isProfit ? '+' : ''}{data.profitLossPercentage.toFixed(2)}%
-                  </div>
-                  <div className="mt-8 grid grid-cols-2 gap-3">
-                     <button className="btn-emerald text-xs py-3">Invest</button>
-                     <button className="btn-outline text-xs py-3">Withdraw</button>
-                  </div>
-               </div>
+            {/* Total Invested */}
+            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Invested</span>
+                <div className="h-7 w-7 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-400">
+                  <IndianRupee className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-white tracking-tighter">
+                ₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+              </div>
+            </div>
 
-               <div className="glass-card p-6">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-400">
-                       <TrendingUp className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Current NAV</p>
-                      <p className="text-lg font-black text-white">₹{data.currentNav.toFixed(4)}</p>
-                    </div>
-                  </div>
-                  <div className={`text-xs font-bold ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                    {data.navChange >= 0 ? '+' : ''}{data.navChangePercentage.toFixed(2)}% Today
-                  </div>
-               </div>
+            {/* Units Held */}
+            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Units Held</span>
+                <div className="h-7 w-7 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400">
+                  <Layers className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-white tracking-tighter">
+                {data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+              </div>
+            </div>
+
+            {/* Current NAV */}
+            <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full blur-[40px] -mr-6 -mt-6"></div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current NAV</span>
+                <div className="h-7 w-7 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <div className="text-2xl font-black text-white tracking-tighter mb-2">
+                ₹{data.currentNav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+              </div>
+              <div className={`text-[10px] font-bold ${isDayUp ? 'text-emerald-400' : 'text-red-400'}`}>
+                {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}% today
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* Bottom Left Circle Analytics */}
-            <div className="lg:col-span-1 glass-card p-8 flex flex-col items-center justify-center text-center group glass-card-hover">
-               <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6 w-full text-left">Asset Mix</h3>
-               <div className="relative h-48 w-48 mb-6">
-                  <div className="absolute inset-0 rounded-full border-[12px] border-white/5"></div>
-                  <div className="absolute inset-0 rounded-full border-[12px] border-emerald-500 border-t-transparent -rotate-45 shadow-[0_0_20px_rgba(0,245,160,0.3)]"></div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl font-black text-white">84%</span>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase">Equity</span>
-                  </div>
-               </div>
-               <p className="text-xs font-bold text-emerald-400">Optimized Performance</p>
-               <p className="text-[10px] text-gray-500 mt-1">Diversified across 12 sectors</p>
-            </div>
+          {/* Charts Row */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <AllocationChart data={data.categoryData} title="Asset Allocation" />
+            <AllocationChart data={data.sectorData} title="Sector Diversification" />
+          </div>
 
-            {/* Middle Promotion Card */}
-            <div className="lg:col-span-2 glass-card p-8 bg-gradient-to-r from-emerald-600/20 to-transparent flex items-center gap-8 glass-card-hover border-emerald-500/20">
-               <div className="hidden sm:block h-32 w-32 bg-white/5 rounded-3xl rotate-12 shadow-2xl relative overflow-hidden">
-                  <div className="absolute inset-2 bg-emerald-500/20 rounded-2xl animate-pulse"></div>
-               </div>
-               <div className="flex-1">
-                  <h3 className="text-2xl font-black text-white tracking-tight mb-2 uppercase">Unlock Pro Insights</h3>
-                  <p className="text-gray-400 text-sm mb-6 max-w-sm">Get access to real-time market signals and deep portfolio analytics.</p>
-                  <button className="btn-emerald">Upgrade Account</button>
-               </div>
-            </div>
-
-            {/* Bottom Right Watch List / Small Metrics */}
-            <div className="lg:col-span-1 glass-card p-6 glass-card-hover">
-               <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-sm font-black text-white uppercase tracking-widest">Sector Insights</h3>
-                  <PieIcon className="w-4 h-4 text-emerald-400" />
-               </div>
-               <div className="space-y-4">
-                  {data.sectorData.slice(0, 3).map((s, i) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                         <div className="h-2 w-2 rounded-full bg-emerald-400"></div>
-                         <span className="text-xs font-bold text-gray-300">{s.name}</span>
-                      </div>
-                      <span className="text-xs font-black text-white">₹{s.value > 100000 ? (s.value/100000).toFixed(1) + 'L' : (s.value/1000).toFixed(1) + 'K'}</span>
-                    </div>
-                  ))}
-               </div>
+          {/* Bottom Banner */}
+          <div className="glass-card p-6 flex items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 flex-shrink-0">
+                <PieIcon className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-white font-black text-sm">Detailed Analytics Available</h3>
+                <p className="text-gray-500 text-xs font-medium mt-0.5">Visit the Fund Performance tab for detailed historical NAV tracking vs Nifty 50.</p>
+              </div>
             </div>
           </div>
         </>
