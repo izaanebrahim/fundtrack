@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 export default function AppLayout({ children }) {
   const { user, profile, loading, profileError } = useAuth();
@@ -62,17 +62,21 @@ export default function AppLayout({ children }) {
 
   if (loading && !user) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center bg-gray-950">
+      <div className="flex h-screen w-screen items-center justify-center"
+           style={{ background: 'radial-gradient(circle at 30% 20%, #1a2e2e 0%, #0d1111 50%)' }}>
         <div className="flex flex-col items-center gap-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+          <div className="relative">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-emerald-500"></div>
+            <div className="absolute inset-0 rounded-full blur-lg bg-emerald-500/20 animate-pulse"></div>
+          </div>
           <div className="text-center">
-            <p className="text-gray-400 text-sm mb-4">Loading FundTrack...</p>
+            <p className="text-gray-400 text-sm font-medium mb-4">Loading FundTrack...</p>
             {showRescue && (
               <button 
                 onClick={forceRecovery}
-                className="px-4 py-2 bg-red-900/30 text-red-400 border border-red-800/50 rounded-lg text-xs hover:bg-red-900/50 transition-all animate-in fade-in slide-in-from-bottom-2"
+                className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold hover:bg-red-500/20 transition-all"
               >
-                Taking too long? Force Reset App
+                Taking too long? Force Reset
               </button>
             )}
           </div>
@@ -86,13 +90,14 @@ export default function AppLayout({ children }) {
     return <>{children}</>;
   }
 
-  // Logged in but profile still loading - show shell but with a loading state inside
+  // Logged in but profile still loading - show shell with loading state inside
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-950 text-gray-100">
+    <div className="flex h-screen overflow-hidden text-gray-100"
+         style={{ background: '#0d1111' }}>
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-40 bg-black/70 lg:hidden backdrop-blur-sm transition-opacity"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -104,25 +109,29 @@ export default function AppLayout({ children }) {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile Header */}
-        <header className="flex h-16 items-center justify-between border-b border-gray-800 bg-gray-900 px-4 lg:hidden">
-          <h1 className="text-lg font-bold text-white tracking-widest uppercase">FundTrack</h1>
+        <header className="flex h-14 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
+          <h1 className="text-lg font-black text-white tracking-tighter italic">FT.</h1>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 text-gray-400 hover:text-white font-bold"
+            className="p-2 text-gray-500 hover:text-emerald-400 transition-colors"
           >
-            MENU
+            <Menu className="h-5 w-5" />
           </button>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8"
+              style={{ background: 'radial-gradient(circle at 70% 10%, #1a2e2e 0%, transparent 40%), #0d1111' }}>
           {!profile && !profileError ? (
             <div className="flex h-full items-center justify-center">
-               <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-indigo-500"></div>
+               <div className="relative">
+                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
+                 <div className="absolute inset-0 rounded-full blur-lg bg-emerald-500/20 animate-pulse"></div>
+               </div>
             </div>
           ) : profileError ? (
-            <div className="p-6 bg-red-900/20 border border-red-500/30 rounded-xl text-red-400">
-               <h3 className="font-bold text-lg mb-2">Connection Error</h3>
-               <p className="text-sm">{profileError}</p>
+            <div className="p-6 glass-card border-red-500/20 text-red-400">
+               <h3 className="font-black text-lg mb-2">Connection Error</h3>
+               <p className="text-sm font-medium">{profileError}</p>
             </div>
           ) : (
             children
