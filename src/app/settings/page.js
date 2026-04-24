@@ -79,17 +79,15 @@ export default function Settings() {
   };
 
   return (
-    <div className="max-w-4xl space-y-8 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-          <SettingsIcon className="mr-3 text-indigo-400" />
-          Account Settings
-        </h1>
+    <div className="max-w-4xl space-y-8">
+      <div>
+        <h1 className="text-3xl font-black tracking-tighter text-white">Account Settings</h1>
+        <p className="text-gray-500 text-sm font-medium mt-1">Manage your profile and security preferences</p>
       </div>
 
       {status.text && (
-        <div className={`p-4 rounded-xl flex items-center gap-3 text-sm ${
-          status.type === 'success' ? 'bg-emerald-950/40 text-emerald-300 border border-emerald-800' : 'bg-red-950/40 text-red-300 border border-red-800'
+        <div className={`glass-card p-4 flex items-center gap-3 text-sm font-bold ${
+          status.type === 'success' ? 'text-emerald-400 border-emerald-500/20' : 'text-red-400 border-red-500/20'
         }`}>
           {status.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
           {status.text}
@@ -98,45 +96,45 @@ export default function Settings() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Profile Information */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-800 bg-gray-900/50">
-             <h2 className="text-lg font-semibold text-white flex items-center">
-               <User className="w-5 h-5 mr-3 text-indigo-400" />
+        <div className="glass-card overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-white/5">
+             <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-3">
+               <User className="w-4 h-4 text-emerald-400" />
                Profile Information
              </h2>
-             <p className="text-xs text-gray-400 mt-1">Manage your personal details and contact info.</p>
+             <p className="text-xs text-gray-500 font-medium mt-2">Manage your personal details and contact info.</p>
           </div>
           
           <form onSubmit={handleUpdateProfile} className="p-6 space-y-5 flex-1">
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1.5">Full Name</label>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Full Name</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2.5 bg-gray-950 border border-gray-800 rounded-xl text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-all text-sm"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1.5">Email Address</label>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Email Address</label>
               <input
                 type="email"
                 disabled
                 value={profile.email}
-                className="w-full px-4 py-2.5 bg-gray-950 border border-gray-800 rounded-xl text-gray-500 cursor-not-allowed"
+                className="w-full px-4 py-3 bg-black/10 border border-white/5 rounded-xl text-gray-600 cursor-not-allowed text-sm"
               />
-              <p className="text-[10px] text-gray-600 mt-1">Email cannot be changed online for security.</p>
+              <p className="text-[10px] text-gray-600 mt-1 font-medium">Email cannot be changed for security reasons.</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1.5">Phone Number</label>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Phone Number</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full px-4 py-2.5 bg-gray-950 border border-gray-800 rounded-xl text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-all text-sm"
               />
             </div>
 
@@ -144,52 +142,52 @@ export default function Settings() {
               <button
                 type="submit"
                 disabled={updatingProfile}
-                className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center"
+                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-black font-black rounded-xl transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center text-sm uppercase tracking-widest"
               >
                 {updatingProfile ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-                Update Profile
+                Save Changes
               </button>
             </div>
           </form>
         </div>
 
         {/* Security / Password Change */}
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-800 bg-gray-900/50">
-             <h2 className="text-lg font-semibold text-white flex items-center">
-               <Lock className="w-5 h-5 mr-3 text-emerald-400" />
+        <div className="glass-card overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-white/5">
+             <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-3">
+               <Lock className="w-4 h-4 text-emerald-400" />
                Security Settings
              </h2>
-             <p className="text-xs text-gray-400 mt-1">Update your password to keep your account safe.</p>
+             <p className="text-xs text-gray-500 font-medium mt-2">Update your password to keep your account safe.</p>
           </div>
           
           <form onSubmit={handleChangePassword} className="p-6 space-y-5 flex-1">
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1.5">New Password</label>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">New Password</label>
               <input
                 type="password"
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 bg-gray-950 border border-gray-800 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 transition-all outline-none font-mono"
+                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-all text-sm font-mono"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-500 mb-1.5">Confirm New Password</label>
+              <label className="block text-[10px] font-black text-gray-500 mb-2 uppercase tracking-widest">Confirm New Password</label>
               <input
                 type="password"
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 bg-gray-950 border border-gray-800 rounded-xl text-white focus:ring-2 focus:ring-emerald-500 transition-all outline-none font-mono"
+                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 transition-all text-sm font-mono"
               />
             </div>
 
-            <div className="bg-gray-950/50 p-4 rounded-xl border border-gray-800/50">
-               <h4 className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-2">Password Requirements</h4>
+            <div className="bg-black/20 p-4 rounded-xl border border-white/5">
+               <h4 className="text-[10px] uppercase font-black text-gray-500 tracking-widest mb-2">Requirements</h4>
                <ul className="text-xs text-gray-500 space-y-1">
                   <li className="flex items-center gap-2">
                     <div className={`w-1.5 h-1.5 rounded-full ${newPassword.length >= 6 ? 'bg-emerald-500' : 'bg-gray-700'}`}></div>
@@ -206,7 +204,7 @@ export default function Settings() {
               <button
                 type="submit"
                 disabled={updatingPassword}
-                className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center"
+                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-black font-black rounded-xl transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 flex items-center justify-center text-sm uppercase tracking-widest"
               >
                 {updatingPassword ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
                 Change Password

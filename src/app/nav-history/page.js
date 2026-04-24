@@ -11,69 +11,66 @@ export default function NavHistory() {
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState([]);
 
-  useEffect(() => {
-    fetchFundData();
-  }, [profile]);
+  useEffect(() => { fetchFundData(); }, [profile]);
 
   async function fetchFundData() {
     if (!profile) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('fund')
-        .select('id, date, nav')
-        .order('date', { ascending: false });
-
+      const { data, error } = await supabase.from('fund').select('id, date, nav').order('date', { ascending: false });
       if (error) throw error;
       setHistory(data || []);
     } catch (error) {
-      console.error("Error fetching NAV history:", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   }
 
-  if (loading) return <div className="text-gray-400">Loading history...</div>;
+  if (loading) return <div className="glass-card h-96 animate-pulse max-w-4xl mx-auto"></div>;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center">
-          <History className="mr-3 text-indigo-400" />
-          Historical NAV Prices
-        </h1>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <div>
+        <h1 className="text-3xl font-black tracking-tighter text-white">NAV History</h1>
+        <p className="text-gray-500 text-sm font-medium mt-1">Official historical Net Asset Value of one fund unit</p>
       </div>
-      
-      <p className="text-gray-400 text-sm">Review the official historical Net Asset Value (NAV) of a single unit of the fund.</p>
-
-      <div className="bg-gray-900 border border-gray-800 rounded-xl shadow-sm overflow-hidden">
+      <div className="glass-card overflow-hidden">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between">
+          <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-3">
+            <History className="w-4 h-4 text-emerald-400" /> Historical NAV Prices
+          </h2>
+          <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{history.length} records</span>
+        </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-400">
-            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-gray-800">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-black/20 text-[10px] uppercase text-gray-500 font-black tracking-widest border-b border-white/5">
               <tr>
-                <th className="px-6 py-4">Observation Date</th>
-                <th className="px-6 py-4 text-right">Declared NAV per Unit</th>
+                <th className="px-6 py-5">Date</th>
+                <th className="px-6 py-5 text-right">NAV per Unit</th>
+                <th className="px-6 py-5 text-right">1D Change</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-800">
-              {history.map((record) => (
-                <tr key={record.id} className="hover:bg-gray-800/30 transition-colors">
-                  <td className="px-6 py-4 font-medium text-gray-300">
-                    {format(new Date(record.date), 'dd MMMM yyyy')}
-                  </td>
-                  <td className="px-6 py-4 text-right font-bold text-indigo-400 text-base">
-                    ₹{Number(record.nav).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
-                  </td>
-                </tr>
-              ))}
-              
-              {history.length === 0 && !loading && (
-                <tr>
-                  <td colSpan="2" className="px-6 py-12 text-center text-gray-500">
-                    No NAV history is currently available.
-                  </td>
-                </tr>
-              )}
+            <tbody className="divide-y divide-white/5">
+              {history.map((record, i) => {
+                const prevNav = history[i + 1]?.nav;
+                const change = prevNav ? record.nav - prevNav : null;
+                const changePct = prevNav && prevNav > 0 ? (change / prevNav) * 100 : null;
+                return (
+                  <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
+                    <td className="px-6 py-4 text-gray-300 font-bold">{format(new Date(record.date), 'dd MMMM yyyy')}</td>
+                    <td className="px-6 py-4 text-right font-black text-white text-base">₹{Number(record.nav).toFixed(4)}</td>
+                    <td className="px-6 py-4 text-right">
+                      {changePct !== null ? (
+                        <span className={`text-xs font-black ${change >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {change >= 0 ? '+' : ''}{changePct.toFixed(2)}%
+                        </span>
+                      ) : <span className="text-gray-600 text-xs">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+              {history.length === 0 && <tr><td colSpan="3" className="px-6 py-12 text-center text-gray-600">No NAV history available.</td></tr>}
             </tbody>
           </table>
         </div>
