@@ -108,9 +108,9 @@ export default function AppLayout({ children }) {
           <h1 className="text-lg font-bold text-white tracking-widest uppercase">FundTrack</h1>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 text-gray-400 hover:text-white"
+            className="p-2 text-gray-400 hover:text-white font-bold"
           >
-            <Menu className="h-6 w-6" />
+            MENU
           </button>
         </header>
 

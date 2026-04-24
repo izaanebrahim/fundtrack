@@ -57,9 +57,9 @@ export default function Sidebar({ onClose }) {
         <h1 className="text-xl font-bold text-white tracking-widest uppercase">FundTrack</h1>
         <button 
           onClick={onClose}
-          className="p-2 text-gray-400 hover:text-white lg:hidden"
+          className="p-2 text-gray-400 hover:text-white lg:hidden font-bold"
         >
-          <X className="h-6 w-6" />
+          X
         </button>
       </div>
       
