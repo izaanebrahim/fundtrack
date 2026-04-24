@@ -47,7 +47,9 @@ export const AuthProvider = ({ children }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth Event:', event);
-        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        
+        // Only fetch profile on initial load or fresh login to prevent lock conflicts during background token refreshes
+        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN') {
           if (session?.user) {
             setUser(session.user);
             const profileData = await fetchProfile(session.user.id);
@@ -57,6 +59,11 @@ export const AuthProvider = ({ children }) => {
             setProfile(null);
           }
           setLoading(false);
+        } else if (event === 'TOKEN_REFRESHED') {
+          // Just update the user session, do NOT re-fetch profile data
+          if (session?.user) {
+            setUser(session.user);
+          }
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
           setProfile(null);
