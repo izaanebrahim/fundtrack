@@ -119,14 +119,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Dashboard</h1>
-        <div className="text-sm text-gray-400">
+        <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-white">Dashboard</h1>
+        <div className="text-[10px] lg:text-xs text-gray-500 font-mono">
           Last updated: {format(new Date(), 'dd MMM yyyy, hh:mm a')}
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl p-6 animate-pulse h-28"></div>
           ))}

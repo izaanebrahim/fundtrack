@@ -109,13 +109,13 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Admin Dashboard</h1>
+        <h1 className="text-xl lg:text-2xl font-bold tracking-tight text-white">Admin Dashboard</h1>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-sm">
           <div className="flex items-center text-sm font-medium text-gray-400 mb-2">
             <IndianRupee className="w-4 h-4 mr-1" />
