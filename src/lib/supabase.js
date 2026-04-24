@@ -3,18 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Singleton pattern to prevent "navigator lock" errors in development
-let supabase;
-
-if (typeof window !== 'undefined') {
-  // Browser: Cache the client on the window object to survive HMR reloads
-  if (!window.__supabaseClient) {
-    window.__supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+// Create a single client instance.
+// Using a custom storage key to permanently bypass any previously corrupted Web Locks in the browser.
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storageKey: 'fundtrack-auth-v2',
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
   }
-  supabase = window.__supabaseClient;
-} else {
-  // Server: Just create a new client
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-}
-
-export { supabase };
+});
