@@ -42,12 +42,40 @@ export default function AppLayout({ children }) {
   }, [user, profile, loading, pathname, router]);
 
   // Full page loading spinner
+  const [showRescue, setShowRescue] = useState(false);
+  useEffect(() => {
+    let t;
+    if (loading && !user) {
+      t = setTimeout(() => setShowRescue(true), 4000);
+    } else {
+      setShowRescue(false);
+    }
+    return () => clearTimeout(t);
+  }, [loading, user]);
+
+  const forceRecovery = () => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.clear();
+      window.location.reload();
+    }
+  };
+
   if (loading && !user) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-950">
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-6">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-          <p className="text-gray-400 text-sm">Loading FundTrack...</p>
+          <div className="text-center">
+            <p className="text-gray-400 text-sm mb-4">Loading FundTrack...</p>
+            {showRescue && (
+              <button 
+                onClick={forceRecovery}
+                className="px-4 py-2 bg-red-900/30 text-red-400 border border-red-800/50 rounded-lg text-xs hover:bg-red-900/50 transition-all animate-in fade-in slide-in-from-bottom-2"
+              >
+                Taking too long? Force Reset App
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
