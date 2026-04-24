@@ -70,15 +70,22 @@ export const AuthProvider = ({ children }) => {
               
               if (session?.user) {
                 setUser(session.user);
-                const profileData = await fetchProfile(session.user.id);
-                if (isMounted) setProfile(profileData);
+                // SET LOADING FALSE IMMEDIATELY - Don't wait for profile
+                if (isMounted) setLoading(false);
+                
+                // Fetch profile in background
+                fetchProfile(session.user.id).then(profileData => {
+                  if (isMounted) setProfile(profileData);
+                }).catch(err => {
+                  console.error('Background profile fetch error:', err);
+                });
               } else {
                 if (isMounted) {
                   setUser(null);
                   setProfile(null);
+                  setLoading(false);
                 }
               }
-              if (isMounted) setLoading(false);
             } else if (event === 'TOKEN_REFRESHED') {
               if (session?.user && isMounted) {
                 setUser(session.user);
