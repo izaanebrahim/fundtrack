@@ -2,6 +2,8 @@ import YahooFinance from 'yahoo-finance2';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 const yf = new YahooFinance();
 
 export async function GET(request) {
