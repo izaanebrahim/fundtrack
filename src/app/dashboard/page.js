@@ -61,6 +61,10 @@ export default function Dashboard() {
           });
         }
 
+        // Clamp: if fully exited, both should be 0
+        if (totalUnits <= 0) { totalUnits = 0; investedAmount = 0; }
+        if (investedAmount < 0) investedAmount = 0;
+
         const currentNav = totalSystemUnits > 0 ? (liveAum / totalSystemUnits) : 10;
         const portfolioValue = totalUnits * currentNav;
         const profitLoss = portfolioValue - investedAmount;

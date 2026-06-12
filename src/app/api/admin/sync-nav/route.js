@@ -41,24 +41,35 @@ export async function POST(request) {
 
     // 3. Update holdings with new prices
     let totalFundValue = 0;
-    for (const res of results) {
-      if (res.price !== null) {
-        const holding = holdings.find(h => h.symbol === res.symbol);
-        const newTotalValue = holding.quantity * res.price;
-        totalFundValue += newTotalValue;
+    const updates = [];
+    const nowStr = new Date().toISOString();
 
-        await adminSupabase
-          .from('holdings')
-          .update({ 
-            current_price: res.price,
-            last_synced_at: new Date().toISOString()
-          })
-          .eq('symbol', res.symbol);
+    for (const res of results) {
+      const holding = holdings.find(h => h.symbol === res.symbol);
+      if (res.price !== null) {
+        totalFundValue += holding.quantity * res.price;
+        updates.push({
+          id: holding.id,
+          symbol: holding.symbol,
+          name: holding.name,
+          category: holding.category,
+          sector: holding.sector,
+          quantity: holding.quantity,
+          avg_cost: holding.avg_cost,
+          current_price: res.price,
+          last_synced_at: nowStr
+        });
       } else {
          // If price fetch failed, use old price for valuation
-         const holding = holdings.find(h => h.symbol === res.symbol);
-         totalFundValue += holding.quantity * holding.current_price;
+         totalFundValue += holding.quantity * (holding.current_price || 0);
       }
+    }
+
+    if (updates.length > 0) {
+      const { error: updateError } = await adminSupabase
+        .from('holdings')
+        .upsert(updates, { onConflict: 'id' });
+      if (updateError) throw updateError;
     }
 
     // 4. Calculate New NAV

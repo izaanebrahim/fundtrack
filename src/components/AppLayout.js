@@ -70,7 +70,7 @@ export default function AppLayout({ children }) {
             <div className="absolute inset-0 rounded-full blur-lg bg-emerald-500/20 animate-pulse"></div>
           </div>
           <div className="text-center">
-            <p className="text-gray-400 text-sm font-medium mb-4">Loading FundTrack...</p>
+            <p className="text-gray-400 text-sm font-medium mb-4">Loading Barakha Capital...</p>
             {showRescue && (
               <button 
                 onClick={forceRecovery}
@@ -110,7 +110,7 @@ export default function AppLayout({ children }) {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="flex h-14 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
-          <h1 className="text-lg font-black text-white tracking-tighter italic">FT.</h1>
+          <h1 className="text-lg font-black text-white tracking-tighter italic">BC.</h1>
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className="p-2 text-gray-500 hover:text-emerald-400 transition-colors"

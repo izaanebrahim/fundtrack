@@ -6,8 +6,8 @@ import AppLayout from '@/components/AppLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'FundTrack - Client Portfolio & Fund NAV Dashboard',
-  description: 'Track your investments, units, and NAV performace.',
+  title: 'Barakha Capital - Client Portfolio & Fund NAV Dashboard',
+  description: 'Track your investments, units, and NAV performance with Barakha Capital.',
 };
 
 export default function RootLayout({ children }) {

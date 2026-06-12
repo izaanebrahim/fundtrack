@@ -118,3 +118,25 @@ input:focus, select:focus {
   box-shadow: 0 0 0 2px rgba(0, 245, 160, 0.1) !important;
   outline: none !important;
 }
+
+/* Dropdown option styling - native options need solid backgrounds */
+select option {
+  background: #111616 !important;
+  color: #e5e7eb !important;
+  padding: 8px 12px !important;
+}
+select option:checked,
+select option:hover {
+  background: #1a2a2a !important;
+  color: #00f5a0 !important;
+}
+select option:disabled {
+  color: #6b7280 !important;
+}
+select optgroup {
+  background: #0d1111 !important;
+  color: #00f5a0 !important;
+  font-weight: 700;
+  font-style: normal;
+  padding: 4px 0;
+}

@@ -49,6 +49,9 @@ export async function GET(request) {
 
     // 5. Update holdings & Calculate Total AUM
     let totalFundValue = 0;
+    const updates = [];
+    const nowStr = new Date().toISOString();
+
     for (const res of results) {
       const holding = holdings.find(h => h.symbol === res.symbol);
       const priceToUse = res.price !== null ? res.price : (holding.current_price || 0);
@@ -56,14 +59,25 @@ export async function GET(request) {
       totalFundValue += holding.quantity * priceToUse;
 
       if (res.price !== null) {
-        await adminSupabase
-          .from('holdings')
-          .update({ 
-            current_price: res.price,
-            last_synced_at: new Date().toISOString()
-          })
-          .eq('symbol', res.symbol);
+        updates.push({
+          id: holding.id,
+          symbol: holding.symbol,
+          name: holding.name,
+          category: holding.category,
+          sector: holding.sector,
+          quantity: holding.quantity,
+          avg_cost: holding.avg_cost,
+          current_price: res.price,
+          last_synced_at: nowStr
+        });
       }
+    }
+
+    if (updates.length > 0) {
+      const { error: updateError } = await adminSupabase
+        .from('holdings')
+        .upsert(updates, { onConflict: 'id' });
+      if (updateError) throw updateError;
     }
 
     // 6. Calculate New NAV

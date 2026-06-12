@@ -42,10 +42,10 @@ export default function Login() {
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-6 shadow-lg shadow-emerald-500/20">
-            <span className="text-2xl font-black text-black italic">FT</span>
+            <span className="text-2xl font-black text-black italic">BC</span>
           </div>
           <h1 className="text-4xl font-black tracking-tighter text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-500 text-sm font-medium">Sign in to your FundTrack account</p>
+          <p className="text-gray-500 text-sm font-medium">Sign in to your Barakha Capital account</p>
         </div>
 
         {/* Card */}
@@ -98,7 +98,7 @@ export default function Login() {
         </div>
 
         <p className="text-center text-gray-600 text-xs mt-8 font-medium">
-          Secured by Supabase • FundTrack v2.0
+          Secured by Supabase • Barakha Capital
         </p>
       </div>
     </div>

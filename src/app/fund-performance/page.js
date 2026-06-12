@@ -102,6 +102,7 @@ export default function FundPerformance() {
 
     if (filteredFund.length === 0) return [];
 
+    // Use the first NAV in the filtered range as the benchmark rebase base
     const fundBase = filteredFund[0].nav;
     const benchmarkVisible = benchmarkData.filter(b => b.date >= filteredFund[0].date);
     const benchmarkBase = benchmarkVisible.length > 0 ? benchmarkVisible[0].price : 0;
@@ -110,11 +111,16 @@ export default function FundPerformance() {
        const bPoint = benchmarkData.find(b => b.date === f.date);
        const lastBPoint = bPoint || benchmarkData.filter(b => b.date <= f.date).slice(-1)[0];
        
+       // Rebase benchmark to match fund's starting NAV for fair visual comparison
+       const benchmarkRebased = (lastBPoint && benchmarkBase > 0)
+         ? ((lastBPoint.price / benchmarkBase) * fundBase).toFixed(4)
+         : null;
+       
        return {
          date: f.date,
          formattedDate: format(new Date(f.date), 'dd MMM yy'),
-         fund: ((f.nav / fundBase) * 100).toFixed(2),
-         benchmark: (lastBPoint && benchmarkBase > 0) ? ((lastBPoint.price / benchmarkBase) * 100).toFixed(2) : null,
+         fund: Number(f.nav.toFixed(4)),
+         benchmark: benchmarkRebased ? Number(benchmarkRebased) : null,
          rawNav: f.nav
        };
     });
@@ -153,7 +159,7 @@ export default function FundPerformance() {
         <div>
           <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
             <Calendar className="w-3 h-3" />
-            NAV Growth vs Nifty 50 (Rebased to 100)
+            NAV Growth vs Nifty 50
           </p>
           <div className="flex items-baseline gap-4 flex-wrap">
             <h1 className="text-5xl font-black tracking-tighter text-white">₹{liveNav.toFixed(4)}</h1>
@@ -206,7 +212,7 @@ export default function FundPerformance() {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
               <XAxis dataKey="formattedDate" stroke="transparent" tick={{fill: '#4b5563', fontSize: 10, fontWeight: 700}} axisLine={false} tickLine={false} minTickGap={40} />
-              <YAxis domain={['auto', 'auto']} stroke="transparent" tick={{fill: '#4b5563', fontSize: 10, fontWeight: 700}} axisLine={false} tickLine={false} tickFormatter={(val) => `${val}`} />
+              <YAxis domain={['auto', 'auto']} stroke="transparent" tick={{fill: '#4b5563', fontSize: 10, fontWeight: 700}} axisLine={false} tickLine={false} tickFormatter={(val) => `₹${val}`} />
               <Tooltip 
                 contentStyle={{ 
                   backgroundColor: '#161b1b', 
@@ -242,7 +248,7 @@ export default function FundPerformance() {
         </div>
         <div className="glass-card p-6 flex items-center gap-3 glass-card-hover">
           <Info className="w-5 h-5 flex-shrink-0 text-gray-500" />
-          <p className="text-gray-500 text-xs font-medium italic">Both assets scaled to 100 at start of the selected timeframe.</p>
+          <p className="text-gray-500 text-xs font-medium italic">Fund shows actual NAV. Benchmark is scaled to match fund's starting NAV for visual comparison.</p>
         </div>
       </div>
     </div>

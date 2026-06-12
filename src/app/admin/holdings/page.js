@@ -224,20 +224,51 @@ export default function ManageHoldings() {
                     <optgroup label="Financial Services">
                       <option>Banking & Finance</option>
                       <option>Insurance</option>
+                      <option>Non-Banking Financial (NBFC)</option>
+                      <option>Financial Services</option>
                     </optgroup>
-                    <optgroup label="Industrial & Tech">
+                    <optgroup label="Technology & Telecom">
                       <option>Information Technology</option>
-                      <option>Automobile</option>
-                      <option>Energy & Power</option>
                       <option>Telecommunication</option>
+                      <option>Media & Entertainment</option>
+                    </optgroup>
+                    <optgroup label="Energy & Industrials">
+                      <option>Energy & Power</option>
+                      <option>Oil & Gas</option>
                       <option>Metals & Mining</option>
+                      <option>Infrastructure & Construction</option>
+                      <option>Cement & Building Materials</option>
+                      <option>Capital Goods & Engineering</option>
+                      <option>Defence & Aerospace</option>
                     </optgroup>
-                    <optgroup label="Consumer & Life">
-                      <option>Healthcare & Pharma</option>
+                    <optgroup label="Consumer & Retail">
                       <option>Consumer Goods (FMCG)</option>
-                      <option>Real Estate</option>
+                      <option>Consumer Durables</option>
+                      <option>Retail & E-Commerce</option>
+                      <option>Textiles & Apparel</option>
+                      <option>Hotels, Restaurants & Tourism</option>
                     </optgroup>
-                    <option>Others / Cash</option>
+                    <optgroup label="Healthcare & Life Sciences">
+                      <option>Healthcare & Pharma</option>
+                      <option>Hospitals & Diagnostics</option>
+                    </optgroup>
+                    <optgroup label="Auto & Transport">
+                      <option>Automobile</option>
+                      <option>Auto Components</option>
+                      <option>Logistics & Shipping</option>
+                    </optgroup>
+                    <optgroup label="Materials & Chemicals">
+                      <option>Chemicals & Fertilizers</option>
+                      <option>Paper & Packaging</option>
+                    </optgroup>
+                    <optgroup label="Real Assets">
+                      <option>Real Estate</option>
+                      <option>Agriculture & Allied</option>
+                    </optgroup>
+                    <optgroup label="Other">
+                      <option>ETF / Index Fund</option>
+                      <option>Others / Cash</option>
+                    </optgroup>
                   </select>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -319,20 +350,51 @@ export default function ManageHoldings() {
                                 <optgroup label="Financial Services">
                                   <option>Banking & Finance</option>
                                   <option>Insurance</option>
+                                  <option>Non-Banking Financial (NBFC)</option>
+                                  <option>Financial Services</option>
                                 </optgroup>
-                                <optgroup label="Industrial & Tech">
+                                <optgroup label="Technology & Telecom">
                                   <option>Information Technology</option>
-                                  <option>Automobile</option>
-                                  <option>Energy & Power</option>
                                   <option>Telecommunication</option>
+                                  <option>Media & Entertainment</option>
+                                </optgroup>
+                                <optgroup label="Energy & Industrials">
+                                  <option>Energy & Power</option>
+                                  <option>Oil & Gas</option>
                                   <option>Metals & Mining</option>
+                                  <option>Infrastructure & Construction</option>
+                                  <option>Cement & Building Materials</option>
+                                  <option>Capital Goods & Engineering</option>
+                                  <option>Defence & Aerospace</option>
                                 </optgroup>
-                                <optgroup label="Consumer & Life">
-                                  <option>Healthcare & Pharma</option>
+                                <optgroup label="Consumer & Retail">
                                   <option>Consumer Goods (FMCG)</option>
-                                  <option>Real Estate</option>
+                                  <option>Consumer Durables</option>
+                                  <option>Retail & E-Commerce</option>
+                                  <option>Textiles & Apparel</option>
+                                  <option>Hotels, Restaurants & Tourism</option>
                                 </optgroup>
-                                <option>Others / Cash</option>
+                                <optgroup label="Healthcare & Life Sciences">
+                                  <option>Healthcare & Pharma</option>
+                                  <option>Hospitals & Diagnostics</option>
+                                </optgroup>
+                                <optgroup label="Auto & Transport">
+                                  <option>Automobile</option>
+                                  <option>Auto Components</option>
+                                  <option>Logistics & Shipping</option>
+                                </optgroup>
+                                <optgroup label="Materials & Chemicals">
+                                  <option>Chemicals & Fertilizers</option>
+                                  <option>Paper & Packaging</option>
+                                </optgroup>
+                                <optgroup label="Real Assets">
+                                  <option>Real Estate</option>
+                                  <option>Agriculture & Allied</option>
+                                </optgroup>
+                                <optgroup label="Other">
+                                  <option>ETF / Index Fund</option>
+                                  <option>Others / Cash</option>
+                                </optgroup>
                               </select>
                             ) : (
                               <div className="flex flex-col gap-1">

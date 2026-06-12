@@ -54,7 +54,7 @@ export default function Sidebar({ onClose }) {
   return (
     <div className="flex h-screen w-64 flex-col bg-[#090c0c] border-r border-white/5 text-gray-400">
       <div className="flex h-16 items-center justify-between px-6 border-b border-white/5">
-        <h1 className="text-xl font-black text-white tracking-tighter italic">FT.</h1>
+        <h1 className="text-xl font-black text-white tracking-tighter italic">BC.</h1>
         <button 
           onClick={onClose}
           className="p-2 text-gray-500 hover:text-white lg:hidden font-bold"

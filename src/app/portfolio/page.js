@@ -59,6 +59,10 @@ export default function Portfolio() {
           else if (t.type === 'WITHDRAW') { units -= Number(t.units); invested -= Number(t.amount); }
         });
 
+        // Clamp: if fully exited, both should be 0
+        if (units <= 0) { units = 0; invested = 0; }
+        if (invested < 0) invested = 0;
+
         const value = units * liveNav;
         const avgNav = units > 0 ? (invested / units) : 0;
         const pnl = value - invested;
