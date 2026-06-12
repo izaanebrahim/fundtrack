@@ -15,6 +15,7 @@ All notable changes and bug fixes implemented in this update.
 - **NAV Chart Behavior**: Fixed the client performance chart to display **actual NAV values** instead of rebasing to `100` every time a timeline range (1M, 6M, 1Y, etc.) is switched.
 - **Fair Comparison**: Rebased the Nifty 50 benchmark to start at the fund's initial NAV for the selected timeframe. This ensures visual alignment without distorting the actual NAV value.
 - **UI Enhancements**: Added `₹` prefix to the Y-axis of the chart and updated the helper legend.
+- **Admin Dashboard Daily Change**: Fixed a bug where the daily NAV change percentage on the Admin Dashboard was showing `0.00%` because it compared the current NAV against itself. Now it correctly queries the last 2 records to compare today's NAV against yesterday's NAV.
 
 ### 💼 Portfolio & Holding Fixes
 - **Negative Invested Balance**: Resolved a critical mathematical edge-case where a client who fully withdrew their positions after making profits ended up with a negative invested amount (e.g., Invested: `-₹2,000`). Now, both units and invested amount are cleanly clamped to `0` upon full exit.
