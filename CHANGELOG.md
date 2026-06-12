@@ -27,3 +27,4 @@ All notable changes and bug fixes implemented in this update.
 
 ### ⚡ Performance Optimization
 - **Batch Database Updates**: Rewrote Yahoo Finance price sync procedures in both the manual Admin sync and the automated background cron routine. Multiple individual row updates inside a loop are now batched into a single `.upsert()` query, dramatically reducing database load and network request overhead.
+- **Automated Cron Sync Security Resilience**: Enhanced the automated cron endpoint authentication to support Vercel's native headers in production as a secure fallback. This prevents the cron task from throwing a 401 Unauthorized error due to mismatched `CRON_SECRET` env vars.

@@ -8,12 +8,34 @@ const yf = new YahooFinance();
 
 export async function GET(request) {
   try {
-    // 1. Verify Secret Key
+    // 1. Verify Secret Key (Supports CRON_SECRET, CRON_SECRET_KEY, or Vercel's native stripped cron header)
     const authHeader = request.headers.get('authorization');
-    const expectedSecret = process.env.CRON_SECRET || process.env.CRON_SECRET_KEY;
+    const cronSecret = process.env.CRON_SECRET;
+    const cronSecretKey = process.env.CRON_SECRET_KEY;
+    const isVercelCronHeader = request.headers.get('x-vercel-cron') === '1';
 
-    if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
+    let isAuthorized = false;
+
+    if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+      isAuthorized = true;
+    } else if (cronSecretKey && authHeader === `Bearer ${cronSecretKey}`) {
+      isAuthorized = true;
+    } else if (isVercelCronHeader && process.env.NODE_ENV === 'production') {
+      isAuthorized = true;
+    }
+
+    if (!isAuthorized) {
+      console.warn('Unauthorized cron sync attempt:', {
+        hasAuthHeader: !!authHeader,
+        isVercelCronHeader,
+        env: process.env.NODE_ENV
+      });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing Supabase config in cron handler');
+      return NextResponse.json({ error: 'Configuration Error' }, { status: 500 });
     }
 
     // 2. Initialize Supabase Admin
