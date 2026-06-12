@@ -23,6 +23,7 @@ All notable changes and bug fixes implemented in this update.
 
 ### 🎨 UI & UX Improvements
 - **Dropdown Visibility**: Fixed the select option styles. Translucent backgrounds on native HTML select options made dropdown lists nearly invisible on some systems. Dropdowns now have a solid `#111616` background with clear white text and high-contrast hovered states.
+- **Pro Insights Marketing Removal**: Removed the "Unlock Pro Insights" advertisement card from the Client Dashboard since the clients are already on the Pro/Full tier. Expanded the **Sector Allocation** panel to full-width, displaying up to 6 key investment sectors instead of 4.
 
 ### ⚡ Performance Optimization
 - **Batch Database Updates**: Rewrote Yahoo Finance price sync procedures in both the manual Admin sync and the automated background cron routine. Multiple individual row updates inside a loop are now batched into a single `.upsert()` query, dramatically reducing database load and network request overhead.

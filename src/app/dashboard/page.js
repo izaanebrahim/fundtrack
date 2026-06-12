@@ -220,37 +220,31 @@ export default function Dashboard() {
       </div>
 
       {/* Secondary Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sector Insights */}
-        <div className="lg:col-span-2 glass-card p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Sector Allocation</h3>
-            <PieIcon className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {data.sectorData.slice(0, 4).map((s, i) => (
-              <div key={i} className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-gray-500 truncate">{s.name}</span>
-                  <span className="text-[10px] font-black text-emerald-400">{(s.value / data.portfolioValue * 100).toFixed(1)}%</span>
-                </div>
-                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${(s.value / data.portfolioValue * 100)}%` }}></div>
-                </div>
-              </div>
-            ))}
-          </div>
+      <div className="glass-card p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Sector Allocation</h3>
+          <PieIcon className="w-4 h-4 text-emerald-400" />
         </div>
-
-        {/* Pro Insights Card */}
-        <div className="lg:col-span-1 glass-card p-6 flex flex-col justify-between border-emerald-500/10" style={{ background: 'rgba(0,245,160,0.02)' }}>
-          <div>
-            <h3 className="text-sm font-black text-white mb-2">Unlock Pro Insights</h3>
-            <p className="text-xs text-gray-500 font-medium leading-relaxed">Get access to real-time market signals and deep portfolio analytics.</p>
-          </div>
-          <button className="mt-6 w-full py-2.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
-            Upgrade Account
-          </button>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
+          {data.sectorData.slice(0, 6).map((s, i) => (
+            <div key={i} className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-bold text-gray-500 truncate">{s.name}</span>
+                <span className="text-[10px] font-black text-emerald-400">
+                  {data.portfolioValue > 0 ? ((s.value / data.portfolioValue) * 100).toFixed(1) : '0.0'}%
+                </span>
+              </div>
+              <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-emerald-500 rounded-full" 
+                  style={{ width: `${data.portfolioValue > 0 ? (s.value / data.portfolioValue * 100) : 0}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
+          {data.sectorData.length === 0 && (
+            <p className="text-xs font-semibold text-gray-500 col-span-full">No sector allocation data available.</p>
+          )}
         </div>
       </div>
 
