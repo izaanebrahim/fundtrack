@@ -53,9 +53,9 @@ export default function AdminDashboard() {
           .from('fund')
           .select('nav')
           .order('date', { ascending: false })
-          .limit(1);
+          .limit(2);
         
-        const lastOfficialNav = lastNavData?.[0]?.nav || liveNav;
+        const lastOfficialNav = lastNavData?.[1]?.nav || lastNavData?.[0]?.nav || liveNav;
         const navChange = liveNav - lastOfficialNav;
         const navChangePercentage = lastOfficialNav > 0 ? (navChange / lastOfficialNav) * 100 : 0;
 
