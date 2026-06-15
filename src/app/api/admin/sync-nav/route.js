@@ -88,17 +88,36 @@ export async function POST(request) {
 
     const newNav = totalUnits > 0 ? (totalFundValue / totalUnits) : 10;
 
-    // 5. Record final result in Fund history
-    const { error: fundError } = await adminSupabase
+    // 5. Record final result in Fund history (avoiding duplicates for the same date)
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    const { data: existingFundRows } = await adminSupabase
       .from('fund')
-      .insert([{
-        date: new Date().toISOString().split('T')[0],
-        total_value: totalFundValue,
-        total_units: totalUnits,
-        nav: newNav
-      }]);
+      .select('id')
+      .eq('date', todayStr)
+      .limit(1);
 
-    if (fundError) throw fundError;
+    if (existingFundRows && existingFundRows.length > 0) {
+      const { error: fundError } = await adminSupabase
+        .from('fund')
+        .update({
+          total_value: totalFundValue,
+          total_units: totalUnits,
+          nav: newNav
+        })
+        .eq('id', existingFundRows[0].id);
+      if (fundError) throw fundError;
+    } else {
+      const { error: fundError } = await adminSupabase
+        .from('fund')
+        .insert([{
+          date: todayStr,
+          total_value: totalFundValue,
+          total_units: totalUnits,
+          nav: newNav
+        }]);
+      if (fundError) throw fundError;
+    }
 
     return NextResponse.json({ 
       success: true, 

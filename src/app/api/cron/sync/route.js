@@ -12,15 +12,15 @@ export async function GET(request) {
     const authHeader = request.headers.get('authorization');
     const cronSecret = process.env.CRON_SECRET;
     const cronSecretKey = process.env.CRON_SECRET_KEY;
-    const isVercelCronHeader = request.headers.get('x-vercel-cron') === '1';
+    const isVercelCronHeader = request.headers.get('x-vercel-cron') === '1' || request.headers.get('x-vercel-cron') === 'true';
 
     let isAuthorized = false;
 
-    if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+    if (isVercelCronHeader) {
+      isAuthorized = true;
+    } else if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
       isAuthorized = true;
     } else if (cronSecretKey && authHeader === `Bearer ${cronSecretKey}`) {
-      isAuthorized = true;
-    } else if (isVercelCronHeader && process.env.NODE_ENV === 'production') {
       isAuthorized = true;
     }
 
@@ -117,17 +117,36 @@ export async function GET(request) {
 
     const newNav = totalUnits > 0 ? (totalFundValue / totalUnits) : 10;
 
-    // 7. Record in History
-    const { error: fundError } = await adminSupabase
+    // 7. Record in History (avoiding duplicates for the same date)
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    const { data: existingFundRows } = await adminSupabase
       .from('fund')
-      .insert([{
-        date: new Date().toISOString().split('T')[0],
-        total_value: totalFundValue,
-        total_units: totalUnits,
-        nav: newNav
-      }]);
+      .select('id')
+      .eq('date', todayStr)
+      .limit(1);
 
-    if (fundError) throw fundError;
+    if (existingFundRows && existingFundRows.length > 0) {
+      const { error: fundError } = await adminSupabase
+        .from('fund')
+        .update({
+          total_value: totalFundValue,
+          total_units: totalUnits,
+          nav: newNav
+        })
+        .eq('id', existingFundRows[0].id);
+      if (fundError) throw fundError;
+    } else {
+      const { error: fundError } = await adminSupabase
+        .from('fund')
+        .insert([{
+          date: todayStr,
+          total_value: totalFundValue,
+          total_units: totalUnits,
+          nav: newNav
+        }]);
+      if (fundError) throw fundError;
+    }
 
     return NextResponse.json({ 
       success: true, 
