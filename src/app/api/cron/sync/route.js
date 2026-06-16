@@ -8,28 +8,14 @@ const yf = new YahooFinance();
 
 export async function GET(request) {
   try {
-    // 1. Verify Secret Key (Supports CRON_SECRET, CRON_SECRET_KEY, or Vercel's native stripped cron header)
-    const authHeader = request.headers.get('authorization');
+    // 1. Verify Cron Secret
+    // Vercel Cron sends CRON_SECRET as a Bearer token in the Authorization header.
+    // If CRON_SECRET is configured, we validate it. Otherwise, allow the request (for dev/testing).
     const cronSecret = process.env.CRON_SECRET;
-    const cronSecretKey = process.env.CRON_SECRET_KEY;
-    const isVercelCronHeader = request.headers.get('x-vercel-cron') === '1' || request.headers.get('x-vercel-cron') === 'true';
+    const authHeader = request.headers.get('authorization');
 
-    let isAuthorized = false;
-
-    if (isVercelCronHeader) {
-      isAuthorized = true;
-    } else if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
-      isAuthorized = true;
-    } else if (cronSecretKey && authHeader === `Bearer ${cronSecretKey}`) {
-      isAuthorized = true;
-    }
-
-    if (!isAuthorized) {
-      console.warn('Unauthorized cron sync attempt:', {
-        hasAuthHeader: !!authHeader,
-        isVercelCronHeader,
-        env: process.env.NODE_ENV
-      });
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+      console.warn('Unauthorized cron sync attempt');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
