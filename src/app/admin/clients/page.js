@@ -11,6 +11,7 @@ export default function ManageClients() {
   const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [liveNav, setLiveNav] = useState(0);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,12 +32,24 @@ export default function ManageClients() {
     if (!profile || profile.role !== 'admin') return;
     setLoading(true);
     try {
+      // Calculate Live NAV first
+      const { data: holdings } = await supabase.from('holdings').select('quantity, current_price');
+      const liveAum = holdings?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
+      const { data: allTx } = await supabase.from('transactions').select('type, units');
+      let systemUnits = 0;
+      allTx?.forEach(t => {
+        if (t.type === 'INVEST') systemUnits += Number(t.units);
+        else if (t.type === 'WITHDRAW') systemUnits -= Number(t.units);
+      });
+      const currentLiveNav = systemUnits > 0 ? liveAum / systemUnits : 10;
+      setLiveNav(currentLiveNav);
+
       const { data, error } = await supabase
         .from('clients')
         .select(`
           *,
           transactions (
-            id, type, amount, units
+            id, type, amount, units, created_at
           )
         `)
         .eq('role', 'client')
@@ -212,19 +225,37 @@ export default function ManageClients() {
               <tr>
                 <th className="px-6 py-4">Client Name</th>
                 <th className="px-6 py-4">Contact Info</th>
-                <th className="px-6 py-4">Joined Date</th>
-                <th className="px-6 py-4 text-right">Transaction Count</th>
-                <th className="px-6 py-4 text-right">Net Units Held (Approx)</th>
+                <th className="px-6 py-4">Avg NAV</th>
+                <th className="px-6 py-4 text-right">Net Units</th>
+                <th className="px-6 py-4 text-right">P&L %</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {filteredClients.map((client) => {
-                // Approximate units logic for admin view
-                let approxUnits = 0;
-                client.transactions?.forEach(t => {
-                  if(t.type === 'INVEST') approxUnits += Number(t.units);
-                  if(t.type === 'WITHDRAW') approxUnits -= Number(t.units);
+                let units = 0;
+                let invested = 0;
+                
+                // Sort transactions chronologically
+                const sortedTx = (client.transactions || []).sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
+                
+                sortedTx.forEach(t => {
+                  if (t.type === 'INVEST') {
+                    units += Number(t.units);
+                    invested += Number(t.amount);
+                  } else if (t.type === 'WITHDRAW') {
+                    const avgNav = units > 0 ? (invested / units) : 0;
+                    units -= Number(t.units);
+                    invested -= Number(t.units) * avgNav;
+                  }
                 });
+
+                if (units <= 0.0001) { units = 0; invested = 0; }
+                if (invested < 0) invested = 0;
+
+                const avgNav = units > 0 ? (invested / units) : 0;
+                const portfolioValue = units * liveNav;
+                const pnl = portfolioValue - invested;
+                const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
 
                 return (
                   <tr key={client.id} className="hover:bg-white/[0.02] transition-colors">
@@ -243,14 +274,14 @@ export default function ManageClients() {
                       <p className="text-gray-300">{client.email}</p>
                       <p className="text-gray-500 text-xs">{client.phone || 'No phone provided'}</p>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">
-                      {format(new Date(client.created_at), 'dd MMM yyyy')}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      {client.transactions?.length || 0}
+                    <td className="px-6 py-4 text-gray-400 font-medium">
+                      ₹{avgNav.toFixed(4)}
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-emerald-400">
-                      {approxUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+                      {units.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+                    </td>
+                    <td className={`px-6 py-4 text-right font-medium ${pnlPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
                     </td>
                   </tr>
                 );

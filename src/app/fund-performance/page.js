@@ -15,6 +15,8 @@ export default function FundPerformance() {
   const [selectedRange, setSelectedRange] = useState('ALL'); 
   const [liveNav, setLiveNav] = useState(10);
   const [benchmarkError, setBenchmarkError] = useState(false);
+  const [customStartDate, setCustomStartDate] = useState('');
+  const [customEndDate, setCustomEndDate] = useState('');
   
   useEffect(() => {
     async function loadData() {
@@ -96,9 +98,14 @@ export default function FundPerformance() {
     else if (selectedRange === '1Y') cutoffDate = subYears(now, 1);
     else if (selectedRange === '3Y') cutoffDate = subYears(now, 3);
 
-    const filteredFund = cutoffDate 
-      ? allHistory.filter(d => isAfter(new Date(d.date), cutoffDate))
-      : allHistory;
+    let filteredFund = allHistory;
+    
+    if (selectedRange === 'CUSTOM') {
+      if (customStartDate) filteredFund = filteredFund.filter(d => d.date >= customStartDate);
+      if (customEndDate) filteredFund = filteredFund.filter(d => d.date <= customEndDate);
+    } else if (cutoffDate) {
+      filteredFund = filteredFund.filter(d => isAfter(new Date(d.date), cutoffDate));
+    }
 
     if (filteredFund.length === 0) return [];
 
@@ -151,7 +158,7 @@ export default function FundPerformance() {
     </div>
   );
 
-  const ranges = ['1M', '6M', '1Y', '3Y', 'ALL'];
+  const ranges = ['1M', '6M', '1Y', '3Y', 'ALL', 'CUSTOM'];
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto">
@@ -178,20 +185,39 @@ export default function FundPerformance() {
           </div>
         </div>
 
-        <div className="glass-card p-1.5 flex items-center gap-1">
-           {ranges.map(range => (
-             <button
-                key={range}
-                onClick={() => setSelectedRange(range)}
-                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  selectedRange === range 
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                    : 'text-gray-500 hover:text-white'
-                }`}
-             >
-               {range}
-             </button>
-           ))}
+        <div className="flex flex-col items-end gap-3">
+          <div className="glass-card p-1.5 flex items-center gap-1">
+             {ranges.map(range => (
+               <button
+                  key={range}
+                  onClick={() => setSelectedRange(range)}
+                  className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                    selectedRange === range 
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                      : 'text-gray-500 hover:text-white'
+                  }`}
+               >
+                 {range}
+               </button>
+             ))}
+          </div>
+          {selectedRange === 'CUSTOM' && (
+            <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <input 
+                type="date" 
+                value={customStartDate} 
+                onChange={(e) => setCustomStartDate(e.target.value)}
+                className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-gray-300 focus:outline-none focus:border-emerald-500/50 [color-scheme:dark]"
+              />
+              <span className="text-gray-500 text-xs">to</span>
+              <input 
+                type="date" 
+                value={customEndDate} 
+                onChange={(e) => setCustomEndDate(e.target.value)}
+                className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-gray-300 focus:outline-none focus:border-emerald-500/50 [color-scheme:dark]"
+              />
+            </div>
+          )}
         </div>
       </div>
 

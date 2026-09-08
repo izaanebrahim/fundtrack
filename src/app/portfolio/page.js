@@ -67,7 +67,7 @@ export default function Portfolio() {
         });
 
         // Clamp: if fully exited, both should be 0
-        if (units <= 0) { units = 0; invested = 0; }
+        if (units <= 0.0001) { units = 0; invested = 0; }
         if (invested < 0) invested = 0;
 
         const value = units * liveNav;
