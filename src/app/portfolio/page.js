@@ -50,13 +50,20 @@ export default function Portfolio() {
         const { data: txs } = await supabase
           .from('transactions')
           .select('*')
-          .eq('client_id', profile.id);
+          .eq('client_id', profile.id)
+          .order('created_at', { ascending: true });
 
         let units = 0;
         let invested = 0;
         txs?.forEach(t => {
-          if (t.type === 'INVEST') { units += Number(t.units); invested += Number(t.amount); }
-          else if (t.type === 'WITHDRAW') { units -= Number(t.units); invested -= Number(t.amount); }
+          if (t.type === 'INVEST') { 
+            units += Number(t.units); 
+            invested += Number(t.amount); 
+          } else if (t.type === 'WITHDRAW') { 
+            const avgNav = units > 0 ? (invested / units) : 0;
+            units -= Number(t.units); 
+            invested -= Number(t.units) * avgNav; 
+          }
         });
 
         // Clamp: if fully exited, both should be 0
