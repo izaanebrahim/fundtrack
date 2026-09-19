@@ -140,3 +140,34 @@ select optgroup {
   font-style: normal;
   padding: 4px 0;
 }
+
+/* Animations for login wave */
+@keyframes wave-float {
+  0%, 100% { transform: translateY(0px) translateX(0px) scaleY(1); }
+  50% { transform: translateY(-15px) translateX(10px) scaleY(1.02); }
+}
+
+@keyframes wave-float-reverse {
+  0%, 100% { transform: translateY(0px) translateX(0px) scaleY(1); }
+  50% { transform: translateY(15px) translateX(-10px) scaleY(0.98); }
+}
+
+@keyframes dash-flow {
+  from { stroke-dashoffset: 2000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.wave-animate-even {
+  animation: wave-float 14s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-animate-odd {
+  animation: wave-float-reverse 18s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-dash {
+  stroke-dasharray: 1000;
+  animation: dash-flow 20s linear infinite;
+}

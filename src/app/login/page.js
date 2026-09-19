@@ -72,17 +72,19 @@ export default function Login() {
           <svg className="absolute bottom-0 left-0 w-full h-[70%] opacity-70" preserveAspectRatio="none" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg">
             {/* Multiple fine wave lines */}
             {Array.from({length: 12}).map((_, i) => (
-              <path key={i} d={`M-100 ${300 + i*15} C 200 ${280 - i*25}, 450 ${360 + i*15}, 650 ${260 - i*15} S 850 ${180 + i*10}, 1100 ${120 - i*20}`} stroke="#12C98B" strokeWidth="0.5" strokeOpacity={0.15 - (i*0.01)} vectorEffect="non-scaling-stroke"/>
+              <path key={i} className={i % 2 === 0 ? "wave-animate-even" : "wave-animate-odd"} d={`M-100 ${300 + i*15} C 200 ${280 - i*25}, 450 ${360 + i*15}, 650 ${260 - i*15} S 850 ${180 + i*10}, 1100 ${120 - i*20}`} stroke="#12C98B" strokeWidth="0.5" strokeOpacity={0.15 - (i*0.01)} vectorEffect="non-scaling-stroke"/>
             ))}
             {/* Main highlight curve */}
-            <path d="M-50 320 C 200 300, 450 360, 650 260 S 850 180, 1050 100" stroke="#12C98B" strokeWidth="1.5" strokeOpacity="0.8" vectorEffect="non-scaling-stroke"/>
-            <path d="M-50 320 C 200 300, 450 360, 650 260 S 850 180, 1050 100 L 1050 400 L -50 400 Z" fill="url(#grad2)" opacity="0.15"/>
+            <path className="wave-dash wave-animate-even" d="M-50 320 C 200 300, 450 360, 650 260 S 850 180, 1050 100" stroke="#12C98B" strokeWidth="1.5" strokeOpacity="0.8" vectorEffect="non-scaling-stroke"/>
+            <path className="wave-animate-even" d="M-50 320 C 200 300, 450 360, 650 260 S 850 180, 1050 100 L 1050 400 L -50 400 Z" fill="url(#grad2)" opacity="0.15"/>
             
             {/* Data points */}
-            <circle cx="200" cy="303" r="3" fill="#12C98B" opacity="0.9" className="animate-pulse"/>
-            <circle cx="450" cy="360" r="4" fill="#12C98B" opacity="1" />
-            <circle cx="650" cy="260" r="3" fill="#D6B875" opacity="0.9" />
-            <circle cx="850" cy="170" r="3.5" fill="#12C98B" opacity="0.8" />
+            <g className="wave-animate-even">
+              <circle cx="200" cy="303" r="3" fill="#12C98B" opacity="0.9" className="animate-pulse"/>
+              <circle cx="450" cy="360" r="4" fill="#12C98B" opacity="1" />
+              <circle cx="650" cy="260" r="3" fill="#D6B875" opacity="0.9" />
+              <circle cx="850" cy="170" r="3.5" fill="#12C98B" opacity="0.8" />
+            </g>
             
             <defs>
               <linearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
