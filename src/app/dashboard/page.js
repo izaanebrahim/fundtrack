@@ -106,6 +106,7 @@ export default function Dashboard() {
 
   const isProfit = data.profitLoss >= 0;
   const isDayUp = data.navChange >= 0;
+  const totalSectorValue = data.sectorData.reduce((sum, s) => sum + s.value, 0);
 
   if (loading) {
     return (
@@ -229,15 +230,15 @@ export default function Dashboard() {
           {data.sectorData.slice(0, 6).map((s, i) => (
             <div key={i} className="space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold text-gray-500 truncate">{s.name}</span>
+                <span className="text-[10px] font-bold text-gray-500 truncate" title={s.name}>{s.name}</span>
                 <span className="text-[10px] font-black text-emerald-400">
-                  {data.portfolioValue > 0 ? ((s.value / data.portfolioValue) * 100).toFixed(1) : '0.0'}%
+                  {totalSectorValue > 0 ? ((s.value / totalSectorValue) * 100).toFixed(1) : '0.0'}%
                 </span>
               </div>
               <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-emerald-500 rounded-full" 
-                  style={{ width: `${data.portfolioValue > 0 ? (s.value / data.portfolioValue * 100) : 0}%` }}
+                  style={{ width: `${totalSectorValue > 0 ? (s.value / totalSectorValue * 100) : 0}%` }}
                 ></div>
               </div>
             </div>

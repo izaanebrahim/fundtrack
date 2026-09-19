@@ -5,6 +5,7 @@ import Sidebar from '../components/Sidebar';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Menu } from 'lucide-react';
+import Link from 'next/link';
 
 export default function AppLayout({ children }) {
   const { user, profile, loading, profileError } = useAuth();
@@ -110,7 +111,9 @@ export default function AppLayout({ children }) {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Mobile Header */}
         <header className="flex h-14 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
-          <h1 className="text-lg font-black text-white tracking-tighter italic">BC.</h1>
+          <Link href={profile?.role === 'admin' ? '/admin' : '/dashboard'} className="flex items-center cursor-pointer transition-opacity hover:opacity-80">
+            <img src="/logo-wide-perfect-cropped.png" alt="Barakah Capital" className="w-[130px] h-auto object-contain" />
+          </Link>
           <button 
             onClick={() => setIsSidebarOpen(true)}
             className="p-2 text-gray-500 hover:text-emerald-400 transition-colors"

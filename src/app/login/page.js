@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -31,34 +33,44 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
-         style={{ background: 'radial-gradient(circle at 30% 20%, #1a2e2e 0%, #0d1111 50%), radial-gradient(circle at 80% 80%, #111a1a 0%, #0d1111 50%)' }}>
+    <div 
+      className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#07100E]"
+      style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(18,201,139,0.03) 0%, transparent 60%)' }}
+    >
       
-      {/* Ambient glow */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px]"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-emerald-500/5 rounded-full blur-[100px]"></div>
+      {/* Very faint atmospheric lighting */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#12C98B] opacity-[0.02] rounded-full blur-[100px] pointer-events-none"></div>
 
-      <div className="max-w-md w-full mx-4 relative z-10">
+      <div className="w-full max-w-[440px] mx-4 relative z-10 flex flex-col items-center">
+        
         {/* Logo */}
+        <div className="mb-8">
+          <img src="/logo-wide-perfect-cropped.png" alt="Barakah Capital" className="w-40 h-auto object-contain" />
+        </div>
+        
+        {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 mb-6 shadow-lg shadow-emerald-500/20">
-            <span className="text-2xl font-black text-black italic">BC</span>
-          </div>
-          <h1 className="text-4xl font-black tracking-tighter text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-500 text-sm font-medium">Sign in to your Barakha Capital account</p>
+          <h1 className="text-[40px] font-bold tracking-tight mb-2 text-[#F3F1E8]">Welcome Back</h1>
+          <p className="text-[15px] text-[#7D8C91]">Access your investment dashboard</p>
         </div>
 
         {/* Card */}
-        <div className="glass-card p-8 shadow-2xl">
+        <div 
+          className="w-full p-8 shadow-2xl relative bg-[#101917] rounded-[24px]"
+          style={{ 
+            border: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)'
+          }}
+        >
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm text-center font-medium">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-[12px] text-red-400 text-sm text-center font-medium">
               {error}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest" htmlFor="email">
+              <label className="block text-xs font-semibold uppercase tracking-wider mb-2 text-[#7D8C91]" htmlFor="email">
                 Email Address
               </label>
               <input
@@ -66,39 +78,54 @@ export default function Login() {
                 type="email"
                 required
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:shadow-[0_0_0_2px_rgba(0,245,160,0.1)] transition-all text-sm"
+                className="w-full px-4 h-[54px] bg-[#0B1311] text-[#F3F1E8] rounded-[12px] transition-all text-[15px] outline-none border border-[rgba(255,255,255,0.08)] focus:border-[#12C98B]/40 focus:ring-1 focus:ring-[#12C98B]/40 placeholder-[#7D8C91]/50"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest" htmlFor="password">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                placeholder="••••••••"
-                className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500/50 focus:shadow-[0_0_0_2px_rgba(0,245,160,0.1)] transition-all text-sm"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-[#7D8C91]" htmlFor="password">
+                  Password
+                </label>
+                <a href="#" className="text-xs transition-colors text-[#7D8C91] hover:text-[#F3F1E8]">
+                  Forgot password?
+                </a>
+              </div>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  className="w-full pl-4 pr-12 h-[54px] bg-[#0B1311] text-[#F3F1E8] rounded-[12px] transition-all text-[15px] outline-none border border-[rgba(255,255,255,0.08)] focus:border-[#12C98B]/40 focus:ring-1 focus:ring-[#12C98B]/40 placeholder-[#7D8C91]/50"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#7D8C91] hover:text-[#F3F1E8] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-black font-black rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 text-sm uppercase tracking-widest"
+              className="w-full h-[54px] bg-[#12C98B] text-[#07100E] font-semibold text-[15px] rounded-[12px] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2 flex items-center justify-center shadow-[0_4px_14px_0_rgba(18,201,139,0.15)] hover:shadow-[0_6px_20px_0_rgba(18,201,139,0.25)] hover:-translate-y-[1px]"
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-gray-600 text-xs mt-8 font-medium">
-          Secured by Supabase • Barakha Capital
+        {/* Footer */}
+        <p className="mt-8 text-xs font-medium tracking-wide text-[#7D8C91]">
+          Secure access • Barakah Capital
         </p>
       </div>
     </div>
