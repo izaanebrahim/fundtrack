@@ -108,18 +108,28 @@ export default function Dashboard() {
   const isDayUp = data.navChange >= 0;
   const totalSectorValue = data.sectorData.reduce((sum, s) => sum + s.value, 0);
 
+  const sortedSectors = [...data.sectorData].sort((a, b) => b.value - a.value);
+  let displaySectors = [];
+  if (sortedSectors.length <= 5) {
+    displaySectors = sortedSectors;
+  } else {
+    displaySectors = sortedSectors.slice(0, 5);
+    const othersValue = sortedSectors.slice(5).reduce((sum, s) => sum + s.value, 0);
+    displaySectors.push({ name: 'Others', value: othersValue });
+  }
+
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="h-8 w-48 glass-card animate-pulse"></div>
+        <div className="h-8 w-48 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="h-64 glass-card animate-pulse"></div>
-          <div className="h-64 glass-card animate-pulse"></div>
+          <div className="h-64 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
+          <div className="h-64 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="h-48 glass-card animate-pulse"></div>
-          <div className="h-48 glass-card animate-pulse"></div>
-          <div className="h-48 glass-card animate-pulse"></div>
+          <div className="h-48 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
+          <div className="h-48 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
+          <div className="h-48 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
         </div>
       </div>
     );
@@ -130,14 +140,14 @@ export default function Dashboard() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter text-white">Hello, {profile?.name?.split(' ')[0] || 'Investor'}</h1>
-          <p className="text-gray-500 text-sm font-medium mt-1">Here's your investment overview for today.</p>
+          <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8]">Hello, {profile?.name?.split(' ')[0] || 'Investor'}</h1>
+          <p className="text-[#7E8D91] text-sm font-medium mt-1">Here's your investment overview for today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/transactions" className="px-4 py-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all">
+          <Link href="/transactions" className="px-4 py-2 bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#12C98B]/20 transition-all">
             History
           </Link>
-          <div className="px-4 py-2 glass-card text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+          <div className="px-4 py-2 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest">
             {format(new Date(), 'dd MMM yyyy')}
           </div>
         </div>
@@ -148,37 +158,37 @@ export default function Dashboard() {
         
         {/* Left Column: Portfolio Balance & Quick Actions */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="glass-card p-8 relative overflow-hidden h-full flex flex-col justify-between" 
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-8 relative overflow-hidden h-full flex flex-col justify-between" 
                style={{ background: 'linear-gradient(135deg, rgba(0,245,160,0.08) 0%, rgba(13,17,17,0.9) 100%)' }}>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/10 rounded-full blur-[50px] -mr-10 -mt-10"></div>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#12C98B]/10 rounded-full blur-[50px] -mr-10 -mt-10"></div>
             
             <div>
               <div className="flex items-center justify-between mb-6">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Current Balance</span>
-                <div className="h-8 w-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                <span className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest">Current Balance</span>
+                <div className="h-8 w-8 rounded-xl bg-[#12C98B]/10 flex items-center justify-center text-[#12C98B]">
                   <IndianRupee className="w-4 h-4" />
                 </div>
               </div>
               
-              <div className="text-4xl font-black text-white tracking-tighter mb-4">
+              <div className="text-4xl font-black text-[#F3F1E8] tracking-tighter mb-4">
                 ₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
               </div>
               
               <div className="flex items-center gap-3">
-                <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${isProfit ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${isProfit ? 'bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
                   {isProfit ? '+' : ''}{data.profitLossPercentage.toFixed(2)}% Total
                 </div>
-                <div className={`text-[10px] font-bold ${isDayUp ? 'text-emerald-500/60' : 'text-red-500/60'}`}>
+                <div className={`text-[10px] font-bold ${isDayUp ? 'text-[#12C98B]/60' : 'text-red-500/60'}`}>
                   {isDayUp ? '+' : ''}{data.navChangePercentage.toFixed(2)}% today
                 </div>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-10">
-              <button className="flex items-center justify-center gap-2 py-3 bg-emerald-500 text-black font-black text-xs rounded-xl uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+              <button className="flex items-center justify-center gap-2 py-3 bg-[#12C98B] text-black font-black text-xs rounded-xl uppercase tracking-widest hover:bg-[#12C98B] transition-all shadow-lg shadow-[#12C98B]/20">
                 <ArrowUpRight className="w-4 h-4" /> Invest
               </button>
-              <button className="flex items-center justify-center gap-2 py-3 glass-card border-white/10 text-white font-black text-xs rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all">
+              <button className="flex items-center justify-center gap-2 py-3 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 border-white/10 text-[#F3F1E8] font-black text-xs rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all">
                 <ArrowDownLeft className="w-4 h-4" /> Withdraw
               </button>
             </div>
@@ -189,63 +199,68 @@ export default function Dashboard() {
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Market Card */}
-          <div className="glass-card p-6 flex flex-col justify-between">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4">
-                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current NAV</span>
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <span className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest">Current NAV</span>
+                <TrendingUp className="w-4 h-4 text-[#12C98B]" />
               </div>
-              <div className="text-3xl font-black text-white tracking-tighter mb-2">
+              <div className="text-3xl font-black text-[#F3F1E8] tracking-tighter mb-2">
                 ₹{data.currentNav.toFixed(4)}
               </div>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Fund Performance Index</p>
+              <p className="text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest">Fund Performance Index</p>
             </div>
             
             <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Units Held</p>
-                <p className="text-lg font-black text-white tracking-tight">{data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</p>
+                <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-1">Units Held</p>
+                <p className="text-lg font-black text-[#F3F1E8] tracking-tight">{data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</p>
               </div>
               <div>
-                <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Total Invested</p>
-                <p className="text-lg font-black text-white tracking-tight">₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-1">Total Invested</p>
+                <p className="text-lg font-black text-[#F3F1E8] tracking-tight">₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
               </div>
             </div>
           </div>
 
           {/* Allocation Donut */}
-          <div className="glass-card overflow-hidden">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 overflow-hidden">
             <AllocationChart data={data.categoryData} title="Asset Mix" hideTitle />
           </div>
         </div>
       </div>
 
       {/* Secondary Row */}
-      <div className="glass-card p-6">
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-[10px] font-black text-white uppercase tracking-widest">Sector Allocation</h3>
-          <PieIcon className="w-4 h-4 text-emerald-400" />
+          <h3 className="text-[10px] font-black text-[#F3F1E8] uppercase tracking-widest">Sector Allocation</h3>
+          <PieIcon className="w-4 h-4 text-[#12C98B]" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6">
-          {data.sectorData.slice(0, 6).map((s, i) => (
-            <div key={i} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] font-bold text-gray-500 truncate" title={s.name}>{s.name}</span>
-                <span className="text-[10px] font-black text-emerald-400">
-                  {totalSectorValue > 0 ? ((s.value / totalSectorValue) * 100).toFixed(1) : '0.0'}%
-                </span>
+        <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          <div 
+            className="grid gap-6" 
+            style={{ gridTemplateColumns: `repeat(${displaySectors.length}, minmax(130px, 1fr))` }}
+          >
+            {displaySectors.map((s, i) => (
+              <div key={i} className="space-y-2 min-w-0">
+                <div className="flex justify-between items-center gap-2">
+                  <span className="text-[10px] font-bold text-[#7E8D91] truncate" title={s.name}>{s.name}</span>
+                  <span className="text-[10px] font-black text-[#12C98B] flex-shrink-0">
+                    {totalSectorValue > 0 ? ((s.value / totalSectorValue) * 100).toFixed(1) : '0.0'}%
+                  </span>
+                </div>
+                <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-[#12C98B] rounded-full" 
+                    style={{ width: `${totalSectorValue > 0 ? (s.value / totalSectorValue * 100) : 0}%` }}
+                  ></div>
+                </div>
               </div>
-              <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-emerald-500 rounded-full" 
-                  style={{ width: `${totalSectorValue > 0 ? (s.value / totalSectorValue * 100) : 0}%` }}
-                ></div>
-              </div>
-            </div>
-          ))}
-          {data.sectorData.length === 0 && (
-            <p className="text-xs font-semibold text-gray-500 col-span-full">No sector allocation data available.</p>
-          )}
+            ))}
+            {displaySectors.length === 0 && (
+              <p className="text-xs font-semibold text-[#7E8D91] col-span-full">No sector allocation data available.</p>
+            )}
+          </div>
         </div>
       </div>
 

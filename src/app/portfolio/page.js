@@ -87,11 +87,11 @@ export default function Portfolio() {
 
   if (loading) return (
     <div className="space-y-6">
-      <div className="h-10 w-64 glass-card animate-pulse"></div>
-      <div className="glass-card h-48 animate-pulse"></div>
+      <div className="h-10 w-64 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 h-48 animate-pulse"></div>
       <div className="grid grid-cols-2 gap-6">
-        <div className="glass-card h-36 animate-pulse"></div>
-        <div className="glass-card h-36 animate-pulse"></div>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 h-36 animate-pulse"></div>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 h-36 animate-pulse"></div>
       </div>
     </div>
   );
@@ -101,37 +101,37 @@ export default function Portfolio() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-black tracking-tighter text-white">My Portfolio</h1>
-        <p className="text-gray-500 text-sm font-medium mt-1">Detailed breakdown of your investments</p>
+        <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8]">My Portfolio</h1>
+        <p className="text-[#7E8D91] text-sm font-medium mt-1">Detailed breakdown of your investments</p>
       </div>
 
       {/* Hero Card */}
-      <div className="glass-card p-8 relative overflow-hidden" style={{background: 'linear-gradient(135deg, rgba(0,245,160,0.05) 0%, rgba(22,27,27,0.8) 100%)'}}>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px]"></div>
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-8 relative overflow-hidden" style={{background: 'linear-gradient(135deg, rgba(0,245,160,0.05) 0%, rgba(22,27,27,0.8) 100%)'}}>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#12C98B]/5 rounded-full blur-[80px]"></div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
           <div>
-            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Current Portfolio Value</p>
-            <h2 className="text-4xl font-black tracking-tighter text-white mb-3">₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h2>
-            <div className={`flex items-center gap-2 text-sm font-black ${isProfit ? 'text-emerald-400' : 'text-red-400'}`}>
+            <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-3">Current Portfolio Value</p>
+            <h2 className="text-4xl font-black tracking-tighter text-[#F3F1E8] mb-3">₹{data.portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h2>
+            <div className={`flex items-center gap-2 text-sm font-black ${isProfit ? 'text-[#12C98B]' : 'text-red-400'}`}>
                {isProfit ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                {data.profitLoss > 0 ? '+' : ''}₹{data.profitLoss.toLocaleString('en-IN', { maximumFractionDigits: 2 })} ({data.pnlPercentage.toFixed(2)}%)
             </div>
-            <div className={`flex items-center gap-2 text-xs font-bold mt-1 ${data.dayChangePct >= 0 ? 'text-emerald-500/80' : 'text-red-500/80'}`}>
+            <div className={`flex items-center gap-2 text-xs font-bold mt-1 ${data.dayChangePct >= 0 ? 'text-[#12C98B]/80' : 'text-red-500/80'}`}>
               {data.dayChangePct >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
               Today: {data.dayChangePct >= 0 ? '+' : ''}{data.dayChangePct.toFixed(2)}% ({data.dayChangePct >= 0 ? '+' : ''}₹{(data.dayChange * data.totalUnits).toLocaleString('en-IN', { maximumFractionDigits: 2 })})
             </div>
           </div>
 
           <div className="border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8">
-            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Total Amount Invested</p>
+            <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-3">Total Amount Invested</p>
             <h2 className="text-3xl font-black tracking-tighter text-gray-200">₹{data.investedAmount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</h2>
           </div>
 
           <div className="border-t md:border-t-0 md:border-l border-white/5 pt-6 md:pt-0 md:pl-8">
-            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3">Total Units Held</p>
+            <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-3">Total Units Held</p>
             <div className="flex items-end gap-2">
-              <h2 className="text-3xl font-black tracking-tighter text-emerald-400">{data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}</h2>
-              <span className="text-gray-500 mb-1 text-xs font-bold uppercase tracking-wider">units</span>
+              <h2 className="text-3xl font-black tracking-tighter text-[#12C98B]">{data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 4 })}</h2>
+              <span className="text-[#7E8D91] mb-1 text-xs font-bold uppercase tracking-wider">units</span>
             </div>
           </div>
         </div>
@@ -139,28 +139,28 @@ export default function Portfolio() {
 
       {/* Metrics */}
       <div>
-        <h3 className="text-sm font-black text-white uppercase tracking-widest mb-6">NAV Metrics</h3>
+        <h3 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest mb-6">NAV Metrics</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="glass-card p-6 glass-card-hover">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 transition-all hover:border-[#12C98B]/20">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3 text-gray-400">
+              <div className="flex items-center gap-3 text-[#7E8D91]">
                 <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center"><IndianRupee className="w-4 h-4" /></div>
                 <span className="text-xs font-black uppercase tracking-widest">Average NAV (Your Cost)</span>
               </div>
-              <span className="text-white font-black text-xl">₹{data.averageNav.toFixed(4)}</span>
+              <span className="text-[#F3F1E8] font-black text-xl">₹{data.averageNav.toFixed(4)}</span>
             </div>
-            <p className="text-xs text-gray-500 font-medium">Weighted average cost at which you accumulated your units.</p>
+            <p className="text-xs text-[#7E8D91] font-medium">Weighted average cost at which you accumulated your units.</p>
           </div>
 
-          <div className="glass-card p-6 glass-card-hover">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 transition-all hover:border-[#12C98B]/20">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3 text-gray-400">
-                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400"><TrendingUp className="w-4 h-4" /></div>
+              <div className="flex items-center gap-3 text-[#7E8D91]">
+                <div className="h-8 w-8 rounded-lg bg-[#12C98B]/10 flex items-center justify-center text-[#12C98B]"><TrendingUp className="w-4 h-4" /></div>
                 <span className="text-xs font-black uppercase tracking-widest">Current Live NAV</span>
               </div>
-              <span className="text-emerald-400 font-black text-xl">₹{data.currentNav.toFixed(4)}</span>
+              <span className="text-[#12C98B] font-black text-xl">₹{data.currentNav.toFixed(4)}</span>
             </div>
-            <p className="text-xs text-gray-500 font-medium">Current market value of one unit of the fund.</p>
+            <p className="text-xs text-[#7E8D91] font-medium">Current market value of one unit of the fund.</p>
           </div>
         </div>
       </div>

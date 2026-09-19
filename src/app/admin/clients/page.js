@@ -119,8 +119,8 @@ export default function ManageClients() {
   return (
     <div className="space-y-6 relative">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
-          <Users className="mr-3 text-emerald-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8] flex items-center">
+          <Users className="mr-3 text-[#12C98B]" />
           Client Management
         </h1>
         
@@ -136,12 +136,12 @@ export default function ManageClients() {
       {/* Creation Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-           <div className="glass-card shadow-2xl w-full max-w-md overflow-hidden">
+           <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-2xl w-full max-w-md overflow-hidden">
               <div className="flex justify-between items-center p-4 border-b border-white/5 bg-gray-950/50">
-                 <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center">
-                   <UserPlus className="w-5 h-5 mr-2 text-emerald-400"/> Create Client Account
+                 <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest flex items-center">
+                   <UserPlus className="w-5 h-5 mr-2 text-[#12C98B]"/> Create Client Account
                  </h2>
-                 <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                 <button onClick={() => setIsModalOpen(false)} className="text-[#7E8D91] hover:text-[#F3F1E8] transition-colors">
                    <X className="w-5 h-5" />
                  </button>
               </div>
@@ -158,38 +158,38 @@ export default function ManageClients() {
 
                 <form onSubmit={handleCreateClient} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Full Name</label>
                     <input
                       type="text" required value={newName} onChange={(e) => setNewName(e.target.value)}
-                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Email Address</label>
                     <input
                       type="email" required value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                     />
                   </div>
                   <div>
-                     <label className="block text-sm font-medium text-gray-300 mb-1">Phone Number (Optional)</label>
+                     <label className="block text-sm font-medium text-[#7E8D91] mb-1">Phone Number (Optional)</label>
                      <input
                        type="tel" value={newPhone} onChange={(e) => setNewPhone(e.target.value)}
-                       className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                       className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                      />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Assign Password</label>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Assign Password</label>
                     <input
                       type="text" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={6}
-                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                       placeholder="Min 6 characters"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Provide this password securely to the client.</p>
+                    <p className="text-xs text-[#7E8D91] mt-1">Provide this password securely to the client.</p>
                   </div>
 
                   <div className="pt-4 mt-6 border-t border-gray-800 flex justify-end space-x-3">
-                     <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                     <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-medium text-[#7E8D91] hover:text-[#F3F1E8] transition-colors">
                         Cancel
                      </button>
                      <button type="submit" disabled={creating} className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center">
@@ -203,25 +203,25 @@ export default function ManageClients() {
       )}
 
       {/* Search and List */}
-      <div className="glass-card shadow-sm overflow-hidden">
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-white/5 flex items-center">
           <div className="relative w-full max-w-md">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-4 w-4 text-gray-500" />
+              <Search className="h-4 w-4 text-[#7E8D91]" />
             </div>
             <input
               type="text"
               placeholder="Search clients by name or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-950 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-950 text-[#7E8D91] placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
             />
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-400">
-            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
+          <table className="w-full text-left text-sm text-[#7E8D91]">
+            <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
               <tr>
                 <th className="px-6 py-4">Client Name</th>
                 <th className="px-6 py-4">Contact Info</th>
@@ -265,22 +265,22 @@ export default function ManageClients() {
                            {client.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="ml-3">
-                          <p className="text-white font-medium">{client.name}</p>
-                          <p className="text-gray-500 text-xs">ID: {client.id.substring(0, 8)}...</p>
+                          <p className="text-[#F3F1E8] font-medium">{client.name}</p>
+                          <p className="text-[#7E8D91] text-xs">ID: {client.id.substring(0, 8)}...</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-gray-300">{client.email}</p>
-                      <p className="text-gray-500 text-xs">{client.phone || 'No phone provided'}</p>
+                      <p className="text-[#7E8D91]">{client.email}</p>
+                      <p className="text-[#7E8D91] text-xs">{client.phone || 'No phone provided'}</p>
                     </td>
-                    <td className="px-6 py-4 text-gray-400 font-medium">
+                    <td className="px-6 py-4 text-[#7E8D91] font-medium">
                       ₹{avgNav.toFixed(4)}
                     </td>
-                    <td className="px-6 py-4 text-right font-medium text-emerald-400">
+                    <td className="px-6 py-4 text-right font-medium text-[#12C98B]">
                       {units.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                     </td>
-                    <td className={`px-6 py-4 text-right font-medium ${pnlPct >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                    <td className={`px-6 py-4 text-right font-medium ${pnlPct >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
                       {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
                     </td>
                   </tr>
@@ -289,7 +289,7 @@ export default function ManageClients() {
               
               {filteredClients.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="5" className="px-6 py-12 text-center text-[#7E8D91]">
                     {searchQuery ? 'No clients matching your search.' : 'No clients found.'}
                   </td>
                 </tr>

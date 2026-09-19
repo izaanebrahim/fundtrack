@@ -84,16 +84,16 @@ export default function ManageReports() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
-        <FileText className="mr-3 text-emerald-400" />
+      <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8] flex items-center">
+        <FileText className="mr-3 text-[#12C98B]" />
         Manage Reports
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Upload Form */}
         <div className="lg:col-span-1">
-          <div className="glass-card p-6 shadow-sm sticky top-8">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6">Upload Monthly Report</h2>
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 shadow-sm sticky top-8">
+            <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest mb-6">Upload Monthly Report</h2>
             
             {message.text && (
               <div className={`mb-6 p-4 rounded-lg flex items-start text-sm ${
@@ -106,39 +106,39 @@ export default function ManageReports() {
 
             <form onSubmit={handleUploadReport} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Report Title</label>
+                <label className="block text-sm font-medium text-[#7E8D91] mb-1">Report Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Q1 2026 Factsheet"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Target Month</label>
+                <label className="block text-sm font-medium text-[#7E8D91] mb-1">Target Month</label>
                 <input
                   type="month"
                   required
                   value={month}
                   onChange={(e) => setMonth(e.target.value)}
-                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Document Link / URL</label>
+                <label className="block text-sm font-medium text-[#7E8D91] mb-1">Document Link / URL</label>
                 <input
                   type="url"
                   required
                   placeholder="https://link-to-pdf..."
                   value={fileUrl}
                   onChange={(e) => setFileUrl(e.target.value)}
-                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-white focus:outline-none focus:border-emerald-500/50"
+                  className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                 />
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-[#7E8D91] mt-2">
                   For MVP, provide an external link (Google Drive, AWS, etc) to the PDF.
                 </p>
               </div>
@@ -159,28 +159,28 @@ export default function ManageReports() {
 
         {/* Existing Reports */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="p-4 glass-card flex items-center justify-between">
-             <h2 className="text-sm font-black text-white uppercase tracking-widest">Published Reports</h2>
-             <span className="bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded-md">{reports.length} Total</span>
+          <div className="p-4 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 flex items-center justify-between">
+             <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest">Published Reports</h2>
+             <span className="bg-gray-800 text-[#7E8D91] text-xs px-2 py-1 rounded-md">{reports.length} Total</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {reports.map(report => (
-              <div key={report.id} className="glass-card rounded-lg p-5 flex flex-col justify-between hover:border-indigo-500/50 transition-colors">
+              <div key={report.id} className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 rounded-lg p-5 flex flex-col justify-between hover:border-indigo-500/50 transition-colors">
                  <div>
                     <div className="flex justify-between items-start mb-2">
-                       <span className="text-xs font-semibold text-emerald-400 bg-indigo-900/30 px-2 py-1 rounded border border-indigo-800/50">
+                       <span className="text-xs font-semibold text-[#12C98B] bg-indigo-900/30 px-2 py-1 rounded border border-indigo-800/50">
                          {format(new Date(report.month + '-01'), 'MMMM yyyy')}
                        </span>
-                       <button onClick={() => handleDelete(report.id)} className="text-gray-500 hover:text-red-400 p-1">
+                       <button onClick={() => handleDelete(report.id)} className="text-[#7E8D91] hover:text-red-400 p-1">
                           <Trash2 className="w-4 h-4" />
                        </button>
                     </div>
-                    <h3 className="text-white font-medium text-lg leading-tight mb-3">{report.title}</h3>
+                    <h3 className="text-[#F3F1E8] font-medium text-lg leading-tight mb-3">{report.title}</h3>
                  </div>
-                 <div className="flex items-center justify-between mt-4 text-sm text-gray-400">
+                 <div className="flex items-center justify-between mt-4 text-sm text-[#7E8D91]">
                     <span className="text-xs">Added {format(new Date(report.created_at), 'dd MMM yy')}</span>
-                    <a href={report.file_url} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-indigo-300 transition-colors font-medium">
+                    <a href={report.file_url} target="_blank" rel="noopener noreferrer" className="text-[#12C98B] hover:text-indigo-300 transition-colors font-medium">
                       View Link &rarr;
                     </a>
                  </div>
@@ -188,7 +188,7 @@ export default function ManageReports() {
             ))}
             
             {reports.length === 0 && !loading && (
-              <div className="col-span-1 md:col-span-2 p-12 glass-card border-dashed rounded-xl flex flex-col items-center justify-center text-gray-500">
+              <div className="col-span-1 md:col-span-2 p-12 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 border-dashed rounded-xl flex flex-col items-center justify-center text-[#7E8D91]">
                 <FileText className="w-10 h-10 mb-3 text-gray-700" />
                 <p>No reports uploaded yet.</p>
               </div>

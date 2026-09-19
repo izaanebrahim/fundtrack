@@ -52,10 +52,10 @@ export default function Sidebar({ onClose }) {
   };
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-[#090c0c] border-r border-white/5 text-gray-400">
-      <div className="flex h-16 items-center justify-between px-6 border-b border-white/5">
+    <div className="flex h-screen w-64 flex-col bg-[#07100E] border-r border-white/5 text-[#7E8D91]">
+      <div className="flex h-20 items-center justify-between px-6 border-b border-white/5">
         <Link href={navigation[0].href} className="w-full flex items-center justify-start cursor-pointer transition-opacity hover:opacity-80">
-          <img src="/logo-wide-perfect-cropped.png" alt="Barakah Capital" className="w-[160px] h-auto object-contain" />
+          <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[170px] h-auto object-contain" />
         </Link>
         <button 
           onClick={onClose}
@@ -75,14 +75,14 @@ export default function Sidebar({ onClose }) {
               href={item.href}
               className={clsx(
                 isActive
-                  ? 'nav-item-active'
-                  : 'text-gray-500 hover:bg-white/5 hover:text-white',
-                'group flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition-all duration-200'
+                  ? 'bg-[#12C98B]/10 text-[#F3F1E8] border-l-4 border-[#12C98B] rounded-r-xl'
+                  : 'text-[#7E8D91] hover:bg-[#101917] hover:text-[#F3F1E8] border-l-4 border-transparent rounded-r-xl',
+                'group flex items-center px-4 py-3 text-sm font-semibold transition-all duration-200'
               )}
             >
               <Icon
                 className={clsx(
-                  isActive ? 'text-black' : 'text-gray-500 group-hover:text-white',
+                  isActive ? 'text-[#12C98B]' : 'text-[#7E8D91] group-hover:text-[#F3F1E8]',
                   'h-5 w-5 flex-shrink-0'
                 )}
               />
@@ -92,14 +92,14 @@ export default function Sidebar({ onClose }) {
         })}
       </nav>
 
-      <div className="border-t border-white/5 p-6 bg-black/20">
+      <div className="border-t border-white/5 p-6 bg-[#091411]">
         <div className="flex items-center mb-6">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-black font-black shadow-lg shadow-emerald-500/20">
+          <div className="h-10 w-10 rounded-full bg-[#12C98B]/20 flex items-center justify-center text-[#12C98B] font-black border border-[#12C98B]/30">
             {profile.name.charAt(0).toUpperCase()}
           </div>
           <div className="ml-3">
-            <p className="text-sm font-bold text-white leading-none">{profile.name}</p>
-            <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">{profile.role}</p>
+            <p className="text-sm font-bold text-[#F3F1E8] leading-none">{profile.name}</p>
+            <p className="text-[10px] text-[#7E8D91] mt-1 uppercase tracking-widest">{profile.role}</p>
           </div>
         </div>
         <button

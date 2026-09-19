@@ -3,10 +3,9 @@
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
-import { Users, Landmark, FileText, IndianRupee, PieChart as PieIcon, TrendingUp, ArrowRight } from 'lucide-react';
+import { Users, Landmark, FileText, IndianRupee, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import AllocationChart from '@/components/AllocationChart';
-
 export default function AdminDashboard() {
   const { profile } = useAuth();
   const [data, setData] = useState({
@@ -98,83 +97,75 @@ export default function AdminDashboard() {
 
   if (loading) {
      return <div className="space-y-8">
-        <div className="h-10 w-72 glass-card animate-pulse"></div>
+        <div className="h-10 w-72 bg-[#101917] rounded-xl animate-pulse"></div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-36 glass-card animate-pulse"></div>)}
+          {[...Array(4)].map((_, i) => <div key={i} className="h-32 bg-[#101917] rounded-2xl animate-pulse"></div>)}
         </div>
+        <div className="h-96 bg-[#101917] rounded-[16px] animate-pulse"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="h-80 glass-card animate-pulse"></div>
-          <div className="h-80 glass-card animate-pulse"></div>
+          <div className="h-80 bg-[#101917] rounded-[16px] animate-pulse"></div>
+          <div className="h-80 bg-[#101917] rounded-[16px] animate-pulse"></div>
         </div>
       </div>
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-6xl mx-auto">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter text-white">Admin Dashboard</h1>
-          <p className="text-gray-500 text-sm font-medium mt-1">Fund management overview</p>
+          <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8]">Portfolio Overview</h1>
+          <p className="text-[#7E8D91] text-sm font-medium mt-1">Fund management overview</p>
         </div>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-[40px] -mr-8 -mt-8"></div>
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total AUM</span>
-            <div className="h-8 w-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-              <IndianRupee className="w-4 h-4" />
-            </div>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl p-6 transition-all hover:border-[#12C98B]/20 shadow-sm shadow-black/20">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold text-[#7E8D91] uppercase tracking-widest">Total AUM</span>
+            <IndianRupee className="w-4 h-4 text-[#12C98B]" />
           </div>
-          <div className="text-3xl font-black text-white tracking-tighter relative z-10">
+          <div className="text-3xl font-black text-[#F3F1E8] tracking-tighter">
             ₹{data.totalAum.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
           </div>
         </div>
 
-        <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-[40px] -mr-8 -mt-8"></div>
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Current NAV</span>
-            <div className="h-8 w-8 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-              <Landmark className="w-4 h-4" />
+        <div className="bg-[#101917] border border-white/5 rounded-2xl p-6 transition-all hover:border-[#D6B875]/20 shadow-sm shadow-black/20">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold text-[#7E8D91] uppercase tracking-widest">Current NAV</span>
+            <Landmark className="w-4 h-4 text-[#D6B875]" />
+          </div>
+          <div className="flex items-baseline gap-2">
+            <div className="text-3xl font-black text-[#F3F1E8] tracking-tighter">
+              ₹{data.currentNav.toFixed(4)}
             </div>
           </div>
-          <div className="text-3xl font-black text-white tracking-tighter relative z-10">
-            ₹{data.currentNav.toFixed(4)}
-          </div>
-          <div className={`mt-2 text-xs font-bold ${data.navChange >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+          <div className={`mt-1 text-xs font-bold ${data.navChange >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
             {data.navChange >= 0 ? '+' : ''}{data.navChangePercentage.toFixed(2)}% today
           </div>
         </div>
 
-        <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full blur-[40px] -mr-8 -mt-8"></div>
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Units</span>
-            <div className="h-8 w-8 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
-              <FileText className="w-4 h-4" />
-            </div>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl p-6 transition-all hover:border-white/10 shadow-sm shadow-black/20">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold text-[#7E8D91] uppercase tracking-widest">Total Units</span>
+            <FileText className="w-4 h-4 text-[#7E8D91]" />
           </div>
-          <div className="text-3xl font-black text-white tracking-tighter relative z-10">
+          <div className="text-3xl font-black text-[#F3F1E8] tracking-tighter">
             {data.totalUnits.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
           </div>
         </div>
 
-        <div className="glass-card p-6 glass-card-hover relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-[40px] -mr-8 -mt-8"></div>
-          <div className="flex items-center justify-between mb-4 relative z-10">
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Total Clients</span>
-            <div className="h-8 w-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
-              <Users className="w-4 h-4" />
-            </div>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl p-6 transition-all hover:border-white/10 shadow-sm shadow-black/20">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-[10px] font-bold text-[#7E8D91] uppercase tracking-widest">Total Clients</span>
+            <Users className="w-4 h-4 text-[#7E8D91]" />
           </div>
-          <div className="text-3xl font-black text-white tracking-tighter relative z-10">
+          <div className="text-3xl font-black text-[#F3F1E8] tracking-tighter">
             {data.totalClients}
           </div>
         </div>
       </div>
+
 
       {/* Analytics Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -184,39 +175,39 @@ export default function AdminDashboard() {
 
       {/* Action shortcuts */}
       <div>
-        <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/admin/transactions" className="glass-card p-8 flex items-center gap-6 glass-card-hover group border-emerald-500/0 hover:border-emerald-500/20">
-             <div className="h-14 w-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
-               <IndianRupee className="w-6 h-6" />
+        <h2 className="text-xs font-black text-[#7E8D91] uppercase tracking-widest mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link href="/admin/transactions" className="bg-[#101917] border border-white/5 rounded-2xl p-5 flex items-center gap-4 transition-all hover:bg-white/[0.02] hover:border-white/10 group shadow-sm shadow-black/20">
+             <div className="h-10 w-10 rounded-xl bg-[#12C98B]/10 flex items-center justify-center text-[#12C98B] flex-shrink-0 group-hover:bg-[#12C98B]/20 transition-colors">
+               <IndianRupee className="w-5 h-5" />
              </div>
              <div className="flex-1">
-               <span className="text-white font-black text-sm block">Manage Transactions</span>
-               <span className="text-gray-500 text-xs font-medium">Add investments & withdrawals</span>
+               <span className="text-[#F3F1E8] font-bold text-sm block">Manage Transactions</span>
+               <span className="text-[#7E8D91] text-xs font-medium mt-0.5 block">Add investments & withdrawals</span>
              </div>
-             <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-emerald-400 transition-colors" />
+             <ArrowRight className="w-4 h-4 text-[#7E8D91] group-hover:text-[#F3F1E8] transition-colors" />
           </Link>
           
-          <Link href="/admin/fund" className="glass-card p-8 flex items-center gap-6 glass-card-hover group border-cyan-500/0 hover:border-cyan-500/20">
-             <div className="h-14 w-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 flex-shrink-0 group-hover:bg-cyan-500/20 transition-colors">
-               <Landmark className="w-6 h-6" />
+          <Link href="/admin/fund" className="bg-[#101917] border border-white/5 rounded-2xl p-5 flex items-center gap-4 transition-all hover:bg-white/[0.02] hover:border-white/10 group shadow-sm shadow-black/20">
+             <div className="h-10 w-10 rounded-xl bg-[#D6B875]/10 flex items-center justify-center text-[#D6B875] flex-shrink-0 group-hover:bg-[#D6B875]/20 transition-colors">
+               <Landmark className="w-5 h-5" />
              </div>
              <div className="flex-1">
-               <span className="text-white font-black text-sm block">Update Fund / NAV</span>
-               <span className="text-gray-500 text-xs font-medium">Record daily fund values</span>
+               <span className="text-[#F3F1E8] font-bold text-sm block">Update Fund / NAV</span>
+               <span className="text-[#7E8D91] text-xs font-medium mt-0.5 block">Record daily fund values</span>
              </div>
-             <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-cyan-400 transition-colors" />
+             <ArrowRight className="w-4 h-4 text-[#7E8D91] group-hover:text-[#F3F1E8] transition-colors" />
           </Link>
 
-          <Link href="/admin/clients" className="glass-card p-8 flex items-center gap-6 glass-card-hover group border-purple-500/0 hover:border-purple-500/20">
-             <div className="h-14 w-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 flex-shrink-0 group-hover:bg-purple-500/20 transition-colors">
-               <Users className="w-6 h-6" />
+          <Link href="/admin/clients" className="bg-[#101917] border border-white/5 rounded-2xl p-5 flex items-center gap-4 transition-all hover:bg-white/[0.02] hover:border-white/10 group shadow-sm shadow-black/20">
+             <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center text-[#7E8D91] flex-shrink-0 group-hover:bg-white/10 group-hover:text-[#F3F1E8] transition-colors">
+               <Users className="w-5 h-5" />
              </div>
              <div className="flex-1">
-               <span className="text-white font-black text-sm block">Manage Clients</span>
-               <span className="text-gray-500 text-xs font-medium">View & manage investor accounts</span>
+               <span className="text-[#F3F1E8] font-bold text-sm block">Manage Clients</span>
+               <span className="text-[#7E8D91] text-xs font-medium mt-0.5 block">View & manage accounts</span>
              </div>
-             <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-purple-400 transition-colors" />
+             <ArrowRight className="w-4 h-4 text-[#7E8D91] group-hover:text-[#F3F1E8] transition-colors" />
           </Link>
         </div>
       </div>

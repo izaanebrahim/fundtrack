@@ -43,21 +43,10 @@ body {
 }
 
 /* Glassmorphism Components */
-.glass-card {
-  background: rgba(22, 27, 27, 0.8);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-}
 
-.glass-card-hover {
-  transition: all 0.3s ease;
-}
-.glass-card-hover:hover {
-  border-color: rgba(0, 245, 160, 0.3);
-  box-shadow: 0 0 30px rgba(0, 245, 160, 0.05);
-  transform: translateY(-2px);
-}
+
+
+
 
 /* Gradient Text */
 .text-gradient-emerald {
@@ -99,12 +88,6 @@ body {
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Navigation Active State */
-.nav-item-active {
-  background: var(--accent-emerald) !important;
-  color: #000 !important;
-  box-shadow: 0 0 15px rgba(0, 245, 160, 0.5);
-}
 
 /* Hide default input styles */
 input, select {

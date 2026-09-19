@@ -93,27 +93,27 @@ export default function ManageFund() {
     return ((last - first) / first) * 100;
   }, [filteredData]);
 
-  if (loading) return <div className="text-white p-8 font-medium animate-pulse">Fetching live analytics...</div>;
+  if (loading) return <div className="text-[#F3F1E8] p-8 font-medium animate-pulse">Fetching live analytics...</div>;
 
   const ranges = ['1M', '6M', '1Y', '3Y', 'ALL'];
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
-          <Landmark className="mr-3 text-emerald-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8] flex items-center">
+          <Landmark className="mr-3 text-[#12C98B]" />
           Fund Analytics & History
         </h1>
         
-        <div className="glass-card p-1 rounded-lg flex items-center">
+        <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-1 rounded-lg flex items-center">
            {ranges.map(range => (
              <button
                 key={range}
                 onClick={() => setSelectedRange(range)}
                 className={`px-4 py-1.5 rounded-md text-xs font-black uppercase tracking-widest transition-all ${
                   selectedRange === range 
-                  ? 'bg-indigo-600 text-white shadow-lg' 
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-indigo-600 text-[#F3F1E8] shadow-lg' 
+                  : 'text-[#7E8D91] hover:text-[#F3F1E8]'
                 }`}
              >
                {range}
@@ -123,11 +123,11 @@ export default function ManageFund() {
       </div>
 
       {/* Hero Performance Chart */}
-      <div className="glass-card p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
          <div className="flex items-baseline gap-4 mb-8">
-            <h2 className="text-3xl font-bold text-white">₹{liveStats.nav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}</h2>
-            <span className={`text-lg font-bold ${periodReturn >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-              {periodReturn >= 0 ? '+' : ''}{periodReturn.toFixed(2)}% <span className="text-sm font-medium text-gray-500 ml-1">in {selectedRange}</span>
+            <h2 className="text-3xl font-bold text-[#F3F1E8]">₹{liveStats.nav.toLocaleString('en-IN', { maximumFractionDigits: 4 })}</h2>
+            <span className={`text-lg font-bold ${periodReturn >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
+              {periodReturn >= 0 ? '+' : ''}{periodReturn.toFixed(2)}% <span className="text-sm font-medium text-[#7E8D91] ml-1">in {selectedRange}</span>
             </span>
          </div>
 
@@ -153,17 +153,17 @@ export default function ManageFund() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Live Status Card */}
         <div className="lg:col-span-1 space-y-4">
-          <div className="glass-card p-6 shadow-sm">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6 shadow-sm">
              <h2 className="text-sm font-bold text-indigo-300 uppercase tracking-widest mb-4 flex items-center">
                <TrendingUp className="w-4 h-4 mr-2" /> Live Stats
              </h2>
              <div className="space-y-4">
                 <div>
-                  <p className="text-xs text-gray-400 mb-1">Total AUM</p>
+                  <p className="text-xs text-[#7E8D91] mb-1">Total AUM</p>
                   <p className="text-lg font-semibold text-gray-200">₹{liveStats.aum.toLocaleString('en-IN')}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 mb-1">Active Units</p>
+                  <p className="text-xs text-[#7E8D91] mb-1">Active Units</p>
                   <p className="text-lg font-semibold text-gray-200">{liveStats.units.toLocaleString('en-IN')}</p>
                 </div>
              </div>
@@ -172,27 +172,27 @@ export default function ManageFund() {
 
         {/* History Table */}
         <div className="lg:col-span-3">
-          <div className="glass-card shadow-sm overflow-hidden">
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-sm overflow-hidden">
             <div className="p-6 border-b border-white/5 flex justify-between items-center">
-               <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center">
-                 <History className="w-5 h-5 mr-3 text-gray-400" /> Published NAV Audit Logs
+               <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest flex items-center">
+                 <History className="w-5 h-5 mr-3 text-[#7E8D91]" /> Published NAV Audit Logs
                </h2>
             </div>
             
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-gray-400">
-                <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
+              <table className="w-full text-left text-sm text-[#7E8D91]">
+                <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
                   <tr>
                     <th className="px-6 py-4">Publish Date</th>
                     <th className="px-6 py-4 text-right">AUM at Sync</th>
                     <th className="px-6 py-4 text-right">Units at Sync</th>
-                    <th className="px-6 py-4 text-right text-white">Published NAV</th>
+                    <th className="px-6 py-4 text-right text-[#F3F1E8]">Published NAV</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {history.map((record) => (
                     <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-6 py-4 font-medium text-gray-300">
+                      <td className="px-6 py-4 font-medium text-[#7E8D91]">
                         {format(new Date(record.date), 'dd MMM yyyy')}
                       </td>
                       <td className="px-6 py-4 text-right">
@@ -201,7 +201,7 @@ export default function ManageFund() {
                       <td className="px-6 py-4 text-right">
                         {Number(record.total_units).toLocaleString('en-IN')}
                       </td>
-                      <td className="px-6 py-4 text-right font-bold text-emerald-400 text-base">
+                      <td className="px-6 py-4 text-right font-bold text-[#12C98B] text-base">
                         ₹{Number(record.nav).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                       </td>
                     </tr>
@@ -209,7 +209,7 @@ export default function ManageFund() {
                   
                   {history.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-gray-500 italic">
+                      <td colSpan="4" className="px-6 py-12 text-center text-[#7E8D91] italic">
                         No official history snapshots yet. Go to Manage Holdings to sync your first NAV record.
                       </td>
                     </tr>

@@ -67,11 +67,11 @@ export default function AppLayout({ children }) {
            style={{ background: 'radial-gradient(circle at 30% 20%, #1a2e2e 0%, #0d1111 50%)' }}>
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-emerald-500"></div>
-            <div className="absolute inset-0 rounded-full blur-lg bg-emerald-500/20 animate-pulse"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-[#12C98B]"></div>
+            <div className="absolute inset-0 rounded-full blur-lg bg-[#12C98B]/20 animate-pulse"></div>
           </div>
           <div className="text-center">
-            <p className="text-gray-400 text-sm font-medium mb-4">Loading Barakha Capital...</p>
+            <p className="text-[#7E8D91] text-sm font-medium mb-4">Loading Barakha Capital...</p>
             {showRescue && (
               <button 
                 onClick={forceRecovery}
@@ -112,11 +112,11 @@ export default function AppLayout({ children }) {
         {/* Mobile Header */}
         <header className="flex h-14 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
           <Link href={profile?.role === 'admin' ? '/admin' : '/dashboard'} className="flex items-center cursor-pointer transition-opacity hover:opacity-80">
-            <img src="/logo-wide-perfect-cropped.png" alt="Barakah Capital" className="w-[130px] h-auto object-contain" />
+            <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[140px] h-auto object-contain" />
           </Link>
           <button 
             onClick={() => setIsSidebarOpen(true)}
-            className="p-2 text-gray-500 hover:text-emerald-400 transition-colors"
+            className="p-2 text-[#7E8D91] hover:text-[#12C98B] transition-colors"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -127,12 +127,12 @@ export default function AppLayout({ children }) {
           {!profile && !profileError ? (
             <div className="flex h-full items-center justify-center">
                <div className="relative">
-                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-emerald-500"></div>
-                 <div className="absolute inset-0 rounded-full blur-lg bg-emerald-500/20 animate-pulse"></div>
+                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-[#12C98B]"></div>
+                 <div className="absolute inset-0 rounded-full blur-lg bg-[#12C98B]/20 animate-pulse"></div>
                </div>
             </div>
           ) : profileError ? (
-            <div className="p-6 glass-card border-red-500/20 text-red-400">
+            <div className="p-6 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 border-red-500/20 text-red-400">
                <h3 className="font-black text-lg mb-2">Connection Error</h3>
                <p className="text-sm font-medium">{profileError}</p>
             </div>

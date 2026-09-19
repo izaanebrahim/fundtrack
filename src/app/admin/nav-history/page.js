@@ -57,28 +57,28 @@ export default function AdminNavHistory() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h1 className="text-3xl font-black tracking-tighter text-white flex items-center">
-          <History className="mr-3 text-emerald-400" />
+        <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8] flex items-center">
+          <History className="mr-3 text-[#12C98B]" />
           Full NAV History (Admin)
         </h1>
         
-        <button className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors border border-gray-700">
+        <button className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-[#F3F1E8] text-sm font-medium rounded-lg transition-colors border border-gray-700">
           <Download className="w-4 h-4 mr-2" />
           Export CSV
         </button>
       </div>
 
-      <div className="glass-card shadow-sm overflow-hidden">
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-sm overflow-hidden">
         <div className="p-4 border-b border-white/5 flex items-center flex-wrap gap-4 justify-between">
-           <p className="text-sm text-gray-400">Chronological record of all declared NAV and Fund Values.</p>
+           <p className="text-sm text-[#7E8D91]">Chronological record of all declared NAV and Fund Values.</p>
            <div className="bg-indigo-900/30 text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-md text-sm font-medium">
              Total Records: {history.length}
            </div>
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-400">
-            <thead className="bg-gray-950/50 text-xs uppercase text-gray-500 font-semibold border-b border-white/5">
+          <table className="w-full text-left text-sm text-[#7E8D91]">
+            <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
               <tr>
                 <th className="px-6 py-4">Observation Date</th>
                 <th className="px-6 py-4 text-right">Total Value (AUM)</th>
@@ -91,19 +91,19 @@ export default function AdminNavHistory() {
             <tbody className="divide-y divide-white/5">
               {history.map((record) => (
                 <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="px-6 py-4 font-medium text-white">
+                  <td className="px-6 py-4 font-medium text-[#F3F1E8]">
                     {format(new Date(record.date), 'dd MMMM yyyy')}
                   </td>
-                  <td className="px-6 py-4 text-right text-gray-300">
+                  <td className="px-6 py-4 text-right text-[#7E8D91]">
                     ₹{Number(record.total_value).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                   </td>
-                  <td className="px-6 py-4 text-right text-gray-300">
+                  <td className="px-6 py-4 text-right text-[#7E8D91]">
                     {Number(record.total_units).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                   </td>
-                  <td className="px-6 py-4 text-right font-bold text-emerald-400 text-base">
+                  <td className="px-6 py-4 text-right font-bold text-[#12C98B] text-base">
                     ₹{Number(record.nav).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                   </td>
-                  <td className="px-6 py-4 text-right text-xs text-gray-600">
+                  <td className="px-6 py-4 text-right text-xs text-[#7E8D91]">
                     {format(new Date(record.created_at), 'dd MMM yy, HH:mm')}
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -120,7 +120,7 @@ export default function AdminNavHistory() {
               
               {history.length === 0 && !loading && (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="5" className="px-6 py-12 text-center text-[#7E8D91]">
                     No fund history recorded yet. Please declare an initial NAV in the Manage Fund tab.
                   </td>
                 </tr>

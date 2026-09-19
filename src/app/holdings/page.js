@@ -28,9 +28,9 @@ export default function ClientHoldings() {
 
   if (loading) return (
     <div className="space-y-6">
-      <div className="h-10 w-64 glass-card animate-pulse"></div>
-      <div className="glass-card h-12 animate-pulse"></div>
-      <div className="glass-card h-80 animate-pulse"></div>
+      <div className="h-10 w-64 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 animate-pulse"></div>
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 h-12 animate-pulse"></div>
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 h-80 animate-pulse"></div>
     </div>
   );
 
@@ -40,31 +40,31 @@ export default function ClientHoldings() {
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter text-white">Fund Holdings</h1>
-          <p className="text-gray-500 text-sm font-medium mt-1">Full transparency into where your capital is deployed</p>
+          <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8]">Fund Holdings</h1>
+          <p className="text-[#7E8D91] text-sm font-medium mt-1">Full transparency into where your capital is deployed</p>
         </div>
-        <div className="glass-card px-6 py-4 text-right">
-          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Total AUM</p>
-          <p className="text-2xl font-black text-white tracking-tighter">₹{totalAUM.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+        <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 px-6 py-4 text-right">
+          <p className="text-[10px] font-black text-[#7E8D91] uppercase tracking-widest mb-1">Total AUM</p>
+          <p className="text-2xl font-black text-[#F3F1E8] tracking-tighter">₹{totalAUM.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
         </div>
       </div>
 
-      <div className="glass-card p-4 flex items-start gap-3 border-emerald-500/10" style={{background: 'rgba(0,245,160,0.03)'}}>
-        <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-emerald-500/70" />
-        <p className="text-xs text-gray-400 font-medium leading-relaxed">
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-4 flex items-start gap-3 border-[#12C98B]/10" style={{background: 'rgba(0,245,160,0.03)'}}>
+        <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-[#12C98B]/70" />
+        <p className="text-xs text-[#7E8D91] font-medium leading-relaxed">
           We maintain a transparent model so you always know exactly where your capital is deployed. Prices are updated via live market data sync.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Holdings Table */}
-        <div className="lg:col-span-2 glass-card overflow-hidden">
+        <div className="lg:col-span-2 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 overflow-hidden">
           <div className="p-6 border-b border-white/5">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest">Current Portfolio Assets</h2>
+            <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest">Current Portfolio Assets</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-black/20 text-[10px] uppercase text-gray-500 font-black tracking-widest border-b border-white/5">
+              <thead className="bg-black/20 text-[10px] uppercase text-[#7E8D91] font-black tracking-widest border-b border-white/5">
                 <tr>
                   <th className="px-6 py-4">Asset</th>
                   <th className="px-6 py-4">Category</th>
@@ -78,20 +78,20 @@ export default function ClientHoldings() {
                   return (
                     <tr key={h.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-6 py-4">
-                        <p className="font-black text-white text-sm">{h.name}</p>
-                        <p className="text-[10px] text-emerald-400/70 font-mono font-bold">{h.symbol}</p>
+                        <p className="font-black text-[#F3F1E8] text-sm">{h.name}</p>
+                        <p className="text-[10px] text-[#12C98B]/70 font-mono font-bold">{h.symbol}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white/5 text-gray-400">{h.category}</span>
+                        <span className="px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white/5 text-[#7E8D91]">{h.category}</span>
                       </td>
                       <td className="px-6 py-4 text-right font-black text-gray-200">
                         {Number(h.current_price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-3">
-                          <span className="font-black text-emerald-400 text-sm">{weight.toFixed(1)}%</span>
+                          <span className="font-black text-[#12C98B] text-sm">{weight.toFixed(1)}%</span>
                           <div className="w-16 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${weight}%` }}></div>
+                            <div className="h-full bg-[#12C98B] rounded-full" style={{ width: `${weight}%` }}></div>
                           </div>
                         </div>
                       </td>
@@ -99,7 +99,7 @@ export default function ClientHoldings() {
                   );
                 })}
                 {holdings.length === 0 && (
-                  <tr><td colSpan="4" className="text-center py-12 text-gray-600 font-medium">No holdings information available.</td></tr>
+                  <tr><td colSpan="4" className="text-center py-12 text-[#7E8D91] font-medium">No holdings information available.</td></tr>
                 )}
               </tbody>
             </table>
@@ -108,9 +108,9 @@ export default function ClientHoldings() {
 
         {/* Allocation Breakdown */}
         <div className="lg:col-span-1">
-          <div className="glass-card p-6">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 flex items-center gap-3">
-              <PieChart className="w-4 h-4 text-emerald-400" />
+          <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6">
+            <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest mb-6 flex items-center gap-3">
+              <PieChart className="w-4 h-4 text-[#12C98B]" />
               Allocation Breakdown
             </h2>
             <div className="space-y-5">
@@ -122,8 +122,8 @@ export default function ClientHoldings() {
                 return (
                   <div key={cat} className="space-y-2">
                     <div className="flex justify-between text-xs font-black uppercase tracking-widest">
-                      <span className="text-gray-400">{cat}</span>
-                      <span className="text-white">{catPct.toFixed(1)}%</span>
+                      <span className="text-[#7E8D91]">{cat}</span>
+                      <span className="text-[#F3F1E8]">{catPct.toFixed(1)}%</span>
                     </div>
                     <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${catPct}%`, background: colors[cat] }}></div>
