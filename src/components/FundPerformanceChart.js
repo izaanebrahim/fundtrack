@@ -228,9 +228,11 @@ export default function FundPerformanceChart({ liveNav }) {
                 }}
                 itemStyle={{ fontSize: '12px', fontWeight: 700 }}
                 labelStyle={{ color: '#7E8D91', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}
+                trigger="hover"
+                isAnimationActive={false}
               />
-              <Area type="monotone" dataKey="fund" stroke="#12C98B" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFund)" name="Fund NAV" dot={false} />
-              {!benchmarkError && <Area type="monotone" dataKey="benchmark" stroke="#7E8D91" strokeWidth={2} strokeDasharray="6 3" fill="url(#colorBench)" name="Nifty 50" dot={false} />}
+              <Area type="monotone" dataKey="fund" stroke="#12C98B" strokeWidth={2.5} fillOpacity={1} fill="url(#colorFund)" name="Fund NAV" dot={false} activeDot={{ r: 4, fill: '#12C98B', stroke: '#091411', strokeWidth: 2 }} />
+              {!benchmarkError && <Area type="monotone" dataKey="benchmark" stroke="#7E8D91" strokeWidth={2} strokeDasharray="6 3" fill="url(#colorBench)" name="Nifty 50" dot={false} activeDot={{ r: 3, fill: '#7E8D91', stroke: '#091411', strokeWidth: 2 }} />}
             </AreaChart>
           </ResponsiveContainer>
         </div>

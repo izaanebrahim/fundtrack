@@ -37,10 +37,11 @@ export default function AdminNavHistory() {
     if (!confirm('Are you sure you want to delete this NAV record? This action cannot be undone.')) return;
     
     try {
+      const { data: { session } } = await supabase.auth.getSession();
       const res = await fetch('/api/admin/delete-nav', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id, adminToken: session?.access_token })
       });
       
       const data = await res.json();

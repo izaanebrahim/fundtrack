@@ -128,7 +128,12 @@ export default function ManageHoldings() {
     setSyncing(true);
     setMessage({ text: '', type: '' });
     try {
-      const response = await fetch('/api/admin/sync-nav', { method: 'POST' });
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch('/api/admin/sync-nav', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminToken: session?.access_token })
+      });
       const result = await response.json();
       
       if (!response.ok) throw new Error(result.error || 'Sync failed');
