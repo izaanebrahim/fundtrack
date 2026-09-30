@@ -275,7 +275,7 @@ export default function Login() {
         <div className="flex-1 w-full relative">
           
           {/* MOBILE WELCOME SCREEN */}
-          <div className={`absolute inset-0 flex flex-col w-full h-full transition-all duration-300 ease-in-out ${showMobileLogin ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
+          <div className={`absolute inset-0 flex flex-col w-full h-full overflow-y-auto transition-all duration-300 ease-in-out ${showMobileLogin ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
             
             {/* Top Brand Section */}
             <div className="flex-none flex flex-col items-center px-6 pt-[64px] sm:pt-[80px] z-20">
@@ -361,7 +361,7 @@ export default function Login() {
           </div>
 
           {/* MOBILE LOGIN SCREEN */}
-          <div className={`absolute inset-0 flex flex-col w-full h-full bg-[#07100E] transition-all duration-300 ease-in-out ${showMobileLogin ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'}`}>
+          <div className={`absolute inset-0 flex flex-col w-full h-full bg-[#07100E] overflow-y-auto transition-all duration-300 ease-in-out ${showMobileLogin ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'}`}>
             
             {/* Top Bar with Back Button */}
             <div className="flex items-center justify-between px-6 py-6 w-full">
