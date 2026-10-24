@@ -13,9 +13,11 @@ A full-stack investment fund management platform I built for **Barakha Capital**
 - **Fund Performance** — Interactive NAV chart (1M / 6M / 1Y / All) benchmarked against Nifty 50
 - **NAV History** — Historical Net Asset Value table
 - **Reports** — Downloadable portfolio summaries
+- **Invest / Withdraw requests** — Ask the fund manager for a new investment or a withdrawal from the dashboard, and track its status
 
 ### For Admin (Me)
 - **Admin Dashboard** — Fund-level AUM, total units, and daily NAV stats
+- **Client Requests** — See investment and withdrawal requests, contact the client (call, WhatsApp, email), and record the transaction with the form prefilled
 - **Manage Transactions** — Record investments and withdrawals for any client
 - **Client Management** — Onboard new clients
 - **Holdings Management** — Add, edit, or remove fund holdings across 25+ Indian market sectors
@@ -77,7 +79,7 @@ src/
 
 ## Database
 
-Four Supabase (PostgreSQL) tables power the app:
+Five Supabase (PostgreSQL) tables power the app:
 
 | Table          | Purpose                                                          |
 | -------------- | ---------------------------------------------------------------- |
@@ -85,3 +87,6 @@ Four Supabase (PostgreSQL) tables power the app:
 | `holdings`     | Fund holdings — symbol, sector, quantity, avg cost, live price    |
 | `transactions` | Investment & withdrawal records per client                       |
 | `fund`         | Daily NAV snapshots — date, AUM, total units, NAV                |
+| `requests`     | Client investment / withdrawal requests and their status         |
+
+SQL for new tables lives in `supabase/migrations/`. Run each file once in the Supabase SQL editor.
