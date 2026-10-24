@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Briefcase, IndianRupee, Layers, TrendingUp, TrendingDown } from 'lucide-react';
 import { computeClientPosition } from '@/lib/portfolio';
+import FundHoldings from '@/components/FundHoldings';
 
 export default function Portfolio() {
   const { profile } = useAuth();
@@ -148,6 +149,11 @@ export default function Portfolio() {
             <p className="text-xs text-[#7E8D91] font-medium">Current market value of one unit of the fund.</p>
           </div>
         </div>
+      </div>
+
+      {/* Fund holdings (previously a separate Portfolio Holdings page) */}
+      <div className="pt-4 border-t border-white/5">
+        <FundHoldings />
       </div>
     </div>
   );
