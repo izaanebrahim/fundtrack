@@ -13,9 +13,11 @@ import {
   Settings,
   Users,
   LogOut,
-  Landmark
+  Landmark,
+  Inbox
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
 const clientNav = [
@@ -31,6 +33,7 @@ const clientNav = [
 
 const adminNav = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Requests', href: '/admin/requests', icon: Inbox },
   { name: 'Manage Transactions', href: '/admin/transactions', icon: ArrowLeftRight },
   { name: 'Clients', href: '/admin/clients', icon: Users },
   { name: 'Manage Holdings', href: '/admin/holdings', icon: Briefcase },
@@ -42,6 +45,20 @@ const adminNav = [
 export default function Sidebar({ onClose }) {
   const pathname = usePathname();
   const { profile } = useAuth();
+  const [openRequests, setOpenRequests] = useState(0);
+  const isAdmin = profile?.role === 'admin';
+
+  // Badge on the admin Requests link; refreshed on navigation
+  useEffect(() => {
+    if (!isAdmin) return;
+    supabase
+      .from('requests')
+      .select('id', { count: 'exact', head: true })
+      .in('status', ['PENDING', 'CONTACTED'])
+      .then(({ count, error }) => {
+        if (!error) setOpenRequests(count || 0);
+      });
+  }, [isAdmin, pathname]);
   
   if (!profile) return null;
 
@@ -87,6 +104,11 @@ export default function Sidebar({ onClose }) {
                 )}
               />
               <span className="ml-3">{item.name}</span>
+              {item.href === '/admin/requests' && openRequests > 0 && (
+                <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-amber-500/20 text-amber-400 text-[10px] font-black flex items-center justify-center">
+                  {openRequests}
+                </span>
+              )}
             </Link>
           );
         })}

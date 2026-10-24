@@ -2,12 +2,24 @@
 
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ArrowLeftRight, CheckCircle2, AlertCircle, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 
-export default function ManageTransactions() {
+// useSearchParams needs a Suspense boundary for Next.js prerendering
+export default function ManageTransactionsPage() {
+  return (
+    <Suspense fallback={<div className="text-[#F3F1E8]">Loading data...</div>}>
+      <ManageTransactions />
+    </Suspense>
+  );
+}
+
+function ManageTransactions() {
   const { profile } = useAuth();
+  // Arriving from the Requests page prefills the form via ?client=&type=&amount=&request=
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState([]);
   const [manualNav, setManualNav] = useState(10);
@@ -15,11 +27,13 @@ export default function ManageTransactions() {
   const [currentNav, setCurrentNav] = useState(0);
 
   // Form State
-  const [selectedClient, setSelectedClient] = useState('');
-  const [type, setType] = useState('INVEST');
-  const [amount, setAmount] = useState('');
+  const [selectedClient, setSelectedClient] = useState(() => searchParams.get('client') || '');
+  const [type, setType] = useState(() => (searchParams.get('type') === 'WITHDRAW' ? 'WITHDRAW' : 'INVEST'));
+  const [amount, setAmount] = useState(() => searchParams.get('amount') || '');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
+  // Set when arriving from the Requests page, so the request can be closed once recorded
+  const [requestId, setRequestId] = useState(() => searchParams.get('request'));
 
   useEffect(() => {
     fetchData();
@@ -136,7 +150,23 @@ export default function ManageTransactions() {
         // but we log it for the admin.
       }
 
-      setMessage({ text: `Successfully processed ${type} of ₹${txAmount}. Cash balance updated.`, type: 'success' });
+      let requestNote = '';
+      if (requestId) {
+        const { error: requestError } = await supabase
+          .from('requests')
+          .update({ status: 'COMPLETED' })
+          .eq('id', requestId);
+        if (requestError) {
+          console.error('Could not close request:', requestError);
+          requestNote = ' The client request could not be marked completed, please close it from Requests.';
+        } else {
+          requestNote = ' Client request marked as completed.';
+        }
+        setRequestId(null);
+        window.history.replaceState(null, '', '/admin/transactions');
+      }
+
+      setMessage({ text: `Successfully processed ${type} of ₹${txAmount}. Cash balance updated.${requestNote}`, type: 'success' });
       setAmount('');
       setSelectedClient('');
       fetchData(); // Refresh table
@@ -200,6 +230,12 @@ export default function ManageTransactions() {
               }`}>
                 {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />}
                 {message.text}
+              </div>
+            )}
+
+            {requestId && (
+              <div className="mb-6 p-3 rounded-lg text-xs bg-sky-500/10 text-sky-300 border border-sky-500/20">
+                Filled in from a client request. Check the amount you actually received or paid out before saving; the request is closed when you save.
               </div>
             )}
 
