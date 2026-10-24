@@ -13,7 +13,8 @@ import {
   Users,
   LogOut,
   Inbox,
-  Megaphone
+  Megaphone,
+  X
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
@@ -84,20 +85,21 @@ export default function Sidebar({ onClose }) {
   };
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-[#07100E] border-r border-white/5 text-[#7E8D91]">
-      <div className="flex h-20 items-center justify-between px-6 border-b border-white/5">
+    <div className="flex h-[100dvh] w-64 max-w-[85vw] flex-col bg-[#07100E] border-r border-white/5 text-[#7E8D91]">
+      <div className="flex h-20 shrink-0 items-center justify-between px-6 border-b border-white/5">
         <Link href={navigation[0].href} className="w-full flex items-center justify-start cursor-pointer transition-opacity hover:opacity-80">
           <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[170px] h-auto object-contain" />
         </Link>
         <button 
           onClick={onClose}
-          className="p-2 text-gray-500 hover:text-white lg:hidden font-bold"
+          className="p-2 -mr-2 text-gray-500 hover:text-white lg:hidden"
+          aria-label="Close menu"
         >
-          X
+          <X className="h-5 w-5" />
         </button>
       </div>
       
-      <nav className="flex-1 space-y-2 px-3 py-6">
+      <nav className="flex-1 min-h-0 overflow-y-auto space-y-1 px-3 py-4 [@media(min-height:700px)]:space-y-2 [@media(min-height:700px)]:py-6">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -109,7 +111,7 @@ export default function Sidebar({ onClose }) {
                 isActive
                   ? 'bg-[#12C98B]/10 text-[#F3F1E8] border-l-4 border-[#12C98B] rounded-r-xl'
                   : 'text-[#7E8D91] hover:bg-[#101917] hover:text-[#F3F1E8] border-l-4 border-transparent rounded-r-xl',
-                'group flex items-center px-4 py-3 text-sm font-semibold transition-all duration-200'
+                'group flex items-center px-4 py-2.5 [@media(min-height:700px)]:py-3 text-sm font-semibold transition-all duration-200'
               )}
             >
               <Icon
@@ -134,13 +136,13 @@ export default function Sidebar({ onClose }) {
         })}
       </nav>
 
-      <div className="border-t border-white/5 p-6 bg-[#091411]">
-        <div className="flex items-center mb-6">
-          <div className="h-10 w-10 rounded-full bg-[#12C98B]/20 flex items-center justify-center text-[#12C98B] font-black border border-[#12C98B]/30">
+      <div className="shrink-0 border-t border-white/5 px-6 py-4 [@media(min-height:700px)]:py-6 bg-[#091411]">
+        <div className="flex items-center mb-3 [@media(min-height:700px)]:mb-6">
+          <div className="h-10 w-10 shrink-0 rounded-full bg-[#12C98B]/20 flex items-center justify-center text-[#12C98B] font-black border border-[#12C98B]/30">
             {profile.name.charAt(0).toUpperCase()}
           </div>
-          <div className="ml-3">
-            <p className="text-sm font-bold text-[#F3F1E8] leading-none">{profile.name}</p>
+          <div className="ml-3 min-w-0">
+            <p className="text-sm font-bold text-[#F3F1E8] leading-none truncate">{profile.name}</p>
             <p className="text-[10px] text-[#7E8D91] mt-1 uppercase tracking-widest">{profile.role}</p>
           </div>
         </div>

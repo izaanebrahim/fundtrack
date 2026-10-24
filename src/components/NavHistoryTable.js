@@ -99,12 +99,12 @@ export default function NavHistoryTable({ isAdmin = false }) {
         <table className="w-full text-left text-sm">
           <thead className="bg-black/20 text-[10px] uppercase text-[#7E8D91] font-black tracking-widest border-b border-white/5">
             <tr>
-              <th className="px-6 py-4">Date</th>
-              {isAdmin && <th className="px-6 py-4 text-right">Total Value (AUM)</th>}
-              {isAdmin && <th className="px-6 py-4 text-right">Units</th>}
-              <th className="px-6 py-4 text-right">NAV per Unit</th>
-              <th className="px-6 py-4 text-right">1D Change</th>
-              {isAdmin && <th className="px-6 py-4 text-center"></th>}
+              <th className="px-3 sm:px-6 py-3 sm:py-4">Date</th>
+              {isAdmin && <th className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-right">Total Value (AUM)</th>}
+              {isAdmin && <th className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-right">Units</th>}
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-right">NAV per Unit</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-right">1D Change</th>
+              {isAdmin && <th className="px-3 sm:px-6 py-3 sm:py-4 text-center"></th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
@@ -114,19 +114,19 @@ export default function NavHistoryTable({ isAdmin = false }) {
               const changePct = prevNav && prevNav > 0 ? (change / prevNav) * 100 : null;
               return (
                 <tr key={record.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="px-6 py-4 text-[#7E8D91] font-bold">{format(new Date(record.date), 'dd MMM yyyy')}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-[#7E8D91] font-bold whitespace-nowrap">{format(new Date(record.date), 'dd MMM yyyy')}</td>
                   {isAdmin && (
-                    <td className="px-6 py-4 text-right text-[#7E8D91]">
+                    <td className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-right text-[#7E8D91]">
                       ₹{Number(record.total_value).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                     </td>
                   )}
                   {isAdmin && (
-                    <td className="px-6 py-4 text-right text-[#7E8D91]">
+                    <td className="hidden sm:table-cell px-3 sm:px-6 py-3 sm:py-4 text-right text-[#7E8D91]">
                       {Number(record.total_units).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
                     </td>
                   )}
-                  <td className="px-6 py-4 text-right font-black text-[#F3F1E8] text-base">₹{Number(record.nav).toFixed(4)}</td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-right font-black text-[#F3F1E8] text-sm sm:text-base">₹{Number(record.nav).toFixed(4)}</td>
+                  <td className="px-3 sm:px-6 py-3 sm:py-4 text-right">
                     {changePct !== null ? (
                       <span className={`text-xs font-black ${change >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
                         {change >= 0 ? '+' : ''}{changePct.toFixed(2)}%
@@ -134,7 +134,7 @@ export default function NavHistoryTable({ isAdmin = false }) {
                     ) : <span className="text-[#7E8D91] text-xs">—</span>}
                   </td>
                   {isAdmin && (
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-3 sm:px-6 py-3 sm:py-4 text-center">
                       <button
                         onClick={() => handleDeleteRecord(record.id)}
                         className="text-red-400 hover:text-red-300 hover:bg-red-900/30 p-2 rounded-lg transition-colors"

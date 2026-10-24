@@ -190,23 +190,19 @@ export default function ManageNotices() {
 
       <div className="space-y-4">
         {notices.map(n => (
-          <div key={n.id} className={`bg-[#101917] border rounded-2xl shadow-sm shadow-black/20 p-6 ${editingId === n.id ? 'border-[#12C98B]/50' : n.pinned ? 'border-[#12C98B]/30' : 'border-white/5'}`}>
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  {n.pinned && (
-                    <span className="flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20">
-                      <Pin className="w-3 h-3" /> Pinned
-                    </span>
-                  )}
-                  <span className="text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest">
-                    Posted {format(new Date(n.created_at), 'dd MMM yyyy, hh:mm a')}
+          <div key={n.id} className={`bg-[#101917] border rounded-2xl shadow-sm shadow-black/20 p-4 sm:p-6 ${editingId === n.id ? 'border-[#12C98B]/50' : n.pinned ? 'border-[#12C98B]/30' : 'border-white/5'}`}>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div className="flex items-center gap-2 flex-wrap min-w-0 pt-1.5">
+                {n.pinned && (
+                  <span className="flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20">
+                    <Pin className="w-3 h-3" /> Pinned
                   </span>
-                </div>
-                <h3 className="text-base font-black text-[#F3F1E8]">{n.title}</h3>
-                <p className="text-sm text-[#C9CFCB] mt-2 whitespace-pre-line">{n.body}</p>
+                )}
+                <span className="text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest">
+                  Posted {format(new Date(n.created_at), 'dd MMM yyyy, hh:mm a')}
+                </span>
               </div>
-              <div className="flex items-center gap-1 flex-shrink-0">
+              <div className="flex items-center gap-1 flex-shrink-0 -mr-2 -mt-0.5">
                 <button onClick={() => togglePin(n)} title={n.pinned ? 'Unpin' : 'Pin to top'} className="p-2 rounded-lg text-[#7E8D91] hover:text-[#12C98B] hover:bg-[#12C98B]/10 transition-colors">
                   {n.pinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
                 </button>
@@ -218,6 +214,8 @@ export default function ManageNotices() {
                 </button>
               </div>
             </div>
+            <h3 className="text-base font-black text-[#F3F1E8] break-words">{n.title}</h3>
+            <p className="text-sm text-[#C9CFCB] mt-2 whitespace-pre-line break-words">{n.body}</p>
           </div>
         ))}
         {notices.length === 0 && (

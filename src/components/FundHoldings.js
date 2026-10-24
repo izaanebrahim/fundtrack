@@ -61,10 +61,39 @@ export default function FundHoldings() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Holdings Table */}
         <div className="lg:col-span-2 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 overflow-hidden">
-          <div className="p-6 border-b border-white/5">
+          <div className="p-4 sm:p-6 border-b border-white/5">
             <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest">Current Portfolio Assets</h2>
           </div>
-          <div className="overflow-x-auto">
+          {/* Mobile: one row per holding, nothing hidden off-screen */}
+          <div className="sm:hidden divide-y divide-white/5">
+            {holdings.map(h => {
+              const weight = totalAUM > 0 ? ((h.quantity * h.current_price) / totalAUM) * 100 : 0;
+              return (
+                <div key={h.id} className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-black text-[#F3F1E8] text-sm break-words">{h.name}</p>
+                      <p className="text-[10px] text-[#12C98B]/70 font-mono font-bold">{h.symbol}</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <p className="font-black text-gray-200 text-sm">₹{Number(h.current_price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
+                      <span className="inline-block mt-1 px-2 py-0.5 rounded-lg text-[9px] font-black uppercase tracking-widest bg-white/5 text-[#7E8D91]">{h.category}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 mt-3">
+                    <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#12C98B] rounded-full" style={{ width: `${weight}%` }}></div>
+                    </div>
+                    <span className="font-black text-[#12C98B] text-xs w-12 text-right">{weight.toFixed(1)}%</span>
+                  </div>
+                </div>
+              );
+            })}
+            {holdings.length === 0 && (
+              <p className="text-center py-10 text-sm text-[#7E8D91] font-medium">No holdings information available.</p>
+            )}
+          </div>
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead className="bg-black/20 text-[10px] uppercase text-[#7E8D91] font-black tracking-widest border-b border-white/5">
                 <tr>

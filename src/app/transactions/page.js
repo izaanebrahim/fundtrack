@@ -58,24 +58,24 @@ export default function Transactions() {
           <p className="text-[#7E8D91] text-sm font-medium mt-1">Your investment and withdrawal history</p>
         </div>
         
-        <div className="flex items-center gap-2 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-1.5">
+        <div className="grid grid-cols-3 sm:flex items-center gap-1 sm:gap-2 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-1.5">
            <button 
              onClick={() => setTypeFilter('ALL')}
-             className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${typeFilter === 'ALL' ? 'bg-white/10 text-[#F3F1E8]' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
+             className={`px-2 sm:px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider sm:tracking-widest rounded-xl transition-all ${typeFilter === 'ALL' ? 'bg-white/10 text-[#F3F1E8]' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
            >
              All
            </button>
            <button 
              onClick={() => setTypeFilter('INVEST')}
-             className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${typeFilter === 'INVEST' ? 'bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
+             className={`px-2 sm:px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider sm:tracking-widest rounded-xl transition-all ${typeFilter === 'INVEST' ? 'bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
            >
-             Investments
+             <span className="sm:hidden">Invest</span><span className="hidden sm:inline">Investments</span>
            </button>
            <button 
              onClick={() => setTypeFilter('WITHDRAW')}
-             className={`px-4 py-2 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${typeFilter === 'WITHDRAW' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
+             className={`px-2 sm:px-4 py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider sm:tracking-widest rounded-xl transition-all ${typeFilter === 'WITHDRAW' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'text-[#7E8D91] hover:text-[#F3F1E8]'}`}
            >
-             Withdrawals
+             <span className="sm:hidden">Withdraw</span><span className="hidden sm:inline">Withdrawals</span>
            </button>
         </div>
       </div>

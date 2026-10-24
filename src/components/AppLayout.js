@@ -93,7 +93,7 @@ export default function AppLayout({ children }) {
 
   // Logged in but profile still loading - show shell with loading state inside
   return (
-    <div className="flex h-screen overflow-hidden text-gray-100"
+    <div className="flex h-[100dvh] overflow-hidden text-gray-100"
          style={{ background: '#0d1111' }}>
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
@@ -108,9 +108,9 @@ export default function AppLayout({ children }) {
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Mobile Header */}
-        <header className="flex h-14 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/5 bg-[#090c0c] px-4 lg:hidden">
           <Link href={profile?.role === 'admin' ? '/admin' : '/dashboard'} className="flex items-center cursor-pointer transition-opacity hover:opacity-80">
             <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[140px] h-auto object-contain" />
           </Link>

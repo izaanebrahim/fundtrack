@@ -223,7 +223,41 @@ export default function ManageClients() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Mobile: one card per client */}
+        <div className="md:hidden divide-y divide-white/5">
+          {filteredClients.map((client) => {
+            const { units, invested } = computeClientPosition(client.transactions || []);
+            const portfolioValue = units * liveNav;
+            const pnl = portfolioValue - invested;
+            const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
+
+            return (
+              <Link key={client.id} href={`/admin/clients/${client.id}`} className="flex items-center gap-3 p-4 hover:bg-white/[0.02] transition-colors">
+                <div className="flex-shrink-0 h-9 w-9 rounded-full bg-indigo-900/50 flex items-center justify-center text-indigo-300 font-bold border border-indigo-700/50">
+                  {client.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[#F3F1E8] font-medium truncate">{client.name}</p>
+                  <p className="text-[#7E8D91] text-xs truncate">{client.email}</p>
+                  <p className="text-[#7E8D91] text-xs">{client.phone || 'No phone provided'}</p>
+                </div>
+                <div className="flex-shrink-0 text-right">
+                  <p className="text-sm font-medium text-[#12C98B]">₹{portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                  <p className={`text-xs font-medium ${pnlPct >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
+                    {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+          {filteredClients.length === 0 && (
+            <p className="px-4 py-10 text-center text-sm text-[#7E8D91]">
+              {searchQuery ? 'No clients matching your search.' : 'No clients found.'}
+            </p>
+          )}
+        </div>
+
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-sm text-[#7E8D91]">
             <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
               <tr>

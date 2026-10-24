@@ -306,8 +306,45 @@ function ManageTransactions() {
             <div className="p-6 border-b border-white/5">
                <h2 className="text-xl font-semibold text-[#F3F1E8]">Recent Transactions</h2>
             </div>
-            
-            <div className="overflow-x-auto">
+
+            {/* Mobile: one card per transaction */}
+            <div className="sm:hidden divide-y divide-white/5">
+              {transactions.map((t) => (
+                <div key={t.id} className="p-4 flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium ${
+                        t.type === 'INVEST' ? 'bg-emerald-900/30 text-[#12C98B] border border-emerald-800/50' : 'bg-red-900/30 text-red-400 border border-red-800/50'
+                      }`}>
+                        {t.type}
+                      </span>
+                      <span className="text-xs text-[#7E8D91]">{format(new Date(t.created_at), 'dd MMM yyyy')}</span>
+                    </div>
+                    <p className="text-sm font-medium text-[#F3F1E8] mt-1.5 break-words">{t.client?.name}</p>
+                    <p className="text-xs text-[#7E8D91] mt-0.5">
+                      {Number(t.units).toLocaleString('en-IN', { maximumFractionDigits: 4 })} units @ ₹{Number(t.nav_at_transaction).toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                    <span className={`text-sm font-semibold ${t.type === 'INVEST' ? 'text-[#12C98B]' : 'text-red-400'}`}>
+                      {t.type === 'INVEST' ? '+' : '-'}₹{Number(t.amount).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteTransaction(t.id)}
+                      className="p-1.5 -mr-1.5 text-[#7E8D91] hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+                      title="Delete Transaction"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {transactions.length === 0 && (
+                <p className="px-4 py-10 text-center text-sm text-[#7E8D91]">No transactions recorded yet.</p>
+              )}
+            </div>
+
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-left text-sm text-[#7E8D91]">
                 <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
                   <tr>

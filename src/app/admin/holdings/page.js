@@ -264,15 +264,121 @@ export default function ManageHoldings() {
         {/* Assets List */}
         <div className="lg:col-span-3 space-y-4">
           <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 overflow-hidden shadow-sm">
-            <div className="p-6 border-b border-white/5 flex justify-between items-center">
+            <div className="p-4 sm:p-6 border-b border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest">Current Asset Allocation</h2>
-               <div className="text-right">
+               <div className="sm:text-right">
                   <p className="text-xs text-[#7E8D91] uppercase font-bold tracking-wider">Total Calculated AUM</p>
                   <p className="text-2xl font-bold text-[#F3F1E8]">₹{totalAUM.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</p>
                </div>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Mobile: one card per holding */}
+            <div className="md:hidden divide-y divide-white/5">
+              {holdings.map(h => {
+                const holdingValue = h.quantity * h.current_price;
+                const costValue = h.quantity * h.avg_cost;
+                const pnl = holdingValue - costValue;
+                const pnlPct = costValue > 0 ? (pnl / costValue) * 100 : 0;
+                const isEditing = h.id === editingId;
+
+                return (
+                  <div key={h.id} className={`p-4 ${isEditing ? 'bg-[#12C98B]/5' : ''}`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-medium text-[#F3F1E8] break-words">{h.name}</p>
+                        <p className="text-xs text-[#12C98B] font-mono">{h.symbol}</p>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0 -mr-1">
+                        {isEditing ? (
+                          <>
+                            <button onClick={() => handleEditSave(h.id)} className="text-[#12C98B] hover:text-emerald-300 p-1.5">
+                              <Check className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => setEditingId(null)} className="text-[#7E8D91] hover:text-[#F3F1E8] p-1.5">
+                              <X className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button onClick={() => handleEditStart(h)} className="text-[#7E8D91] hover:text-[#12C98B] transition-colors p-1.5">
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => deleteHolding(h.id)} className="text-[#7E8D91] hover:text-red-400 transition-colors p-1.5">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {isEditing ? (
+                      <div className="grid grid-cols-2 gap-2 mt-3">
+                        <label className="col-span-2 text-[10px] uppercase font-bold text-[#7E8D91]">
+                          Sector
+                          <select
+                            value={editForm.sector}
+                            onChange={e => setEditForm({ ...editForm, sector: e.target.value })}
+                            className="mt-1 w-full px-2 py-1.5 bg-gray-950 border border-gray-700 rounded text-xs text-[#F3F1E8] normal-case font-normal"
+                          >
+                            <SectorOptions />
+                          </select>
+                        </label>
+                        <label className="text-[10px] uppercase font-bold text-[#7E8D91]">
+                          Qty
+                          <input
+                            type="number" step="0.0001"
+                            className="mt-1 w-full px-2 py-1.5 bg-gray-950 border border-gray-700 rounded text-sm text-[#F3F1E8] font-normal"
+                            value={editForm.quantity}
+                            onChange={e => setEditForm({...editForm, quantity: e.target.value})}
+                          />
+                        </label>
+                        <label className="text-[10px] uppercase font-bold text-[#7E8D91]">
+                          Avg Cost
+                          <input
+                            type="number" step="0.01"
+                            className="mt-1 w-full px-2 py-1.5 bg-gray-950 border border-gray-700 rounded text-sm text-[#F3F1E8] font-normal"
+                            value={editForm.avg_cost}
+                            onChange={e => setEditForm({...editForm, avg_cost: e.target.value})}
+                          />
+                        </label>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                          <span className="px-2 py-0.5 rounded-full text-[9px] bg-gray-800 border border-gray-700">{h.category}</span>
+                          <span className="text-[10px] text-[#7E8D91]">{h.sector || 'N/A'}</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2 mt-3 text-xs">
+                          <div>
+                            <p className="text-[10px] uppercase font-bold">Qty</p>
+                            <p className="font-mono text-[#F3F1E8] break-all">{h.quantity}</p>
+                          </div>
+                          <div>
+                            <p className="text-[10px] uppercase font-bold">Avg Cost</p>
+                            <p className="text-[#F3F1E8] break-all">₹{h.avg_cost.toLocaleString()}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-[10px] uppercase font-bold">CMP</p>
+                            <p className="font-bold text-[#F3F1E8] break-all">₹{h.current_price.toLocaleString()}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between gap-3 mt-2 text-sm">
+                          <span className="font-semibold text-[#F3F1E8]">₹{holdingValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+                          <span className={`font-medium ${pnl >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
+                            {pnl >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+              {holdings.length === 0 && (
+                <p className="px-4 py-10 text-center text-sm text-[#7E8D91] italic">No assets added yet. Add your first stock ticker to begin tracking.</p>
+              )}
+            </div>
+
+            <div className="hidden md:block overflow-x-auto">
                <table className="w-full text-left text-sm text-[#7E8D91]">
                  <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
                     <tr>

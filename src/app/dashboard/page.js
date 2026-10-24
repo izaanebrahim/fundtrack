@@ -330,9 +330,10 @@ export default function Dashboard() {
           <PieIcon className="w-4 h-4 text-[#12C98B]" />
         </div>
         <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+          {/* Stacked on phones; one column per sector from sm up */}
           <div 
-            className="grid gap-6" 
-            style={{ gridTemplateColumns: `repeat(${displaySectors.length}, minmax(130px, 1fr))` }}
+            className="grid grid-cols-1 gap-4 sm:gap-6 sm:[grid-template-columns:var(--sector-cols)]" 
+            style={{ '--sector-cols': `repeat(${displaySectors.length}, minmax(130px, 1fr))` }}
           >
             {displaySectors.map((s, i) => (
               <div key={i} className="space-y-2 min-w-0">

@@ -94,12 +94,12 @@ export default function ManageRequests() {
           </p>
         </div>
 
-        <div className="bg-[#101917] border border-white/5 rounded-xl p-1 flex items-center self-start">
+        <div className="bg-[#101917] border border-white/5 rounded-xl p-1 grid grid-cols-4 sm:flex items-center sm:self-start">
           {FILTERS.map(f => (
             <button
               key={f.key}
               onClick={() => setFilter(f.key)}
-              className={`px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest transition-all ${
+              className={`px-0.5 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-black uppercase tracking-normal sm:tracking-widest transition-all ${
                 filter === f.key ? 'bg-[#12C98B]/10 text-[#12C98B]' : 'text-[#7E8D91] hover:text-[#F3F1E8]'
               }`}
             >
@@ -131,14 +131,14 @@ export default function ManageRequests() {
           }).toString()}`;
 
           return (
-            <div key={r.id} className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6">
+            <div key={r.id} className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-4 sm:p-6">
               <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
                 {/* Request details */}
-                <div className="flex items-start gap-4 min-w-0">
+                <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                   <div className={`h-10 w-10 flex-shrink-0 rounded-xl flex items-center justify-center ${isInvest ? 'bg-[#12C98B]/10 text-[#12C98B]' : 'bg-red-500/10 text-red-400'}`}>
                     {isInvest ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-lg font-black text-[#F3F1E8] tracking-tight">
                         {isInvest ? 'Invest' : 'Withdraw'} · {formatRequestAmount(r)}
@@ -168,8 +168,8 @@ export default function ManageRequests() {
                         </a>
                       )}
                       {r.client?.email && (
-                        <a href={`mailto:${r.client.email}`} className="flex items-center gap-1.5 px-3 py-1.5 bg-black/30 border border-white/10 rounded-lg text-xs font-bold text-[#F3F1E8] hover:border-[#12C98B]/40">
-                          <Mail className="w-3.5 h-3.5" /> {r.client.email}
+                        <a href={`mailto:${r.client.email}`} className="flex items-center gap-1.5 max-w-full min-w-0 px-3 py-1.5 bg-black/30 border border-white/10 rounded-lg text-xs font-bold text-[#F3F1E8] hover:border-[#12C98B]/40">
+                          <Mail className="w-3.5 h-3.5 flex-shrink-0" /> <span className="truncate">{r.client.email}</span>
                         </a>
                       )}
                     </div>

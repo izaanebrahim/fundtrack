@@ -164,13 +164,13 @@ export default function FundPerformanceChart({ liveNav }) {
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-3">
-          <div className="bg-[#101917] border border-white/5 p-1 rounded-2xl flex items-center gap-1">
+        <div className="flex flex-col items-stretch lg:items-end gap-3">
+          <div className="bg-[#101917] border border-white/5 p-1 rounded-2xl grid grid-cols-6 sm:flex items-center gap-1">
              {ranges.map(range => (
                <button
                   key={range}
                   onClick={() => setSelectedRange(range)}
-                  className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                  className={`px-0.5 sm:px-4 py-2 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-normal sm:tracking-widest transition-all ${
                     selectedRange === range 
                       ? 'bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20' 
                       : 'text-[#7E8D91] hover:text-[#F3F1E8] border border-transparent'
@@ -181,19 +181,19 @@ export default function FundPerformanceChart({ liveNav }) {
              ))}
           </div>
           {selectedRange === 'CUSTOM' && (
-            <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="flex items-center gap-2 w-full sm:w-auto animate-in fade-in slide-in-from-top-2 duration-300">
               <input 
                 type="date" 
                 value={customStartDate} 
                 onChange={(e) => setCustomStartDate(e.target.value)}
-                className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50 [color-scheme:dark]"
+                className="flex-1 min-w-0 sm:flex-none px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50 [color-scheme:dark]"
               />
               <span className="text-[#7E8D91] text-xs">to</span>
               <input 
                 type="date" 
                 value={customEndDate} 
                 onChange={(e) => setCustomEndDate(e.target.value)}
-                className="px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50 [color-scheme:dark]"
+                className="flex-1 min-w-0 sm:flex-none px-3 py-1.5 bg-black/40 border border-white/10 rounded-lg text-xs font-medium text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50 [color-scheme:dark]"
               />
             </div>
           )}

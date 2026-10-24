@@ -282,9 +282,9 @@ export default function Login() {
               <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[clamp(140px,26svh,210px)] h-auto object-contain" />
               
               <div className="mt-[clamp(14px,6svh,64px)] flex items-center gap-2">
-                <div className="w-4 h-[1px] bg-[#12C98B]/70"></div>
-                <p className="text-[9px] font-bold tracking-[0.2em] text-[#7E8D91] uppercase">Ethical investing for a brighter tomorrow</p>
-                <div className="w-4 h-[1px] bg-[#12C98B]/70"></div>
+                <div className="w-4 h-[1px] flex-shrink-0 bg-[#12C98B]/70"></div>
+                <p className="text-[9px] font-bold tracking-[0.2em] leading-relaxed text-[#7E8D91] uppercase text-center">Ethical investing for a brighter tomorrow</p>
+                <div className="w-4 h-[1px] flex-shrink-0 bg-[#12C98B]/70"></div>
               </div>
               
               <h2 className="mt-[clamp(10px,2.5svh,24px)] text-[length:min(9vw,5.4svh,44px)] font-[650] sm:font-[700] tracking-tight leading-[1.05] text-center max-w-[340px]">
