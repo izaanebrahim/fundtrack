@@ -3,9 +3,11 @@
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft, Inbox } from 'lucide-react';
 import { format } from 'date-fns';
 import AllocationChart from '@/components/AllocationChart';
+import RequestModal from '@/components/RequestModal';
+import { REQUEST_STATUS_LABELS, REQUEST_STATUS_STYLES, formatRequestAmount } from '@/lib/requests';
 import Link from 'next/link';
 
 export default function Dashboard() {
@@ -23,6 +25,29 @@ export default function Dashboard() {
     sectorData: [],
   });
   const [loading, setLoading] = useState(true);
+  const [requestType, setRequestType] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [requestsVersion, setRequestsVersion] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    async function fetchRequests() {
+      const { data: requestData, error } = await supabase
+        .from('requests')
+        .select('id, type, amount, withdraw_all, status, created_at')
+        .eq('client_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (error) {
+        console.error('Error fetching requests:', error);
+        return;
+      }
+      setRequests(requestData || []);
+    }
+
+    fetchRequests();
+  }, [user, requestsVersion]);
 
   useEffect(() => {
     if (!user) return;
@@ -185,10 +210,10 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-10">
-              <button className="flex items-center justify-center gap-2 py-3 bg-[#12C98B] text-black font-black text-xs rounded-xl uppercase tracking-widest hover:bg-[#12C98B] transition-all shadow-lg shadow-[#12C98B]/20">
+              <button onClick={() => setRequestType('INVEST')} className="flex items-center justify-center gap-2 py-3 bg-[#12C98B] text-black font-black text-xs rounded-xl uppercase tracking-widest hover:bg-[#12C98B] transition-all shadow-lg shadow-[#12C98B]/20">
                 <ArrowUpRight className="w-4 h-4" /> Invest
               </button>
-              <button className="flex items-center justify-center gap-2 py-3 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 border-white/10 text-[#F3F1E8] font-black text-xs rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all">
+              <button onClick={() => setRequestType('WITHDRAW')} disabled={data.portfolioValue <= 0} title={data.portfolioValue <= 0 ? 'You have no balance to withdraw yet' : undefined} className="disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 py-3 bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 border-white/10 text-[#F3F1E8] font-black text-xs rounded-xl uppercase tracking-widest hover:bg-white/5 transition-all">
                 <ArrowDownLeft className="w-4 h-4" /> Withdraw
               </button>
             </div>
@@ -263,6 +288,43 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Client Requests */}
+      {requests.length > 0 && (
+        <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-[10px] font-black text-[#F3F1E8] uppercase tracking-widest">Your Requests</h3>
+            <Inbox className="w-4 h-4 text-[#12C98B]" />
+          </div>
+          <div className="divide-y divide-white/5">
+            {requests.map(r => (
+              <div key={r.id} className="py-3 flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-[#F3F1E8]">
+                    {r.type === 'INVEST' ? 'Invest' : 'Withdraw'} · {formatRequestAmount(r)}
+                  </p>
+                  <p className="text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest mt-0.5">
+                    Sent {format(new Date(r.created_at), 'dd MMM yyyy')}
+                  </p>
+                </div>
+                <span className={`flex-shrink-0 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${REQUEST_STATUS_STYLES[r.status] || REQUEST_STATUS_STYLES.PENDING}`}>
+                  {REQUEST_STATUS_LABELS[r.status] || r.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {requestType && (
+        <RequestModal
+          type={requestType}
+          clientId={user.id}
+          portfolioValue={data.portfolioValue}
+          onClose={() => setRequestType(null)}
+          onSubmitted={() => setRequestsVersion(v => v + 1)}
+        />
+      )}
 
     </div>
   );
