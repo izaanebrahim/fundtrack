@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Pages merged into others when the menus were simplified
+  async redirects() {
+    return [
+      { source: '/holdings', destination: '/portfolio', permanent: true },
+      { source: '/nav-history', destination: '/fund-performance', permanent: true },
+      { source: '/admin/nav-history', destination: '/fund-performance', permanent: true },
+      { source: '/admin/fund', destination: '/fund-performance', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

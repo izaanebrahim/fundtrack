@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Briefcase, Plus, Trash2, RefreshCw, AlertCircle, CheckCircle2, TrendingUp, Pencil, X, Check } from 'lucide-react';
 import { format } from 'date-fns';
+import { SectorOptions } from '@/lib/sectors';
 
 export default function ManageHoldings() {
   const { profile } = useAuth();
@@ -76,7 +77,7 @@ export default function ManageHoldings() {
       if (error) throw error;
       
       setMessage({ text: `Success: Added ${marketData.name}`, type: 'success' });
-      setNewAsset({ symbol: '', name: '', category: 'Equity', quantity: '', avg_cost: '' });
+      setNewAsset({ symbol: '', name: '', category: 'Equity', sector: 'Banking & Finance', quantity: '', avg_cost: '' });
       fetchHoldings();
     } catch (error) {
       setMessage({ text: error.message, type: 'error' });
@@ -228,54 +229,7 @@ export default function ManageHoldings() {
                     value={newAsset.sector} onChange={e => setNewAsset({...newAsset, sector: e.target.value})}
                     className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] text-sm"
                   >
-                    <optgroup label="Financial Services">
-                      <option>Banking & Finance</option>
-                      <option>Insurance</option>
-                      <option>Non-Banking Financial (NBFC)</option>
-                      <option>Financial Services</option>
-                    </optgroup>
-                    <optgroup label="Technology & Telecom">
-                      <option>Information Technology</option>
-                      <option>Telecommunication</option>
-                      <option>Media & Entertainment</option>
-                    </optgroup>
-                    <optgroup label="Energy & Industrials">
-                      <option>Energy & Power</option>
-                      <option>Oil & Gas</option>
-                      <option>Metals & Mining</option>
-                      <option>Infrastructure & Construction</option>
-                      <option>Cement & Building Materials</option>
-                      <option>Capital Goods & Engineering</option>
-                      <option>Defence & Aerospace</option>
-                    </optgroup>
-                    <optgroup label="Consumer & Retail">
-                      <option>Consumer Goods (FMCG)</option>
-                      <option>Consumer Durables</option>
-                      <option>Retail & E-Commerce</option>
-                      <option>Textiles & Apparel</option>
-                      <option>Hotels, Restaurants & Tourism</option>
-                    </optgroup>
-                    <optgroup label="Healthcare & Life Sciences">
-                      <option>Healthcare & Pharma</option>
-                      <option>Hospitals & Diagnostics</option>
-                    </optgroup>
-                    <optgroup label="Auto & Transport">
-                      <option>Automobile</option>
-                      <option>Auto Components</option>
-                      <option>Logistics & Shipping</option>
-                    </optgroup>
-                    <optgroup label="Materials & Chemicals">
-                      <option>Chemicals & Fertilizers</option>
-                      <option>Paper & Packaging</option>
-                    </optgroup>
-                    <optgroup label="Real Assets">
-                      <option>Real Estate</option>
-                      <option>Agriculture & Allied</option>
-                    </optgroup>
-                    <optgroup label="Other">
-                      <option>ETF / Index Fund</option>
-                      <option>Others / Cash</option>
-                    </optgroup>
+                    <SectorOptions />
                   </select>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -354,54 +308,7 @@ export default function ManageHoldings() {
                                 onChange={e => setEditForm({ ...editForm, sector: e.target.value })}
                                 className="w-full px-2 py-1 bg-gray-950 border border-gray-700 rounded text-xs text-[#F3F1E8]"
                               >
-                                <optgroup label="Financial Services">
-                                  <option>Banking & Finance</option>
-                                  <option>Insurance</option>
-                                  <option>Non-Banking Financial (NBFC)</option>
-                                  <option>Financial Services</option>
-                                </optgroup>
-                                <optgroup label="Technology & Telecom">
-                                  <option>Information Technology</option>
-                                  <option>Telecommunication</option>
-                                  <option>Media & Entertainment</option>
-                                </optgroup>
-                                <optgroup label="Energy & Industrials">
-                                  <option>Energy & Power</option>
-                                  <option>Oil & Gas</option>
-                                  <option>Metals & Mining</option>
-                                  <option>Infrastructure & Construction</option>
-                                  <option>Cement & Building Materials</option>
-                                  <option>Capital Goods & Engineering</option>
-                                  <option>Defence & Aerospace</option>
-                                </optgroup>
-                                <optgroup label="Consumer & Retail">
-                                  <option>Consumer Goods (FMCG)</option>
-                                  <option>Consumer Durables</option>
-                                  <option>Retail & E-Commerce</option>
-                                  <option>Textiles & Apparel</option>
-                                  <option>Hotels, Restaurants & Tourism</option>
-                                </optgroup>
-                                <optgroup label="Healthcare & Life Sciences">
-                                  <option>Healthcare & Pharma</option>
-                                  <option>Hospitals & Diagnostics</option>
-                                </optgroup>
-                                <optgroup label="Auto & Transport">
-                                  <option>Automobile</option>
-                                  <option>Auto Components</option>
-                                  <option>Logistics & Shipping</option>
-                                </optgroup>
-                                <optgroup label="Materials & Chemicals">
-                                  <option>Chemicals & Fertilizers</option>
-                                  <option>Paper & Packaging</option>
-                                </optgroup>
-                                <optgroup label="Real Assets">
-                                  <option>Real Estate</option>
-                                  <option>Agriculture & Allied</option>
-                                </optgroup>
-                                <optgroup label="Other">
-                                  <option>ETF / Index Fund</option>
-                                  <option>Others / Cash</option>
-                                </optgroup>
+                                <SectorOptions />
                               </select>
                             ) : (
                               <div className="flex flex-col gap-1">

@@ -9,26 +9,24 @@ import {
   ArrowLeftRight, 
   TrendingUp, 
   FileText, 
-  History, 
   Settings,
   Users,
   LogOut,
-  Landmark,
-  Inbox
+  Inbox,
+  Megaphone
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { getNoticesSeenAt } from '../lib/notices';
 
 const clientNav = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Portfolio', href: '/portfolio', icon: Briefcase },
   { name: 'Transactions', href: '/transactions', icon: ArrowLeftRight },
-  { name: 'Fund Performance', href: '/fund-performance', icon: TrendingUp },
+  { name: 'Performance', href: '/fund-performance', icon: TrendingUp },
+  { name: 'Notices', href: '/notices', icon: Megaphone },
   { name: 'Reports', href: '/reports', icon: FileText },
-  { name: 'NAV History', href: '/nav-history', icon: History },
-  { name: 'Portfolio Holdings', href: '/holdings', icon: Briefcase },
-  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 const adminNav = [
@@ -37,9 +35,9 @@ const adminNav = [
   { name: 'Manage Transactions', href: '/admin/transactions', icon: ArrowLeftRight },
   { name: 'Clients', href: '/admin/clients', icon: Users },
   { name: 'Manage Holdings', href: '/admin/holdings', icon: Briefcase },
-  { name: 'Fund Performance', href: '/fund-performance', icon: TrendingUp },
+  { name: 'Performance', href: '/fund-performance', icon: TrendingUp },
+  { name: 'Notices', href: '/admin/notices', icon: Megaphone },
   { name: 'Reports', href: '/admin/reports', icon: FileText },
-  { name: 'NAV History', href: '/admin/nav-history', icon: History },
 ];
 
 export default function Sidebar({ onClose }) {
@@ -59,6 +57,23 @@ export default function Sidebar({ onClose }) {
         if (!error) setOpenRequests(count || 0);
       });
   }, [isAdmin, pathname]);
+
+  // Badge on the client Notices link: notices posted since this browser last opened the tab
+  const [unreadNotices, setUnreadNotices] = useState(0);
+  useEffect(() => {
+    if (!profile || isAdmin) return;
+    function countUnread() {
+      let query = supabase.from('notices').select('id', { count: 'exact', head: true });
+      const seenAt = getNoticesSeenAt();
+      if (seenAt) query = query.gt('created_at', seenAt);
+      query.then(({ count, error }) => {
+        if (!error) setUnreadNotices(count || 0);
+      });
+    }
+    countUnread();
+    window.addEventListener('notices-seen', countUnread);
+    return () => window.removeEventListener('notices-seen', countUnread);
+  }, [profile, isAdmin, pathname]);
   
   if (!profile) return null;
 
@@ -109,6 +124,11 @@ export default function Sidebar({ onClose }) {
                   {openRequests}
                 </span>
               )}
+              {item.href === '/notices' && unreadNotices > 0 && (
+                <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-[#12C98B]/20 text-[#12C98B] text-[10px] font-black flex items-center justify-center">
+                  {unreadNotices}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -124,6 +144,18 @@ export default function Sidebar({ onClose }) {
             <p className="text-[10px] text-[#7E8D91] mt-1 uppercase tracking-widest">{profile.role}</p>
           </div>
         </div>
+        {!isAdmin && (
+          <Link
+            href="/settings"
+            className={clsx(
+              pathname === '/settings' ? 'bg-[#12C98B]/10 text-[#F3F1E8]' : 'text-[#7E8D91] hover:bg-[#101917] hover:text-[#F3F1E8]',
+              'group flex w-full items-center rounded-xl px-3 py-3 mb-1 text-sm font-bold transition-all'
+            )}
+          >
+            <Settings className="h-5 w-5 flex-shrink-0" />
+            <span className="ml-3">Settings</span>
+          </Link>
+        )}
         <button
           onClick={handleLogout}
           className="group flex w-full items-center rounded-xl px-3 py-3 text-sm font-bold text-red-500/80 hover:bg-red-500/10 hover:text-red-400 transition-all"

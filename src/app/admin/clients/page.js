@@ -6,9 +6,12 @@ import { useEffect, useState } from 'react';
 import { Users, Search, UserPlus, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { computeClientPosition } from '@/lib/portfolio';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function ManageClients() {
   const { profile } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -239,14 +242,14 @@ export default function ManageClients() {
                 const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
 
                 return (
-                  <tr key={client.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={client.id} onClick={() => router.push(`/admin/clients/${client.id}`)} className="hover:bg-white/[0.02] transition-colors cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-900/50 flex items-center justify-center text-indigo-300 font-bold border border-indigo-700/50">
                            {client.name.charAt(0).toUpperCase()}
                         </div>
                         <div className="ml-3">
-                          <p className="text-[#F3F1E8] font-medium">{client.name}</p>
+                          <Link href={`/admin/clients/${client.id}`} onClick={(e) => e.stopPropagation()} className="text-[#F3F1E8] font-medium hover:text-[#12C98B]">{client.name}</Link>
                           <p className="text-[#7E8D91] text-xs">ID: {client.id.substring(0, 8)}...</p>
                         </div>
                       </div>

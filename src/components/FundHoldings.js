@@ -4,7 +4,8 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Briefcase, PieChart, Info } from 'lucide-react';
 
-export default function ClientHoldings() {
+// Fund-wide holdings and allocation, shown on the client Portfolio page.
+export default function FundHoldings() {
   const [loading, setLoading] = useState(true);
   const [holdings, setHoldings] = useState([]);
   
@@ -41,7 +42,7 @@ export default function ClientHoldings() {
     <div className="space-y-8">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8]">Fund Holdings</h1>
+          <h2 className="text-2xl font-black tracking-tighter text-[#F3F1E8]">Fund Holdings</h2>
           <p className="text-[#7E8D91] text-sm font-medium mt-1">Full transparency into where your capital is deployed</p>
         </div>
         <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 px-6 py-4 text-right">

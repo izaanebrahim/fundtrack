@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import FundPerformanceChart from '@/components/FundPerformanceChart';
+import NavHistoryTable from '@/components/NavHistoryTable';
 import { Info } from 'lucide-react';
 
 export default function FundPerformance() {
@@ -68,6 +69,8 @@ export default function FundPerformance() {
           <p className="text-[#7E8D91] text-xs font-medium italic">Fund shows actual NAV. Benchmark is scaled to match fund's starting NAV for visual comparison.</p>
         </div>
       </div>
+
+      <NavHistoryTable isAdmin={profile?.role === 'admin'} />
     </div>
   );
 }
