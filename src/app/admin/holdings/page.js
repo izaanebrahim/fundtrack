@@ -38,7 +38,9 @@ export default function ManageHoldings() {
         .select('*')
         .order('name');
       if (error) throw error;
-      setHoldings(data || []);
+      // Largest positions (by current value) first
+      const byValue = (h) => Number(h.quantity) * Number(h.current_price);
+      setHoldings((data || []).sort((a, b) => byValue(b) - byValue(a)));
     } catch (error) {
       console.error(error);
     } finally {
