@@ -24,7 +24,7 @@ A full-stack investment fund management platform I built for **Barakha Capital**
 - **NAV Sync** — Manually trigger a Yahoo Finance price sync or let the daily cron handle it
 
 ### Automation
-- A **Vercel Cron Job** runs daily at 4:00 PM IST to automatically:
+- A **Vercel Cron Job** runs at 4:00 PM IST on weekdays (Mon–Fri) to automatically:
   - Fetch live stock prices from Yahoo Finance
   - Update all holdings in a single batched database call
   - Recalculate AUM, total units, and NAV

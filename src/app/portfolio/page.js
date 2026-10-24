@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Briefcase, IndianRupee, Layers, TrendingUp, TrendingDown } from 'lucide-react';
+import { computeClientPosition } from '@/lib/portfolio';
 
 export default function Portfolio() {
   const { profile } = useAuth();
@@ -53,25 +54,9 @@ export default function Portfolio() {
           .eq('client_id', profile.id)
           .order('created_at', { ascending: true });
 
-        let units = 0;
-        let invested = 0;
-        txs?.forEach(t => {
-          if (t.type === 'INVEST') { 
-            units += Number(t.units); 
-            invested += Number(t.amount); 
-          } else if (t.type === 'WITHDRAW') { 
-            const avgNav = units > 0 ? (invested / units) : 0;
-            units -= Number(t.units); 
-            invested -= Number(t.units) * avgNav; 
-          }
-        });
-
-        // Clamp: if fully exited, both should be 0
-        if (units <= 0.0001) { units = 0; invested = 0; }
-        if (invested < 0) invested = 0;
+        const { units, invested, averageNav: avgNav } = computeClientPosition(txs || []);
 
         const value = units * liveNav;
-        const avgNav = units > 0 ? (invested / units) : 0;
         const pnl = value - invested;
         const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
 
