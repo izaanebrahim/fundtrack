@@ -3,7 +3,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
-import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft, Inbox, Megaphone, Pin, Send, PhoneCall, BadgeCheck } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft, Inbox, Bell, Send, PhoneCall, BadgeCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import AllocationChart from '@/components/AllocationChart';
 import { computeClientPosition } from '@/lib/portfolio';
@@ -11,7 +11,7 @@ import RequestModal from '@/components/RequestModal';
 import { REQUEST_STATUS_LABELS, REQUEST_STATUS_STYLES, formatRequestAmount } from '@/lib/requests';
 import Link from 'next/link';
 import BalanceChart from '@/components/BalanceChart';
-import { sortNotices } from '@/lib/notices';
+import { getNoticesSeenAt } from '@/lib/notices';
 
 export default function Dashboard() {
   const { user, profile } = useAuth();
@@ -33,25 +33,25 @@ export default function Dashboard() {
   const [requestsVersion, setRequestsVersion] = useState(0);
   const [userTransactions, setUserTransactions] = useState([]);
   const [navHistory, setNavHistory] = useState([]);
-  const [latestNotice, setLatestNotice] = useState(null);
+  const [unreadNotices, setUnreadNotices] = useState(0);
 
+  // Count notices posted since this browser last opened the Notices tab
   useEffect(() => {
     if (!user) return;
 
-    async function fetchLatestNotice() {
-      const { data: noticeData, error } = await supabase
-        .from('notices')
-        .select('id, title, body, pinned, created_at')
-        .order('created_at', { ascending: false })
-        .limit(20);
+    async function fetchUnreadNotices() {
+      let query = supabase.from('notices').select('id', { count: 'exact', head: true });
+      const seenAt = getNoticesSeenAt();
+      if (seenAt) query = query.gt('created_at', seenAt);
+      const { count, error } = await query;
       if (error) {
         console.error('Error fetching notices:', error);
         return;
       }
-      setLatestNotice(sortNotices(noticeData || [])[0] || null);
+      setUnreadNotices(count || 0);
     }
 
-    fetchLatestNotice();
+    fetchUnreadNotices();
   }, [user]);
 
   useEffect(() => {
@@ -183,6 +183,19 @@ export default function Dashboard() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Link
+            href="/notices"
+            title={unreadNotices > 0 ? `${unreadNotices} new notice${unreadNotices === 1 ? '' : 's'}` : "Manager's notices"}
+            aria-label="Manager's notices"
+            className="relative h-9 w-9 flex items-center justify-center bg-[#101917] border border-white/5 rounded-xl text-[#7E8D91] hover:text-[#F3F1E8] hover:border-white/10 transition-all"
+          >
+            <Bell className="w-4 h-4" />
+            {unreadNotices > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#12C98B] text-black text-[10px] font-black flex items-center justify-center">
+                {unreadNotices}
+              </span>
+            )}
+          </Link>
           <Link href="/transactions" className="px-4 py-2 bg-[#12C98B]/10 text-[#12C98B] border border-[#12C98B]/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#12C98B]/20 transition-all">
             History
           </Link>
@@ -191,27 +204,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
-      {latestNotice && (
-        <Link href="/notices" className="block bg-[#101917] border border-[#12C98B]/20 rounded-2xl shadow-sm shadow-black/20 p-5 hover:border-[#12C98B]/40 transition-all">
-          <div className="flex items-start gap-4">
-            <div className="h-9 w-9 flex-shrink-0 rounded-xl bg-[#12C98B]/10 flex items-center justify-center text-[#12C98B]">
-              <Megaphone className="w-4 h-4" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-black text-[#12C98B] uppercase tracking-widest">Manager&apos;s Notice</span>
-                {latestNotice.pinned && <Pin className="w-3 h-3 text-[#12C98B]" />}
-                <span className="text-[10px] text-[#7E8D91] font-bold uppercase tracking-widest ml-auto flex-shrink-0">
-                  {format(new Date(latestNotice.created_at), 'dd MMM yyyy')}
-                </span>
-              </div>
-              <p className="text-sm font-bold text-[#F3F1E8] truncate">{latestNotice.title}</p>
-              <p className="text-xs text-[#7E8D91] mt-1 line-clamp-2 whitespace-pre-line">{latestNotice.body}</p>
-            </div>
-          </div>
-        </Link>
-      )}
 
       {isNewClient ? (
         <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 p-8 relative overflow-hidden"
