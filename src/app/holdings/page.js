@@ -13,10 +13,11 @@ export default function ClientHoldings() {
       try {
         const { data, error } = await supabase
           .from('holdings')
-          .select('*')
-          .order('current_price', { ascending: false });
+          .select('*');
         if (error) throw error;
-        setHoldings(data || []);
+        // Largest positions first
+        const byValue = (h) => Number(h.quantity) * Number(h.current_price);
+        setHoldings((data || []).sort((a, b) => byValue(b) - byValue(a)));
       } catch (error) {
         console.error(error);
       } finally {

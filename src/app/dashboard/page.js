@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import AllocationChart from '@/components/AllocationChart';
+import { computeClientPosition } from '@/lib/portfolio';
 import Link from 'next/link';
 
 export default function Dashboard() {
@@ -46,24 +47,7 @@ export default function Dashboard() {
           .select('*')
           .eq('client_id', user.id);
 
-        let totalUnits = 0;
-        let investedAmount = 0;
-
-        if (userTransactions && userTransactions.length > 0) {
-          userTransactions.forEach(t => {
-            if (t.type === 'INVEST') {
-              totalUnits += Number(t.units);
-              investedAmount += Number(t.amount);
-            } else if (t.type === 'WITHDRAW') {
-              totalUnits -= Number(t.units);
-              investedAmount -= Number(t.amount);
-            }
-          });
-        }
-
-        // Clamp: if fully exited, both should be 0
-        if (totalUnits <= 0) { totalUnits = 0; investedAmount = 0; }
-        if (investedAmount < 0) investedAmount = 0;
+        const { units: totalUnits, invested: investedAmount } = computeClientPosition(userTransactions || []);
 
         const currentNav = totalSystemUnits > 0 ? (liveAum / totalSystemUnits) : 10;
         const portfolioValue = totalUnits * currentNav;

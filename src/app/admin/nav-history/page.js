@@ -55,6 +55,27 @@ export default function AdminNavHistory() {
     }
   }
 
+  function handleExportCsv() {
+    const header = ['Date', 'Total Value (INR)', 'Total Units', 'NAV (INR)', 'Recorded At'];
+    const rows = history.map(r => [
+      r.date,
+      Number(r.total_value).toFixed(2),
+      Number(r.total_units).toFixed(4),
+      Number(r.nav).toFixed(4),
+      r.created_at ? new Date(r.created_at).toISOString() : '',
+    ]);
+    const csv = [header, ...rows]
+      .map(cols => cols.map(c => `"${String(c).replace(/"/g, '""')}"`).join(','))
+      .join('\r\n');
+
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `barakah-nav-history-${format(new Date(), 'yyyy-MM-dd')}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -63,7 +84,11 @@ export default function AdminNavHistory() {
           Full NAV History (Admin)
         </h1>
         
-        <button className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-[#F3F1E8] text-sm font-medium rounded-lg transition-colors border border-gray-700">
+        <button
+          onClick={handleExportCsv}
+          disabled={history.length === 0}
+          className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-[#F3F1E8] text-sm font-medium rounded-lg transition-colors border border-gray-700 disabled:opacity-50"
+        >
           <Download className="w-4 h-4 mr-2" />
           Export CSV
         </button>

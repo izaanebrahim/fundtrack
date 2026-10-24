@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Users, Search, UserPlus, X, CheckCircle2, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import { computeClientPosition } from '@/lib/portfolio';
 
 export default function ManageClients() {
   const { profile } = useAuth();
@@ -232,27 +233,7 @@ export default function ManageClients() {
             </thead>
             <tbody className="divide-y divide-white/5">
               {filteredClients.map((client) => {
-                let units = 0;
-                let invested = 0;
-                
-                // Sort transactions chronologically
-                const sortedTx = (client.transactions || []).sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
-                
-                sortedTx.forEach(t => {
-                  if (t.type === 'INVEST') {
-                    units += Number(t.units);
-                    invested += Number(t.amount);
-                  } else if (t.type === 'WITHDRAW') {
-                    const avgNav = units > 0 ? (invested / units) : 0;
-                    units -= Number(t.units);
-                    invested -= Number(t.units) * avgNav;
-                  }
-                });
-
-                if (units <= 0.0001) { units = 0; invested = 0; }
-                if (invested < 0) invested = 0;
-
-                const avgNav = units > 0 ? (invested / units) : 0;
+                const { units, invested, averageNav: avgNav } = computeClientPosition(client.transactions || []);
                 const portfolioValue = units * liveNav;
                 const pnl = portfolioValue - invested;
                 const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
