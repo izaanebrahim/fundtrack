@@ -269,37 +269,37 @@ export default function Login() {
       </div>
 
       {/* MOBILE LAYOUT (< 768px) */}
-      <div className="md:hidden flex flex-col min-h-[100svh] bg-[#07100E] text-[#F3F1E8] font-sans relative overflow-hidden">
+      <div className="md:hidden flex flex-col h-[100svh] bg-[#07100E] text-[#F3F1E8] font-sans relative overflow-hidden">
         
         {/* Transition container for fade/slide */}
         <div className="flex-1 w-full relative">
           
           {/* MOBILE WELCOME SCREEN */}
-          <div className={`absolute inset-0 flex flex-col w-full h-full overflow-y-auto transition-all duration-300 ease-in-out ${showMobileLogin ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
+          <div className={`absolute inset-0 flex flex-col w-full h-full overflow-hidden transition-all duration-300 ease-in-out ${showMobileLogin ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
             
             {/* Top Brand Section */}
-            <div className="flex-none flex flex-col items-center px-6 pt-[64px] sm:pt-[80px] z-20">
-              <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[180px] sm:w-[210px] h-auto object-contain" />
+            <div className="flex-none flex flex-col items-center px-6 pt-[clamp(20px,7svh,80px)] z-20">
+              <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[clamp(140px,26svh,210px)] h-auto object-contain" />
               
-              <div className="mt-16 flex items-center gap-2">
+              <div className="mt-[clamp(14px,6svh,64px)] flex items-center gap-2">
                 <div className="w-4 h-[1px] bg-[#12C98B]/70"></div>
                 <p className="text-[9px] font-bold tracking-[0.2em] text-[#7E8D91] uppercase">Ethical investing for a brighter tomorrow</p>
                 <div className="w-4 h-[1px] bg-[#12C98B]/70"></div>
               </div>
               
-              <h2 className="mt-6 text-[38px] sm:text-[44px] font-[650] sm:font-[700] tracking-tight leading-[1.05] text-center max-w-[320px]">
+              <h2 className="mt-[clamp(10px,2.5svh,24px)] text-[length:min(9vw,5.4svh,44px)] font-[650] sm:font-[700] tracking-tight leading-[1.05] text-center max-w-[340px]">
                 Grow Your Wealth.<br />
                 Without Compromising<br />
                 <span className="text-[#12C98B]">Your Values.</span>
               </h2>
               
-              <p className="mt-4 text-[15px] sm:text-[16px] text-[#7E8D91] text-center leading-snug max-w-[280px]">
+              <p className="mt-[clamp(8px,2svh,16px)] text-[length:min(4vw,2.3svh,16px)] text-[#7E8D91] text-center leading-snug max-w-[280px]">
                 Built around disciplined, transparent and purpose-driven investing.
               </p>
             </div>
 
             {/* Middle Abstract Wave Section */}
-            <div className="flex-1 relative w-full flex items-end justify-center min-h-[160px] pointer-events-none overflow-visible">
+            <div className="flex-1 min-h-0 relative w-full flex items-end justify-center pointer-events-none overflow-visible">
                <svg className="absolute w-full h-[150%] max-h-[300px] bottom-0 opacity-80" preserveAspectRatio="none" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Fewer lines for mobile to keep it subtle */}
                 {Array.from({length: 8}).map((_, i) => (
@@ -326,10 +326,10 @@ export default function Login() {
             </div>
 
             {/* Bottom Section */}
-            <div className="flex-none w-full flex flex-col items-center pb-8 pt-4 z-20 px-6">
+            <div className="flex-none w-full flex flex-col items-center pb-[clamp(12px,4svh,32px)] pt-2 z-20 px-6">
               
               {/* Value Indicators */}
-              <div className="flex w-full justify-between items-start mb-8 text-[#7E8D91] px-2 max-w-[340px] mx-auto bg-[#07100e]/60 backdrop-blur-sm py-2 rounded-xl">
+              <div className="flex w-full justify-between items-start mb-[clamp(10px,3.5svh,32px)] [@media(max-height:500px)]:hidden text-[#7E8D91] px-2 max-w-[340px] mx-auto bg-[#07100e]/60 backdrop-blur-sm py-2 rounded-xl">
                 <div className="flex flex-col items-center gap-1.5 flex-1">
                   <Leaf className="w-4 h-4 text-[#12C98B]" strokeWidth={1.5} />
                   <span className="text-[8px] sm:text-[9px] text-center font-bold tracking-[0.1em] uppercase">Ethical<br/>Approach</span>
@@ -349,12 +349,12 @@ export default function Login() {
               {/* Sign In CTA */}
               <button 
                 onClick={() => setShowMobileLogin(true)}
-                className="w-[90%] max-w-[340px] h-[54px] sm:h-[58px] bg-[#12C98B] hover:bg-[#15e09b] active:bg-[#0fa673] text-[#07100E] font-bold text-[15px] rounded-[12px] transition-all shadow-[0_4px_16px_rgba(18,201,139,0.25)] flex items-center justify-center"
+                className="w-[90%] max-w-[340px] h-[clamp(46px,7svh,58px)] flex-none bg-[#12C98B] hover:bg-[#15e09b] active:bg-[#0fa673] text-[#07100E] font-bold text-[15px] rounded-[12px] transition-all shadow-[0_4px_16px_rgba(18,201,139,0.25)] flex items-center justify-center"
               >
                 SIGN IN
               </button>
 
-              <p className="mt-4 text-[11px] font-medium text-[#7E8D91]">
+              <p className="mt-[clamp(8px,2svh,16px)] text-[11px] font-medium text-[#7E8D91]">
                 Secure access • Barakah Capital
               </p>
             </div>
@@ -364,7 +364,7 @@ export default function Login() {
           <div className={`absolute inset-0 flex flex-col w-full h-full bg-[#07100E] overflow-y-auto transition-all duration-300 ease-in-out ${showMobileLogin ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'}`}>
             
             {/* Top Bar with Back Button */}
-            <div className="flex items-center justify-between px-6 py-6 w-full">
+            <div className="flex items-center justify-between px-6 py-[clamp(8px,3svh,24px)] w-full">
               <button 
                 onClick={() => setShowMobileLogin(false)}
                 className="flex items-center gap-2 text-[#7E8D91] hover:text-[#F3F1E8] transition-colors py-2"
@@ -375,16 +375,16 @@ export default function Login() {
             </div>
 
             {/* Login Content */}
-            <div className="flex-1 flex flex-col justify-center px-6 w-full max-w-[420px] mx-auto pb-12">
+            <div className="flex-1 flex flex-col justify-center px-6 w-full max-w-[420px] mx-auto pb-[clamp(12px,5svh,48px)]">
               
               {/* Logo */}
-              <div className="flex justify-center mb-8">
-                <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[180px] sm:w-[210px] h-auto object-contain" />
+              <div className="flex justify-center mb-[clamp(12px,4svh,32px)]">
+                <img src="/logo-wide-transparent.png" alt="Barakah Capital" className="w-[clamp(130px,24svh,210px)] h-auto object-contain" />
               </div>
 
               {/* Header */}
-              <div className="mb-8 text-center">
-                <h1 className="text-[32px] font-[700] tracking-tight mb-2 text-[#F3F1E8]">Welcome Back</h1>
+              <div className="mb-[clamp(12px,4svh,32px)] text-center">
+                <h1 className="text-[length:clamp(24px,4.5svh,32px)] font-[700] tracking-tight mb-2 text-[#F3F1E8]">Welcome Back</h1>
                 <p className="text-[14px] text-[#7E8D91] leading-relaxed">Access your Barakah Capital account</p>
               </div>
 
@@ -400,7 +400,7 @@ export default function Login() {
                 </div>
               )}
 
-              <form onSubmit={handleLogin} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-[clamp(10px,2.5svh,20px)]">
                 
                 {/* Email */}
                 <div>
@@ -412,7 +412,7 @@ export default function Login() {
                     type="email"
                     required
                     placeholder="you@example.com"
-                    className="w-full px-4 h-[54px] sm:h-[56px] bg-[#0B1311] text-[#F3F1E8] rounded-[10px] sm:rounded-[12px] transition-all text-[15px] outline-none border border-white/10 focus:border-[#12C98B]/60 focus:ring-1 focus:ring-[#12C98B]/60 placeholder-[#53666B]"
+                    className="w-full px-4 h-[clamp(46px,7svh,56px)] bg-[#0B1311] text-[#F3F1E8] rounded-[10px] sm:rounded-[12px] transition-all text-[15px] outline-none border border-white/10 focus:border-[#12C98B]/60 focus:ring-1 focus:ring-[#12C98B]/60 placeholder-[#53666B]"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -439,7 +439,7 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       required
                       placeholder="••••••••"
-                      className="w-full pl-4 pr-12 h-[54px] sm:h-[56px] bg-[#0B1311] text-[#F3F1E8] rounded-[10px] sm:rounded-[12px] transition-all text-[15px] outline-none border border-white/10 focus:border-[#12C98B]/60 focus:ring-1 focus:ring-[#12C98B]/60 placeholder-[#53666B]"
+                      className="w-full pl-4 pr-12 h-[clamp(46px,7svh,56px)] bg-[#0B1311] text-[#F3F1E8] rounded-[10px] sm:rounded-[12px] transition-all text-[15px] outline-none border border-white/10 focus:border-[#12C98B]/60 focus:ring-1 focus:ring-[#12C98B]/60 placeholder-[#53666B]"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
@@ -457,14 +457,14 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-[54px] sm:h-[56px] bg-[#12C98B] hover:bg-[#15e09b] active:bg-[#0fa673] text-[#07100E] font-bold text-[15px] rounded-[10px] sm:rounded-[12px] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-4 flex items-center justify-center shadow-[0_4px_16px_rgba(18,201,139,0.2)]"
+                  className="w-full h-[clamp(46px,7svh,56px)] bg-[#12C98B] hover:bg-[#15e09b] active:bg-[#0fa673] text-[#07100E] font-bold text-[15px] rounded-[10px] sm:rounded-[12px] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-[clamp(4px,2svh,16px)] flex items-center justify-center shadow-[0_4px_16px_rgba(18,201,139,0.2)]"
                 >
                   {loading ? 'Signing in...' : 'SIGN IN'}
                 </button>
               </form>
               
               {/* Security Indicator */}
-              <div className="mt-6 flex items-center justify-center gap-2 text-[#7E8D91] text-[13px] font-medium">
+              <div className="mt-[clamp(10px,3svh,24px)] flex items-center justify-center gap-2 text-[#7E8D91] text-[13px] font-medium">
                  <Lock className="w-4 h-4 text-[#12C98B]" strokeWidth={2} />
                  Secure authentication
               </div>
