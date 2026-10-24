@@ -3,15 +3,18 @@
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
+import { OfflineBanner, PullIndicator, usePullToRefresh } from './AppShellHelpers';
 
 export default function AppLayout({ children }) {
   const { user, profile, loading, profileError } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const mainRef = useRef(null);
+  const pullState = usePullToRefresh(mainRef, !!user && pathname !== '/login');
 
   useEffect(() => {
     // Close sidebar on route change
@@ -71,7 +74,7 @@ export default function AppLayout({ children }) {
             <div className="absolute inset-0 rounded-full blur-lg bg-[#12C98B]/20 animate-pulse"></div>
           </div>
           <div className="text-center">
-            <p className="text-[#7E8D91] text-sm font-medium mb-4">Loading Barakha Capital...</p>
+            <p className="text-[#7E8D91] text-sm font-medium mb-4">Loading Barakah Capital...</p>
             {showRescue && (
               <button 
                 onClick={forceRecovery}
@@ -122,7 +125,10 @@ export default function AppLayout({ children }) {
           </button>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8"
+        <OfflineBanner />
+        <PullIndicator {...pullState} />
+
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-4 lg:p-8"
               style={{ background: 'radial-gradient(circle at 70% 10%, #1a2e2e 0%, transparent 40%), #0d1111' }}>
           {!profile && !profileError ? (
             <div className="flex h-full items-center justify-center">

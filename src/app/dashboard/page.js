@@ -7,6 +7,7 @@ import { TrendingUp, TrendingDown, IndianRupee, Layers, PieChart as PieIcon, Arr
 import { format } from 'date-fns';
 import AllocationChart from '@/components/AllocationChart';
 import { computeClientPosition } from '@/lib/portfolio';
+import { fetchFundUnits } from '@/lib/fund';
 import RequestModal from '@/components/RequestModal';
 import { REQUEST_STATUS_LABELS, REQUEST_STATUS_STYLES, formatRequestAmount } from '@/lib/requests';
 import Link from 'next/link';
@@ -82,14 +83,7 @@ export default function Dashboard() {
         const { data: holdingsData } = await supabase.from('holdings').select('quantity, current_price, category, sector');
         const liveAum = holdingsData?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
         
-        const { data: allTxData } = await supabase.from('transactions').select('type, units');
-        let totalSystemUnits = 0;
-        if (allTxData) {
-          allTxData.forEach(t => {
-            if (t.type === 'INVEST') totalSystemUnits += Number(t.units);
-            else if (t.type === 'WITHDRAW') totalSystemUnits -= Number(t.units);
-          });
-        }
+        const totalSystemUnits = await fetchFundUnits();
 
         const { data: userTransactions } = await supabase
           .from('transactions')

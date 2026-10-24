@@ -1,15 +1,15 @@
-# Changelog - Barakha Capital
+# Changelog - Barakah Capital
 
 All notable changes and bug fixes implemented in this update.
 
 ## [v1.1.0] - 2026-06-12
 
 ### 🔄 Rebranding
-- **Name Change**: Officially migrated the platform name from **FundTrack** to **Barakha Capital**.
+- **Name Change**: Officially migrated the platform name from **FundTrack** to **Barakah Capital**.
 - **Branding**:
   - Updated page `<title>` and metadata in `layout.js`.
   - Replaced all header and sidebar logos from `FT.` to `BC.`.
-  - Cleaned up login screen branding and removed version suffixes (`v2.0` -> `Barakha Capital`).
+  - Cleaned up login screen branding and removed version suffixes (`v2.0` -> `Barakah Capital`).
 
 ### 📈 Chart & Timeline Fixes
 - **NAV Chart Behavior**: Fixed the client performance chart to display **actual NAV values** instead of rebasing to `100` every time a timeline range (1M, 6M, 1Y, etc.) is switched.

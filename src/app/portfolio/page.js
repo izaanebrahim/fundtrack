@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { useEffect, useState } from 'react';
 import { Briefcase, IndianRupee, Layers, TrendingUp, TrendingDown } from 'lucide-react';
 import { computeClientPosition } from '@/lib/portfolio';
+import { fetchFundUnits } from '@/lib/fund';
 import FundHoldings from '@/components/FundHoldings';
 
 export default function Portfolio() {
@@ -30,12 +31,7 @@ export default function Portfolio() {
         // Fetch live NAV from holdings
         const { data: holdings } = await supabase.from('holdings').select('quantity, current_price');
         const liveAum = holdings?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
-        const { data: allTx } = await supabase.from('transactions').select('type, units');
-        let systemUnits = 0;
-        allTx?.forEach(t => {
-          if (t.type === 'INVEST') systemUnits += Number(t.units);
-          else if (t.type === 'WITHDRAW') systemUnits -= Number(t.units);
-        });
+        const systemUnits = await fetchFundUnits();
         const liveNav = systemUnits > 0 ? liveAum / systemUnits : 10;
 
         // Fetch previous NAV for 1-day change

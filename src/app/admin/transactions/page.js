@@ -4,8 +4,12 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeftRight, CheckCircle2, AlertCircle, Trash2 } from 'lucide-react';
+import { ArrowLeftRight, CheckCircle2, AlertCircle, AlertTriangle, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { computeClientPosition } from '@/lib/portfolio';
+
+// Order NAVs further than this from the latest saved NAV get a warning and a confirm step
+const NAV_WARN_PCT = 2;
 
 // useSearchParams needs a Suspense boundary for Next.js prerendering
 export default function ManageTransactionsPage() {
@@ -34,6 +38,28 @@ function ManageTransactions() {
   const [message, setMessage] = useState({ text: '', type: '' });
   // Set when arriving from the Requests page, so the request can be closed once recorded
   const [requestId, setRequestId] = useState(() => searchParams.get('request'));
+  // Units the selected client holds now, used to stop over-withdrawals
+  const [holding, setHolding] = useState({ client: null, units: null });
+  const clientUnits = holding.client === selectedClient ? holding.units : null;
+
+  useEffect(() => {
+    if (!selectedClient) return;
+    let cancelled = false;
+    supabase
+      .from('transactions')
+      .select('type, units, amount, created_at')
+      .eq('client_id', selectedClient)
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        setHolding({ client: selectedClient, units: error ? null : computeClientPosition(data || []).units });
+      });
+    return () => { cancelled = true; };
+  }, [selectedClient, transactions]);
+
+  const navDiffPct = currentNav > 0 ? ((manualNav - currentNav) / currentNav) * 100 : 0;
+  const navLooksOff = Math.abs(navDiffPct) > NAV_WARN_PCT;
+  const unitsForAmount = manualNav > 0 && amount ? Number(amount) / manualNav : 0;
+  const overWithdrawal = type === 'WITHDRAW' && clientUnits !== null && unitsForAmount > clientUnits + 0.0001;
 
   useEffect(() => {
     fetchData();
@@ -87,6 +113,20 @@ function ManageTransactions() {
     e.preventDefault();
     if (!selectedClient || !amount || Number(amount) <= 0) {
       setMessage({ text: 'Please fill all fields correctly.', type: 'error' });
+      return;
+    }
+    if (!(manualNav > 0)) {
+      setMessage({ text: 'Enter a NAV above zero for this order.', type: 'error' });
+      return;
+    }
+    if (overWithdrawal) {
+      setMessage({
+        text: `This client holds ${clientUnits.toFixed(4)} units (about ₹${(clientUnits * manualNav).toLocaleString('en-IN', { maximumFractionDigits: 0 })} at this NAV). A withdrawal of ₹${Number(amount).toLocaleString('en-IN')} would need ${unitsForAmount.toFixed(4)} units.`,
+        type: 'error',
+      });
+      return;
+    }
+    if (navLooksOff && !confirm(`The NAV for this order (₹${manualNav.toFixed(4)}) is ${Math.abs(navDiffPct).toFixed(1)}% ${navDiffPct > 0 ? 'above' : 'below'} the latest saved NAV (₹${Number(currentNav).toFixed(4)}). Use it anyway?`)) {
       return;
     }
 
@@ -219,6 +259,12 @@ function ManageTransactions() {
                   value={manualNav}
                   onChange={(e) => setManualNav(Number(e.target.value))}
                 />
+                {navLooksOff && (
+                  <p className="flex items-start gap-1.5 text-xs text-amber-400 mt-1">
+                    <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                    {Math.abs(navDiffPct).toFixed(1)}% {navDiffPct > 0 ? 'above' : 'below'} the latest saved NAV. Check for a typo.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -280,9 +326,15 @@ function ManageTransactions() {
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
                 />
-                {amount && (
+                {amount && manualNav > 0 && (
                   <p className="text-xs text-[#7E8D91] mt-2">
-                    Estimated Layout: <span className="text-[#F3F1E8] font-medium">~{(Number(amount)/manualNav).toFixed(4)} Units</span>
+                    Estimated: <span className="text-[#F3F1E8] font-medium">~{unitsForAmount.toFixed(4)} Units</span>
+                  </p>
+                )}
+                {type === 'WITHDRAW' && clientUnits !== null && (
+                  <p className={`text-xs mt-1 ${overWithdrawal ? 'text-red-400' : 'text-[#7E8D91]'}`}>
+                    Client holds {clientUnits.toFixed(4)} units (about ₹{(clientUnits * manualNav).toLocaleString('en-IN', { maximumFractionDigits: 0 })}).
+                    {overWithdrawal && ' This is more than they hold.'}
                   </p>
                 )}
               </div>
@@ -290,7 +342,7 @@ function ManageTransactions() {
               <div className="pt-4 border-t border-gray-800 mt-4">
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || overWithdrawal}
                   className="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black rounded-xl transition-colors disabled:opacity-50"
                 >
                   {submitting ? 'Processing...' : `Process ${type === 'INVEST' ? 'Investment' : 'Withdrawal'}`}

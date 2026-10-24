@@ -3,7 +3,7 @@ export default function manifest() {
   return {
     name: 'Barakah Capital',
     short_name: 'Barakah',
-    description: 'Track your investments, units, and NAV performance with Barakha Capital.',
+    description: 'Track your investments, units, and NAV performance with Barakah Capital.',
     start_url: '/',
     scope: '/',
     display: 'standalone',
