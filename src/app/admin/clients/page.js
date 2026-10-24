@@ -227,7 +227,7 @@ export default function ManageClients() {
                 <th className="px-6 py-4">Client Name</th>
                 <th className="px-6 py-4">Contact Info</th>
                 <th className="px-6 py-4">Avg NAV</th>
-                <th className="px-6 py-4 text-right">Net Units</th>
+                <th className="px-6 py-4 text-right">Total Value</th>
                 <th className="px-6 py-4 text-right">P&L %</th>
               </tr>
             </thead>
@@ -259,7 +259,7 @@ export default function ManageClients() {
                       ₹{avgNav.toFixed(4)}
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-[#12C98B]">
-                      {units.toLocaleString('en-IN', { maximumFractionDigits: 4 })}
+                      ₹{portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                     </td>
                     <td className={`px-6 py-4 text-right font-medium ${pnlPct >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
                       {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
