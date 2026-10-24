@@ -1,6 +1,6 @@
-# Barakha Capital
+# Barakah Capital
 
-A full-stack investment fund management platform I built for **Barakha Capital** — a private fund I manage. Clients log in to track their portfolio, and I use the admin panel to manage everything from holdings to NAV calculations.
+A full-stack investment fund management platform I built for **Barakah Capital** — a private fund I manage. Clients log in to track their portfolio, and I use the admin panel to manage everything from holdings to NAV calculations.
 
 ---
 

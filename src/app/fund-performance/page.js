@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { fetchFundUnits } from '@/lib/fund';
 import { useAuth } from '@/context/AuthContext';
 import FundPerformanceChart from '@/components/FundPerformanceChart';
 import NavHistoryTable from '@/components/NavHistoryTable';
@@ -19,14 +20,7 @@ export default function FundPerformance() {
         // Fetch live NAV
         const { data: holdings } = await supabase.from('holdings').select('quantity, current_price');
         const liveAum = holdings?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
-        const { data: transactions } = await supabase.from('transactions').select('type, units');
-        let liveUnits = 0;
-        if (transactions) {
-          transactions.forEach(t => {
-            if (t.type === 'INVEST') liveUnits += Number(t.units);
-            else if (t.type === 'WITHDRAW') liveUnits -= Number(t.units);
-          });
-        }
+        const liveUnits = await fetchFundUnits();
         const currentLiveNav = liveUnits > 0 ? liveAum / liveUnits : 10;
         setLiveNav(currentLiveNav);
       } catch (error) {
