@@ -1,0 +1,314 @@
+'use client';
+
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
+import * as demoApi from '@/lib/demoApi';
+import { useEffect, useState } from 'react';
+import { Users, Search, UserPlus, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { format } from 'date-fns';
+import { computeClientPosition } from '@/lib/portfolio';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+export default function ManageClients() {
+  const { profile } = useAuth();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [clients, setClients] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [liveNav, setLiveNav] = useState(0);
+
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [message, setMessage] = useState({ text: '', type: '' });
+  
+  // Form State
+  const [newName, setNewName] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPhone, setNewPhone] = useState('');
+
+  useEffect(() => {
+    fetchClients();
+  }, [profile]);
+
+  async function fetchClients() {
+    if (!profile || profile.role !== 'admin') return;
+    setLoading(true);
+    try {
+      // Calculate Live NAV first
+      const { data: holdings } = await supabase.from('holdings').select('quantity, current_price');
+      const liveAum = holdings?.reduce((sum, h) => sum + (h.quantity * h.current_price), 0) || 0;
+      const { data: allTx } = await supabase.from('transactions').select('type, units');
+      let systemUnits = 0;
+      allTx?.forEach(t => {
+        if (t.type === 'INVEST') systemUnits += Number(t.units);
+        else if (t.type === 'WITHDRAW') systemUnits -= Number(t.units);
+      });
+      const currentLiveNav = systemUnits > 0 ? liveAum / systemUnits : 10;
+      setLiveNav(currentLiveNav);
+
+      const { data, error } = await supabase
+        .from('clients')
+        .select(`
+          *,
+          transactions (
+            id, type, amount, units, created_at
+          )
+        `)
+        .eq('role', 'client')
+        .order('name');
+        
+      if (error) throw error;
+      setClients(data || []);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleCreateClient = async (e) => {
+    e.preventDefault();
+    setCreating(true);
+    setMessage({ text: '', type: '' });
+
+    try {
+      const response = await demoApi.createClient({
+        name: newName,
+        email: newEmail,
+        password: newPassword,
+        phone: newPhone,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to create client');
+      }
+
+      setMessage({ text: 'Client created successfully! They can now log in.', type: 'success' });
+      setNewName('');
+      setNewEmail('');
+      setNewPassword('');
+      setNewPhone('');
+      fetchClients();
+      
+      // Auto close after 2s on success
+      setTimeout(() => {
+        setIsModalOpen(false);
+        setMessage({ text: '', type: '' });
+      }, 2000);
+
+    } catch (error) {
+      setMessage({ text: error.message, type: 'error' });
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const filteredClients = clients.filter(c => 
+    c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    c.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6 relative">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-3xl font-black tracking-tighter text-[#F3F1E8] flex items-center">
+          <Users className="mr-3 text-[#12C98B]" />
+          Client Management
+        </h1>
+        
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors"
+        >
+          <UserPlus className="w-4 h-4 mr-2" />
+          Create New Client
+        </button>
+      </div>
+
+      {/* Creation Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+           <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-2xl w-full max-w-md overflow-hidden">
+              <div className="flex justify-between items-center p-4 border-b border-white/5 bg-gray-950/50">
+                 <h2 className="text-sm font-black text-[#F3F1E8] uppercase tracking-widest flex items-center">
+                   <UserPlus className="w-5 h-5 mr-2 text-[#12C98B]"/> Create Client Account
+                 </h2>
+                 <button onClick={() => setIsModalOpen(false)} className="text-[#7E8D91] hover:text-[#F3F1E8] transition-colors">
+                   <X className="w-5 h-5" />
+                 </button>
+              </div>
+
+              <div className="p-6">
+                {message.text && (
+                  <div className={`mb-6 p-4 rounded-lg flex items-start text-sm ${
+                    message.type === 'success' ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-800' : 'bg-red-900/40 text-red-300 border border-red-800'
+                  }`}>
+                    {message.type === 'success' ? <CheckCircle2 className="w-5 h-5 mr-3 flex-shrink-0" /> : <AlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />}
+                    {message.text}
+                  </div>
+                )}
+
+                <form onSubmit={handleCreateClient} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Full Name</label>
+                    <input
+                      type="text" required value={newName} onChange={(e) => setNewName(e.target.value)}
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Email Address</label>
+                    <input
+                      type="email" required value={newEmail} onChange={(e) => setNewEmail(e.target.value)}
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
+                    />
+                  </div>
+                  <div>
+                     <label className="block text-sm font-medium text-[#7E8D91] mb-1">Phone Number (Optional)</label>
+                     <input
+                       type="tel" value={newPhone} onChange={(e) => setNewPhone(e.target.value)}
+                       className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
+                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-[#7E8D91] mb-1">Assign Password</label>
+                    <input
+                      type="text" required value={newPassword} onChange={(e) => setNewPassword(e.target.value)} minLength={6}
+                      className="w-full px-4 py-2 bg-black/30 border border-white/10 rounded-xl text-[#F3F1E8] focus:outline-none focus:border-[#12C98B]/50"
+                      placeholder="Min 6 characters"
+                    />
+                    <p className="text-xs text-[#7E8D91] mt-1">Provide this password securely to the client.</p>
+                  </div>
+
+                  <div className="pt-4 mt-6 border-t border-gray-800 flex justify-end space-x-3">
+                     <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-sm font-medium text-[#7E8D91] hover:text-[#F3F1E8] transition-colors">
+                        Cancel
+                     </button>
+                     <button type="submit" disabled={creating} className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-black font-black text-sm font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center">
+                        {creating ? 'Creating...' : 'Create Account'}
+                     </button>
+                  </div>
+                </form>
+              </div>
+           </div>
+        </div>
+      )}
+
+      {/* Search and List */}
+      <div className="bg-[#101917] border border-white/5 rounded-2xl shadow-sm shadow-black/20 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-white/5 flex items-center">
+          <div className="relative w-full max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-[#7E8D91]" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search clients by name or email..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-700 rounded-lg leading-5 bg-gray-950 text-[#7E8D91] placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Mobile: one card per client */}
+        <div className="md:hidden divide-y divide-white/5">
+          {filteredClients.map((client) => {
+            const { units, invested } = computeClientPosition(client.transactions || []);
+            const portfolioValue = units * liveNav;
+            const pnl = portfolioValue - invested;
+            const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
+
+            return (
+              <Link key={client.id} href={`/admin/clients/${client.id}`} className="flex items-center gap-3 p-4 hover:bg-white/[0.02] transition-colors">
+                <div className="flex-shrink-0 h-9 w-9 rounded-full bg-indigo-900/50 flex items-center justify-center text-indigo-300 font-bold border border-indigo-700/50">
+                  {client.name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[#F3F1E8] font-medium truncate">{client.name}</p>
+                  <p className="text-[#7E8D91] text-xs truncate">{client.email}</p>
+                  <p className="text-[#7E8D91] text-xs">{client.phone || 'No phone provided'}</p>
+                </div>
+                <div className="flex-shrink-0 text-right">
+                  <p className="text-sm font-medium text-[#12C98B]">₹{portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</p>
+                  <p className={`text-xs font-medium ${pnlPct >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
+                    {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+          {filteredClients.length === 0 && (
+            <p className="px-4 py-10 text-center text-sm text-[#7E8D91]">
+              {searchQuery ? 'No clients matching your search.' : 'No clients found.'}
+            </p>
+          )}
+        </div>
+
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left text-sm text-[#7E8D91]">
+            <thead className="bg-gray-950/50 text-xs uppercase text-[#7E8D91] font-semibold border-b border-white/5">
+              <tr>
+                <th className="px-6 py-4">Client Name</th>
+                <th className="px-6 py-4">Contact Info</th>
+                <th className="px-6 py-4">Avg NAV</th>
+                <th className="px-6 py-4 text-right">Total Value</th>
+                <th className="px-6 py-4 text-right">P&L %</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {filteredClients.map((client) => {
+                const { units, invested, averageNav: avgNav } = computeClientPosition(client.transactions || []);
+                const portfolioValue = units * liveNav;
+                const pnl = portfolioValue - invested;
+                const pnlPct = invested > 0 ? (pnl / invested) * 100 : 0;
+
+                return (
+                  <tr key={client.id} onClick={() => router.push(`/admin/clients/${client.id}`)} className="hover:bg-white/[0.02] transition-colors cursor-pointer">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center">
+                        <div className="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-900/50 flex items-center justify-center text-indigo-300 font-bold border border-indigo-700/50">
+                           {client.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="ml-3">
+                          <Link href={`/admin/clients/${client.id}`} onClick={(e) => e.stopPropagation()} className="text-[#F3F1E8] font-medium hover:text-[#12C98B]">{client.name}</Link>
+                          <p className="text-[#7E8D91] text-xs">ID: {client.id.substring(0, 8)}...</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-[#7E8D91]">{client.email}</p>
+                      <p className="text-[#7E8D91] text-xs">{client.phone || 'No phone provided'}</p>
+                    </td>
+                    <td className="px-6 py-4 text-[#7E8D91] font-medium">
+                      ₹{avgNav.toFixed(4)}
+                    </td>
+                    <td className="px-6 py-4 text-right font-medium text-[#12C98B]">
+                      ₹{portfolioValue.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+                    </td>
+                    <td className={`px-6 py-4 text-right font-medium ${pnlPct >= 0 ? 'text-[#12C98B]' : 'text-red-400'}`}>
+                      {pnlPct >= 0 ? '+' : ''}{pnlPct.toFixed(2)}%
+                    </td>
+                  </tr>
+                );
+              })}
+              
+              {filteredClients.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="px-6 py-12 text-center text-[#7E8D91]">
+                    {searchQuery ? 'No clients matching your search.' : 'No clients found.'}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}

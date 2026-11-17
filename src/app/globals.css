@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0d1111;
+  --foreground: #ffffff;
+  --card-bg: #161b1b;
+  --accent-emerald: #00f5a0;
+  --accent-lime: #d4ff3f;
+  --sidebar-bg: #090c0c;
+  --border-color: rgba(255, 255, 255, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent-emerald: var(--accent-emerald);
+  --color-accent-lime: var(--accent-lime);
+}
+
+body {
+  background: radial-gradient(circle at 0% 0%, #1a2e2e 0%, #0d1111 50%),
+              radial-gradient(circle at 100% 100%, #111a1a 0%, #0d1111 50%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Thin custom scrollbars on mouse/trackpad devices only; phones keep their native overlay scrollbars */
+@media (hover: hover) and (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 245, 160, 0.2);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 245, 160, 0.4);
+  }
+}
+
+/* Glassmorphism Components */
+
+
+
+
+
+/* Gradient Text */
+.text-gradient-emerald {
+  background: linear-gradient(135deg, #00f5a0 0%, #00d98b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Buttons */
+.btn-emerald {
+  background: linear-gradient(135deg, #00f5a0 0%, #00d98b 100%);
+  color: #000;
+  font-weight: 700;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+}
+.btn-emerald:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: #fff;
+  border-radius: 14px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+}
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Hide default input styles */
+input, select {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  color: white !important;
+}
+input:focus, select:focus {
+  border-color: var(--accent-emerald) !important;
+  box-shadow: 0 0 0 2px rgba(0, 245, 160, 0.1) !important;
+  outline: none !important;
+}
+
+/* Dropdown option styling - native options need solid backgrounds */
+select option {
+  background: #111616 !important;
+  color: #e5e7eb !important;
+  padding: 8px 12px !important;
+}
+select option:checked,
+select option:hover {
+  background: #1a2a2a !important;
+  color: #00f5a0 !important;
+}
+select option:disabled {
+  color: #6b7280 !important;
+}
+select optgroup {
+  background: #0d1111 !important;
+  color: #00f5a0 !important;
+  font-weight: 700;
+  font-style: normal;
+  padding: 4px 0;
+}
+
+/* Animations for login wave */
+@keyframes wave-float {
+  0%, 100% { transform: translateY(0px) translateX(0px) scaleY(1); }
+  50% { transform: translateY(-15px) translateX(10px) scaleY(1.02); }
+}
+
+@keyframes wave-float-reverse {
+  0%, 100% { transform: translateY(0px) translateX(0px) scaleY(1); }
+  50% { transform: translateY(15px) translateX(-10px) scaleY(0.98); }
+}
+
+@keyframes dash-flow {
+  from { stroke-dashoffset: 2000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.wave-animate-even {
+  animation: wave-float 14s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-animate-odd {
+  animation: wave-float-reverse 18s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.wave-dash {
+  stroke-dasharray: 1000;
+  animation: dash-flow 20s linear infinite;
+}
